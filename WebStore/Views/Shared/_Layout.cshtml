@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebStore</title>
+    <style type="text/css">
+        TABLE {
+            width: 300px; /* Ширина таблицы */
+            border-collapse: collapse; /* Убираем двойные линии между ячейками */
+        }
+
+        TD, TH {
+            padding: 3px; /* Поля вокруг содержимого таблицы */
+            border: 1px solid black; /* Параметры рамки */
+        }
+
+        TH {
+            background: #b0e0e6; /* Цвет фона */
+        }
+    </style>
+</head>
+<body>
+    <header>
+                <a asp-area="" asp-controller="Home" asp-action="Index">WebStore</a>
+    </header>
+    <div>
+            @RenderBody()
+    </div>
+
+    <footer >
+        <div>
+            &copy; 2021 - WebStore
+        </div>
+    </footer>
+  
+</body>
+</html>
