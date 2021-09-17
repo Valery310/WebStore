@@ -1,0 +1,25 @@
+﻿@model EmployeeView
+@{
+    ViewData["Title"] = "Информция о сотруднике";
+}
+
+<hr />
+<table>
+    <tr>
+        <td>Табельный номер</td>
+        <td>Имя</td>
+        <td>Фамилия</td>
+        <td>Отчество</td>
+        <td>Возраст</td>
+    </tr>
+    <tr>
+        <td>@Model.Id</td>
+        <td>@Model.FirstName</td>
+        <td>@Model.SurName</td>
+        <td>@Model.Patronymic</td>
+        <td>@Model.Age</td>
+        <td>
+            <a asp-action="Index">К общему списку</a>
+        </td>
+    </tr>
+</table>
