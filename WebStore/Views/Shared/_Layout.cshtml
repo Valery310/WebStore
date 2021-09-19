@@ -1,38 +1,33 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebStore</title>
-    <style type="text/css">
-        TABLE {
-            width: 300px; /* Ширина таблицы */
-            border-collapse: collapse; /* Убираем двойные линии между ячейками */
-        }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewData["Title"]</title>
 
-        TD, TH {
-            padding: 3px; /* Поля вокруг содержимого таблицы */
-            border: 1px solid black; /* Параметры рамки */
-        }
+    <partial name="Partial/_Styles" />
 
-        TH {
-            background: #b0e0e6; /* Цвет фона */
-        }
-    </style>
-</head>
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    @*<link rel="shortcut icon" href="images/ico/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">*@
+</head><!--/head-->
 <body>
-    <header>
-                <a asp-area="" asp-controller="Home" asp-action="Index">WebStore</a>
-    </header>
-    <div>
-            @RenderBody()
-    </div>
 
-    <footer >
-        <div>
-            &copy; 2021 - WebStore
-        </div>
-    </footer>
-  
+    <partial name="Partial/_Header" />
+
+    <div class="container">
+        @RenderBody()
+    </div>
+    <partial name="Partial/_Footer" />
+
+    <partial name="Partial/_Scripts" />
 </body>
 </html>

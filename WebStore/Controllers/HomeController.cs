@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebStore.Models;
 
+
 namespace WebStore.Controllers
 {
     public class HomeController : Controller
@@ -18,35 +19,7 @@ namespace WebStore.Controllers
             _logger = logger;
         }
 
-        private static readonly List<EmployeeView> _employees = new List<EmployeeView>
-            {
-                new EmployeeView(
-                    1,
-                    "Иван",
-                    "Иванов",
-                    "Иванович",
-                    22)
-                    
-                ,
-                new EmployeeView(
-                    2,
-                    "Владислав",
-                    "Петров",
-                    "Иванович",
-                    35)
-            };
-
-        public IActionResult Index()
-        {
-
-            return View(_employees);
-            //   return Content("Hello from controller!");
-        }
-
-        public IActionResult Details(int id)
-        {
-            return View(_employees[id - 1]);
-        }
+        public IActionResult Index() => View();
 
         public IActionResult Privacy()
         {
@@ -57,6 +30,51 @@ namespace WebStore.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Shop()
+        {
+            return View();
+        }
+
+        public IActionResult ProductDetails()
+        {
+            return View();
+
+        }
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
+
+        public IActionResult Checkout()
+        {
+            return View();
+        }
+
+        public IActionResult Cart()
+        {
+            return View();
+        }
+
+        public IActionResult BlogSingle()
+        {
+            return View();
+        }
+
+        public IActionResult Blog()
+        {
+            return View();
+        }
+
+        public new IActionResult NotFound()
+        {
+            return View();
         }
 
     }
