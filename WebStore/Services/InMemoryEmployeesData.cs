@@ -11,15 +11,17 @@ namespace WebStore.Services
 {
     public class InMemoryEmployeesData : IEmployeesData
     {
-        private static int _CurrentMaxId;
+        private static int _CurrentMaxId = TestData.Employees.Count;
         private readonly ILogger<InMemoryEmployeesData> logger;
+        private readonly List<EmployeeView> _employees;
 
         public InMemoryEmployeesData(ILogger<InMemoryEmployeesData> Logger)
         {
+            _employees = TestData.Employees;
             logger = Logger;
         }
 
-        int IEmployeesData.Add(EmployeeView employee)
+        public int Add(EmployeeView employee)
         {
             if (employee is null)
             {
@@ -30,31 +32,51 @@ namespace WebStore.Services
             {
                 return employee.Id;
             }
-
+            
             employee.Id = ++_CurrentMaxId;
             TestData.Employees.Add(employee);
 
             return employee.Id;
         }
 
-        bool IEmployeesData.Delete(int id)
+        public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var employee = GetById(id);
+            if (employee!=null)
+            {
+                _employees.Remove(employee);
+                return true;
+            }
+            return false;
         }
 
         IEnumerable<EmployeeView> IEmployeesData.GetAll()
         {
-            throw new NotImplementedException();
+            return _employees;
         }
 
-        EmployeeView IEmployeesData.GetById(int id)
+        public EmployeeView GetById(int id)
         {
-            throw new NotImplementedException();
+            //Получаем сотрудника по Id
+            var employee = _employees.SingleOrDefault(t => t.Id.Equals(id));
+
+            //Если такого не существует
+            if (ReferenceEquals(employee, null))
+                throw new NullReferenceException();//возвращаем результат 404 Not Found
+
+            //Иначе возвращаем сотрудника
+            return employee;
         }
 
-        void IEmployeesData.Update(EmployeeView employee)
+        public void Update(EmployeeView employee)
         {
-            throw new NotImplementedException();
+            if (employee is null)
+            {
+                throw new ArgumentNullException(nameof(employee));
+            }
+
+            var temp = TestData.Employees.SingleOrDefault(t => t.Id == employee.Id);
+            temp = employee;
         }
     }
 }

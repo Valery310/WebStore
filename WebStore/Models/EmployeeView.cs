@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 
 namespace WebStore.Models
 {
-    //public class EmployeeView
-    //{
-    //    public int Id { get; set; }
-    //    public string FirstName { get; set; }
-    //    public string SurName { get; set; }
-    //    public string Patronymic { get; set; }
-    //    public int Age { get; set; }
-    //}
-    public record EmployeeView(int Id, string FirstName, string SurName, string Patronymic, int Age);
+    public class EmployeeView
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string SurName { get; set; }
+        public string Patronymic { get; set; }
+        public int Age { get; set; }
+        public string Position { get; set; }
+    }
+    // public record EmployeeView(int Id, string FirstName, string SurName, string Patronymic, int Age, string? Position);
 }
