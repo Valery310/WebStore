@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using WebStore.Services.Interfaces;
 using WebStore.ViewModel;
 
-namespace WebStore.Components
+namespace WebStore.Models.Product
 {
     public class SectionsViewComponent:ViewComponent
     {
