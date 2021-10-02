@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using WebStore.Infrastructure.Middleware;
 using WebStore.Services.Interfaces;
 using WebStore.Services;
+using WebStore.DAL.Context;
+using Microsoft.EntityFrameworkCore;
+using WebStore.Services.Implementations.Sql;
 
 namespace WebStore
 {
@@ -27,12 +30,15 @@ namespace WebStore
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+                 
             services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
-            services.AddSingleton<IProductData, InMemoryProductData>();
+            //  services.AddSingleton<IProductData, InMemoryProductData>();
+            //  services.AddSingleton<IProductData, SqlProductData>();
+            services.AddScoped<IProductData, SqlProductData>();
             // services.AddMvc().AddMvcOptions(mvcOptions => mvcOptions.EnableEndpointRouting = false);
-
-          //   services.AddMvc().AddMvcOptions(opt => opt.Conventions. );
+            services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
