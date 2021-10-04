@@ -23,6 +23,31 @@ namespace WebStore.Controllers
             return View();
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            var returnurl = Request.Headers["Referer"].ToString();
+            model.ReturnUrl = "/Home/Index";
+
+            if (ModelState.IsValid)
+            {         
+                var loginResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+
+                if (loginResult.Succeeded)
+                {
+                    if (Url.IsLocalUrl(model.ReturnUrl))
+                    {
+                        return Redirect(model.ReturnUrl);
+                    }
+
+                    return RedirectToAction("Index", "Home");
+                }        
+            }
+
+            ModelState.AddModelError("", "Вход невозможен");
+            return View(model);
+        }
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -53,6 +78,13 @@ namespace WebStore.Controllers
                 }
             }
             return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
