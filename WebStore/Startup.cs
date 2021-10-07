@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using WebStore.Services.Implementations.Sql;
 using WebStore.Domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using WebStore.Services.Implementations;
 
 namespace WebStore
 {
@@ -63,6 +65,9 @@ namespace WebStore
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ICartService, CookieCartService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,9 +83,12 @@ namespace WebStore
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+           
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseWelcomePage("/welcome");
             app.UseAuthentication();
 

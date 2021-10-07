@@ -10,6 +10,7 @@ namespace WebStore.Services.Filters
     /// </summary>
     public class ProductFilter
     {
+        public int[] Ids { get; set; }
         /// <summary>
         /// Секция, к которой принадлежит товар
         /// </summary>

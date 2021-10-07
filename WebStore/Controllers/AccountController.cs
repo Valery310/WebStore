@@ -3,6 +3,7 @@ using WebStore.ViewModel;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using WebStore.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebStore.Controllers
 {
@@ -17,17 +18,17 @@ namespace WebStore.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+      //  [HttpGet]
+      //  [Route("login/{returnUrl?}")]
+        [AllowAnonymous]
+        public IActionResult Login(string returnUrl) => View(new LoginViewModel { ReturnUrl = returnUrl });       
 
         [HttpPost, ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var returnurl = Request.Headers["Referer"].ToString();
-            model.ReturnUrl = "/Home/Index";
+         //  var returnurl = Request.Headers["Referer"].ToString();
+         //   model.ReturnUrl = returnurl;
 
             if (ModelState.IsValid)
             {         
@@ -44,47 +45,85 @@ namespace WebStore.Controllers
                 }        
             }
 
-            ModelState.AddModelError("", "Вход невозможен");
+            ModelState.AddModelError("", "Ошибка в имени пользователя, либо в пароле");
             return View(model);
         }
 
-        [HttpGet]
+       // [HttpGet]
+       [AllowAnonymous]
         public IActionResult Register()
         {
             return View(new RegisterUserViewModel());
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterUserViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // var user = new User { UserName = model.UserName, Email = model.Email, EmailConfirmed = true };              
-                var user = new User { UserName = model.UserName, Email = model.Email };
+                return View(model);
+            }
 
-                var createResult = await _userManager.CreateAsync(user, model.Password);
+            var user = new User { UserName = model.UserName, Email = model.Email };
+            var createResult = await _userManager.CreateAsync(user, model.Password);
 
-                if (createResult.Succeeded)
+            if (createResult.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, false);
+                await _userManager.AddToRoleAsync(user, "User");
+                RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                foreach (var identityError in createResult.Errors)
                 {
-                    await _signInManager.SignInAsync(user, false);
-                    RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    foreach (var identityError in createResult.Errors)
-                    {
-                        ModelState.AddModelError("", identityError.Description);
-                    }
+                    ModelState.AddModelError("", identityError.Description);
                 }
             }
-            return View(model);
+
+            return View(new RegisterUserViewModel());
         }
+
+        //[HttpPost, ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Register(RegisterUserViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // var user = new User { UserName = model.UserName, Email = model.Email, EmailConfirmed = true };              
+        //        var user = new User { UserName = model.UserName, Email = model.Email };
+
+        //        var createResult = await _userManager.CreateAsync(user, model.Password);
+
+        //        if (createResult.Succeeded)
+        //        {
+        //            await _signInManager.SignInAsync(user, false);
+        //            RedirectToAction("Index", "Home");
+        //        }
+        //        else
+        //        {
+        //            foreach (var identityError in createResult.Errors)
+        //            {
+        //                ModelState.AddModelError("", identityError.Description);
+        //            }
+        //        }
+        //    }
+        //    return View(model);
+        //}
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            var user_name = User.Identity!.IsAuthenticated ? User.Identity.Name : "anonymous";
+
+            return View();
         }
     }
 }

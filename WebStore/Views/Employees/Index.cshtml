@@ -1,8 +1,15 @@
 ﻿@model IEnumerable<EmployeeView>
+@{
+    ViewData["Title"] = "Список сотрудников";
+}
 <div class="container">
+
     <h3>Сотрудники</h3>
     <hr />
-    <a asp-controller="Employees" asp-action="Edit" class="btn btn-success">Добавить</a>
+    @if (User.IsInRole("Administrator"))
+    {
+        <a asp-action="Edit" asp-controller="Employees" class="btn btn-success">Добавить</a>
+    }
     <hr />
     <table class="table table-bordered">
         <thead>
@@ -26,10 +33,15 @@
                 <td>@item.Patronymic</td>
                 <td>@item.Age</td>
                 <td><a asp-controller="Employees" asp-action="Details" asp-route-id="@item.Id">Детали</a></td>
-                <td><a asp-action="Delete" asp-route-id="@item.Id"><i class="fa fa-cut"></i></a></td>
+                <td>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id"><i class="fa fa-cut"></i></a>
+                    }
+                </td>
             </tr>
             }
         </tbody>
     </table>
     <a asp-controller="Home" asp-action="Index" class="btn btn-default">Домой</a>
-</div>    
+</div>

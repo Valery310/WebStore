@@ -8,10 +8,12 @@ using WebStore.Data;
 using WebStore.Infrastructure.Middleware;
 using WebStore.Infrastructure;
 using WebStore.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebStore.Controllers
 {
     [Route("users")]
+    [Authorize]
     public class EmployeesController : Controller
     {
         private readonly IEmployeesData _employees;
@@ -38,6 +40,7 @@ namespace WebStore.Controllers
         }
 
         [Route("edit/{id?}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int? id)
         {
             EmployeeView model;
@@ -58,6 +61,7 @@ namespace WebStore.Controllers
 
         [HttpPost]
         [Route("edit/{id?}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(EmployeeView model)
         {
             if (model.Age< 18 && model.Age > 75)
@@ -93,6 +97,7 @@ namespace WebStore.Controllers
         }
 
         [Route("delete/{id}")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Delete(int id)
         {
             _employees.Delete(id);
