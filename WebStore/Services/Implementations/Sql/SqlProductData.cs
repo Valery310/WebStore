@@ -41,7 +41,7 @@ namespace WebStore.Services.Implementations.Sql
                 query = query.Where(c => c.SectionId.Equals(filter.SectionId.Value));
             }
 
-            if (filter.Ids.Length > 0)
+            if (filter.Ids != null && filter.Ids.Length > 0)
             {
                 List<Product> product = new List<Product>();
                  foreach (var i in filter.Ids)

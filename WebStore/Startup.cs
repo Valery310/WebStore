@@ -13,6 +13,7 @@ using WebStore.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using WebStore.Services.Implementations;
+using System;
 
 namespace WebStore
 {
@@ -36,6 +37,8 @@ namespace WebStore
             //  services.AddSingleton<IProductData, InMemoryProductData>();
             //  services.AddSingleton<IProductData, SqlProductData>();
             services.AddScoped<IProductData, SqlProductData>();
+            services.AddScoped<IOrdersService, SqlOrdersService>();
+
             // services.AddMvc().AddMvcOptions(mvcOptions => mvcOptions.EnableEndpointRouting = false);
             services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -71,7 +74,7 @@ namespace WebStore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
             if (env.IsDevelopment())
             {
@@ -96,6 +99,10 @@ namespace WebStore
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
