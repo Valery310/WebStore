@@ -82,6 +82,15 @@
                                         <i class="fa fa-shopping-cart"></i> Cart
                                     </a>
                                 </li>
+                                @if (User.IsInRole("Administrator"))
+                                {
+                                    <li>
+                                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">
+                                            <i class="fa fa-android"></i> Админская панель
+                                        </a>
+                                    </li>
+                                }
+
                             </ul>
                         </div>
                     </div>

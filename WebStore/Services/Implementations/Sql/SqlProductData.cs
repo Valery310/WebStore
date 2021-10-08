@@ -29,7 +29,7 @@ namespace WebStore.Services.Implementations.Sql
 
         public IEnumerable<Product> GetProducts(ProductFilter filter) 
         {
-            var query = _context.Products.Include("Section").AsQueryable();
+            var query = _context.Products.Include("Section").AsQueryable().Include("Brand").AsQueryable();
 
             if (filter.BrandId.HasValue)
             {

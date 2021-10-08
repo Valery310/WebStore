@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebStore.DAL.Context;
 using WebStore.Domain;
-using WebStore.DomainNew;
 using WebStore.Services.Interfaces;
 using WebStore.ViewModel;
 
@@ -15,8 +14,7 @@ namespace WebStore.Services.Implementations.Sql
     {
         private readonly WebStoreContext _context;
         private readonly UserManager<User> _userManager;
-        public SqlOrdersService(WebStoreContext context, UserManager<User>
-        userManager)
+        public SqlOrdersService(WebStoreContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;

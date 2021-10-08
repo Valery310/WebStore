@@ -1,7 +1,7 @@
 ﻿using WebStore.Domain;
 using WebStore.Domain.Entities.Base;
 
-namespace WebStore.DomainNew
+namespace WebStore.Domain
 {
     public class OrderItem : BaseEntity
     {

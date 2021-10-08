@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title</title>
 
-    <partial name="Partial/_Styles"></partial>
+    <partial name="Partial/_Styles"/>
     @await RenderSectionAsync("Styles", false)
 
 </head>
 <body>
     <div id="wrapper">
-        <partial name="Partial/_Header"></partial>
+        <partial name="Partial/_Header"/>
 
-        <partial name="Partial/_MainMenu"></partial>
+        <partial name="Partial/_MainMenu"/>
 
         @RenderBody()
     </div>
-    <partial name="Partial/_Footer"></partial>
+    <partial name="Partial/_Footer"/>
 
 
-    <partial name="Partial/_Scripts"></partial>
+    <partial name="Partial/_Scripts"/>
     @await RenderSectionAsync("Scripts", false)
 
 </body>

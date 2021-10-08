@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebStore.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using WebStore.DomainNew;
 
 namespace WebStore.DAL.Context
 {

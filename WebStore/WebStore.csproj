@@ -18,14 +18,13 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Views\Home\Partial\" />
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WebStore.DAL\WebStore.DAL.csproj" />
-    <ProjectReference Include="..\WebStore.DomainNew\WebStore.DomainNew.csproj" />
+    <ProjectReference Include="..\WebStore.DomainNew\WebStore.Domain.csproj" />
   </ItemGroup>
 
 </Project>

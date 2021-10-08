@@ -16,13 +16,15 @@ namespace WebStore.Services.Interfaces
         /// </summary>
         /// <returns></returns>
         IEnumerable<Brand> GetBrands();
+
+       // IEnumerable<Product> GetProducts();
+
         /// <summary>
         /// Список товаров
         /// </summary>
         /// <param name="filter">Фильтр товаров</param>
         /// <returns></returns>
         IEnumerable<Product> GetProducts(ProductFilter filter);
-
         /// <summary>
         /// Продукт
         /// </summary>

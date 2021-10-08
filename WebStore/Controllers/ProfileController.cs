@@ -2,8 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebStore.Infrastructure;
-using WebStore.Models;
 using WebStore.Services.Interfaces;
 using WebStore.ViewModel;
 

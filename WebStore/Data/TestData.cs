@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebStore.Models;
+﻿using System.Collections.Generic;
+using WebStore.ViewModel;
 
 namespace WebStore.Data
 {
     public static class TestData
     {
-        public static List<EmployeeView> Employees { get; } = new(3)
+        public static List<EmployeeViewModel> Employees { get; } = new(3)
             {
-                new EmployeeView
+                new EmployeeViewModel
                 {
                     Id = 1,
                     FirstName = "Вася",
@@ -19,7 +16,7 @@ namespace WebStore.Data
                     Age = 22,
                     Position = "Директор"
                 },
-                new EmployeeView()
+                new EmployeeViewModel
     {
         Id = 2,
                     FirstName = "Иван",
@@ -28,7 +25,7 @@ namespace WebStore.Data
                     Age = 30,
                     Position = "Программист"
                 },
-                new EmployeeView()
+                new EmployeeViewModel
     {
         Id = 3,
                     FirstName = "Роберт",

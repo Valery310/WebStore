@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WebStore.DomainNew;
+using WebStore.Domain;
 using WebStore.ViewModel;
 
 namespace WebStore.Services.Interfaces

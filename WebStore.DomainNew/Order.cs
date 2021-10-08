@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using WebStore.Domain;
 using WebStore.Domain.Entities.Base;
 
-namespace WebStore.DomainNew
+namespace WebStore.Domain
 {
     public class Order : NamedEntity
     {
