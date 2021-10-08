@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebStore.Services.Interfaces;
 
-namespace WebStore.Area.Admin.Controllers
+namespace WebStore.Areas.Admin.Controllers
 {
     [Area("Admin"), Authorize(Roles = "Administrator")]
     public class HomeController : Controller
