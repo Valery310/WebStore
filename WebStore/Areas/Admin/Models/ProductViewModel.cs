@@ -11,5 +11,6 @@ namespace WebStore.Areas.Admin.Models
         public string ImageUrl { get; set; }
         public decimal Price { get; set; }
         public Brand Brand { get; set; }
+        public Section Section { get; set; }
     }
 }

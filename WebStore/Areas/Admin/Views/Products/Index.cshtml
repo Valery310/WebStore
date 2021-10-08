@@ -25,7 +25,7 @@
 
                     <tr>
                         <td>
-                            <a href="#">
+                            <a asp-action="Edit" asp-route-id="@product.Id">
                                 <i class="glyphicon glyphicon-edit"></i>ред.
                             </a>
                         </td>
@@ -36,7 +36,7 @@
                         <td><img src="~/images/shop/@product.ImageUrl" width="50" alt="@product.Name" /></td>
                         <td>@Html.DisplayFor(_ => product.Price)</td>
                         <td>
-                            <a href="#" class="text-danger">
+                            <a asp-action="Delete" asp-route-id="@product.Id" class="text-danger">
                                 <i class="glyphicon glyphicon-remove"></i>уд.
                             </a>
                         </td>

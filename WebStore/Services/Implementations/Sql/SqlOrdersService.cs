@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebStore.DAL.Context;
@@ -29,11 +30,10 @@ namespace WebStore.Services.Implementations.Sql
             return _context.Orders.Include("OrderItems").FirstOrDefault(o =>
             o.Id.Equals(id));
         }
-        public Order CreateOrder(OrderViewModel orderModel, CartViewModel
-        transformCart, string userName)
+        public async Task<Order> CreateOrderAsync(OrderViewModel orderModel, CartViewModel transformCart, string userName)
         {
-            var user = _userManager.FindByNameAsync(userName).Result;
-            using (var transaction = _context.Database.BeginTransaction())
+            var user = await _userManager.FindByNameAsync(userName);
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 var order = new Order()
                 {
@@ -47,7 +47,7 @@ namespace WebStore.Services.Implementations.Sql
                 foreach (var item in transformCart.Items)
                 {
                     var productVm = item.Key;
-                    var product = _context.Products.FirstOrDefault(p =>
+                    var product = await _context.Products.FirstOrDefaultAsync(p =>
                     p.Id.Equals(productVm.Id));
                     if (product == null)
                         throw new InvalidOperationException("Продукт не найден в базе");
@@ -59,10 +59,10 @@ namespace WebStore.Services.Implementations.Sql
                             Product = product
                         };
              
-                _context.OrderItems.Add(orderItem);
+                await _context.OrderItems.AddAsync(orderItem);
             }
-            _context.SaveChanges();
-            transaction.Commit();
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
             return order;
         }
     }

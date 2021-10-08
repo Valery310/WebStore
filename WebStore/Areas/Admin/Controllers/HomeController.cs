@@ -18,10 +18,10 @@ namespace WebStore.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult ProductList() 
-        {
-            var products = _productData.GetProducts(new Services.Filters.ProductFilter());
-            return View(products);
-        }
+        //public IActionResult ProductList() 
+        //{
+        //    var products = _productData.GetProducts(new Services.Filters.ProductFilter());
+        //    return View(products);
+        //}
     }
 }

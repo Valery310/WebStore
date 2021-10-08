@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebStore.Domain;
 using WebStore.Services.Filters;
 
@@ -16,9 +17,6 @@ namespace WebStore.Services.Interfaces
         /// </summary>
         /// <returns></returns>
         IEnumerable<Brand> GetBrands();
-
-       // IEnumerable<Product> GetProducts();
-
         /// <summary>
         /// Список товаров
         /// </summary>
@@ -31,5 +29,17 @@ namespace WebStore.Services.Interfaces
         /// <param name="id">Идентификатор</param>
         /// <returns>Сущность Product, если нашел, иначе null</returns>
         Product GetProductById(int id);
+        /// <summary>
+        /// Редактирование
+        /// </summary>
+        /// <param name="product">Сущность Product</param>
+        /// <returns></returns>
+        Task UpdateAsync(Product product);
+        /// <summary>
+        /// Удаление
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns></returns>
+        Task DeleteAsync(int id);
     }
 }
