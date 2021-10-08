@@ -89,16 +89,16 @@ namespace WebStore.Services.Implementations.Sql
 
         public async Task DeleteAsync(int id)
         {
-            using (_context.Database.BeginTransaction()) 
+            using (await _context.Database.BeginTransactionAsync()) 
             {
-                var productToDelete = _context.Products.FirstOrDefault(p => p.Id == id);
+                var productToDelete = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
                 if (productToDelete != null)
                 {
-                    _context.Products.Remove(productToDelete);
+                   _context.Products.Remove(productToDelete);
                   // _context.Products.Remove(await _context.Products.FindAsync(id));
-                    _context.SaveChanges();
-                    _context.Database.CommitTransaction();
+                   await _context.SaveChangesAsync();
+                   await _context.Database.CommitTransactionAsync();
                 }
                 else
                 {

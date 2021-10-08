@@ -55,7 +55,7 @@ namespace WebStore.Controllers
         {
             if (ModelState.IsValid)
             {
-                var orderResult = _ordersService.CreateOrder(model,
+                var orderResult = _ordersService.CreateOrderAsync(model,
                 _cartService.TransformCart(), User.Identity.Name);
                 _cartService.RemoveAll();
                 return RedirectToAction("OrderConfirmed", new

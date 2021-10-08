@@ -33,6 +33,7 @@ namespace WebStore.Domain
         /// <summary>
         /// Цена
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
     }
 }
