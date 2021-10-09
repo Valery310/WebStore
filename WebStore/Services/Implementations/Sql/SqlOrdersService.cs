@@ -56,10 +56,12 @@ namespace WebStore.Services.Implementations.Sql
                     Address = orderModel.Address,
                     Phone = orderModel.Phone,
                     User = user,
-                    Description = orderModel.Description
+                    Description = orderModel.Description,
+                    Name = orderModel.Name 
                 };
 
-                var products_ids = transformCart.Items.Select(Items => Items.Key.Product.Id).ToArray();
+              //  var products_ids = transformCart.Items.Select(Items => Items.Key.Product.Id).ToArray();
+                var products_ids = transformCart.Items.Select(Items => Items.Key.Id).ToArray();
 
                 var cart_products = await _context.Products.Where(p => products_ids.Contains(p.Id)).ToArrayAsync();
 
@@ -72,7 +74,8 @@ namespace WebStore.Services.Implementations.Sql
                         Order = order,
                         Product = cart_product,
                         Price = cart_product.Price, //тут можно добавить скидку
-                        Quantity = cart_item.Key.Quantity
+                                                    //  Quantity = cart_item.Key.Quantity
+                        Quantity = cart_item.Value
                     }
                     ).ToArray();
 

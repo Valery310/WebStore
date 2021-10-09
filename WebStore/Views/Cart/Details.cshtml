@@ -31,13 +31,13 @@
                     <tr>
                         <td class="cart_product">
                             <a href="">
-                                <img src="~/images/shop/@item.Key.Product.ImageUrl" alt="">
+                                <img src="~/images/shop/@item.Key.ImageUrl" alt="">
                             </a>
                         </td>
                         <td class="cart_description">
                             <h4>
                                 <a asp-action="ProductDetails"
-                                   asp-controller="Catalog" asp-route-id="@item.Key.Id">@item.Key.Product.Name</a>
+                                   asp-controller="Catalog" asp-route-id="@item.Key.Id">@item.Key.Name</a>
                             </h4>
                             <p>Артикул: 1089772</p>
                         </td>
@@ -74,11 +74,15 @@ item.Key.Price).ToString("C"))
         </table>
     </div>
 </section> <!--/#cart_items-->
+
+
 <section id="do_action">
-    <div class="heading">
-        <h3>Оформите заказ</h3>
-    </div>
-    <div class="row login-form">
-        @await Html.PartialAsync("_OrderPartial", Model.Order, new ViewDataDictionary(ViewData) { { "sumCart", sumCart } })
-    </div>
+    <div class="container">
+        <div class="heading">
+            <h3>Оформите заказ</h3>
+        </div>
+        <div class="row login-form">
+            <partial name="Partial/_OrderPartial" model="Model.Order" view-data="@(new ViewDataDictionary(ViewData) { { "sumCart", sumCart } })"/>
+        </div>
+    </div> 
 </section><!--/#do_action-->

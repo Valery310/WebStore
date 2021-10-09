@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.Services.Interfaces;
@@ -19,9 +20,9 @@ namespace WebStore.Controllers
         {
             return View();
         }
-        public IActionResult Orders()
+        public async Task<IActionResult> Orders()
         {
-            var orders = _ordersService.GetUserOrders(User.Identity.Name);
+            var orders = await _ordersService.GetUserOrdersAsync(User.Identity.Name);
             var orderModels = new List<UserOrderViewModel>(orders.Count());
             foreach (var order in orders)
             {

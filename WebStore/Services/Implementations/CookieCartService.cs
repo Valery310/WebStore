@@ -121,6 +121,7 @@ namespace WebStore.Services.Implementations
                 Price = p.Price,
                // Brand = p.Brand != null ? p.Brand.Name : string.Empty
             }).ToList();
+
             var r = new CartViewModel
             {
                 Items = Cart.Items.ToDictionary(x => products.First(y => y.Id ==
