@@ -12,5 +12,7 @@ namespace WebStore.ViewModel
         public string Phone { get; set; }
         public string Address { get; set; }
         public decimal TotalSum { get; set; }
+        public string Description { get; set; }
+        public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
     }
 }

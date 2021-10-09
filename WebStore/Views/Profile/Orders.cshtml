@@ -24,15 +24,23 @@
         <th>
             Сумма заказа
         </th>
+        <th>
+            Время заказа
+        </th>
+        <th>
+            Комментарий
+        </th>
     </tr>
     @foreach (var item in Model)
     {
-        <tr>
-            <td>@item.Id</td>
-            <td>@item.Name</td>
-            <td>@item.Address</td>
-            <td>@item.Phone</td>
-            <td>@item.TotalSum.ToString("C")</td>
-        </tr>
+<tr>
+    <td>@item.Id</td>
+    <td>@item.Name</td>
+    <td>@item.Address</td>
+    <td>@item.Phone</td>
+    <td>@item.TotalSum.ToString("C")</td>
+    <td>@item.Date.UtcDateTime</td>
+    <td>@item.Description</td>
+</tr>
     }
 </table>

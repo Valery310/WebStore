@@ -21,7 +21,7 @@ namespace WebStore.Controllers
             return View();
         }
         public async Task<IActionResult> Orders()
-        {
+        { 
             var orders = await _ordersService.GetUserOrdersAsync(User.Identity.Name);
             var orderModels = new List<UserOrderViewModel>(orders.Count());
             foreach (var order in orders)
@@ -32,7 +32,9 @@ namespace WebStore.Controllers
                     Name = order.Name,
                     Address = order.Address,
                     Phone = order.Phone,
-                    TotalSum = order.OrderItems.Sum(o => o.Price * o.Quantity)
+                    TotalSum = order.OrderItems.Sum(o => o.Price * o.Quantity),
+                    Description = order.Description,
+                    Date = order.Date
                 });
             }
             return View(orderModels);
