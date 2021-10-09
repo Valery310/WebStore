@@ -7,6 +7,7 @@ using WebStore.ViewModel;
 
 namespace WebStore.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ICartService _cartService;

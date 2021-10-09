@@ -37,7 +37,23 @@ namespace WebStore
             services.AddScoped<IProductData, SqlProductData>();
             services.AddScoped<IOrdersService, SqlOrdersService>();
 
-            services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            var database_type = Configuration["Database"];
+
+            switch (database_type)
+            {
+                case "SqlServer":
+                    services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString(database_type)));
+                    break;
+                case "Sqlite":
+                    services.AddDbContext<WebStoreContext>(options => options.UseSqlite(Configuration.GetConnectionString(database_type), o => o.MigrationsAssembly("WebStore.DAL.Sqlite")));// Использование SQLite
+                    break;
+                case "InMemory":
+                    services.AddDbContext<WebStoreContext>(options => options.UseInMemoryDatabase("WebStore.db"));// Использование SQLite
+                    break;
+                default:
+                    throw new InvalidOperationException($"Тип БД {database_type} не поддерживается");
+            }
+
 
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<WebStoreContext>().AddDefaultTokenProviders();
 
