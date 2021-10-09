@@ -32,14 +32,11 @@ namespace WebStore
         {
             
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-                 
+            
             services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
-            //  services.AddSingleton<IProductData, InMemoryProductData>();
-            //  services.AddSingleton<IProductData, SqlProductData>();
             services.AddScoped<IProductData, SqlProductData>();
             services.AddScoped<IOrdersService, SqlOrdersService>();
 
-            // services.AddMvc().AddMvcOptions(mvcOptions => mvcOptions.EnableEndpointRouting = false);
             services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<WebStoreContext>().AddDefaultTokenProviders();

@@ -4,8 +4,8 @@ namespace WebStore.ViewModel
 {
     public class DetailsViewModel
     {
-        public CartViewModel CartViewModel { get; set; }
-        public OrderViewModel OrderViewModel { get; set; }
+        public CartViewModel Cart { get; set; }
+        public OrderViewModel Order { get; set; } = new();
     }
 
 }

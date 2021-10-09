@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 using WebStore.Services.Interfaces;
 using WebStore.ViewModel;
 
@@ -20,8 +23,8 @@ namespace WebStore.Controllers
         {
             var model = new DetailsViewModel()
             {
-                CartViewModel = _cartService.TransformCart(),
-                OrderViewModel = new OrderViewModel()
+                Cart = _cartService.TransformCart(),
+                Order = new OrderViewModel()
             };
             return View(model);
         }
@@ -50,25 +53,27 @@ namespace WebStore.Controllers
             return Redirect(returnUrl);
         }
 
+        [Authorize]
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult CheckOut(OrderViewModel model)
+        public async Task<IActionResult> CheckOut(OrderViewModel model, [FromServices] IOrdersService ordersService)
         {
             if (ModelState.IsValid)
             {
-                var orderResult = _ordersService.CreateOrderAsync(model,
+                var orderResult = await _ordersService.CreateOrderAsync(model,
                 _cartService.TransformCart(), User.Identity.Name);
                 _cartService.RemoveAll();
                 return RedirectToAction("OrderConfirmed", new
                 {
-                    id =
-                orderResult.Id
+                    id = orderResult.Id
                 });
             }
+
             var detailsModel = new DetailsViewModel()
             {
-                CartViewModel = _cartService.TransformCart(),
-                OrderViewModel = model
+                Cart = _cartService.TransformCart(),
+                Order = model
             };
+
             return View("Details", detailsModel);
         }
 
