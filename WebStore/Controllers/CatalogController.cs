@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebStore.Models;
-using Microsoft.AspNetCore.Mvc;
-using WebStore.Models.Product;
-using WebStore.Services;
+using WebStore.Services.Filters;
 using WebStore.Services.Interfaces;
+using WebStore.ViewModel;
 
 namespace WebStore.Controllers
 {
@@ -22,11 +20,8 @@ namespace WebStore.Controllers
 
         public IActionResult Shop(int? sectionId, int? brandId)
         {
-            var products = _productData.GetProducts(new ProductFilter
-            {
-                BrandId = brandId,
-                SectionId = sectionId
-            });
+            var products = _productData.GetProducts(new ProductFilter { BrandId = brandId, SectionId = sectionId });
+
             var model = new CatalogViewModel()
             {
                 BrandId = brandId,
@@ -40,6 +35,7 @@ namespace WebStore.Controllers
                     Price = p.Price
                 }).OrderBy(p => p.Order).ToList()
             };
+
             return View(model);
         }
 

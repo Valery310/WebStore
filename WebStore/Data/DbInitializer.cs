@@ -1,22 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using WebStore.DAL.Context;
 using WebStore.Domain;
-using WebStore.Services.Filters;
 
-
-namespace WebStore.Services.Interfaces
+namespace WebStore.Data
 {
-    public class InMemoryProductData : IProductData
+    public static class DbInitializer
     {
-        private readonly List<Section> _sections;
-        private readonly List<Brand> _brands;
-        private readonly List<Product> _products;
 
-        public InMemoryProductData()
+        public static void Initialize(WebStoreContext context)
         {
-            _sections = new List<Section>()
+            context.Database.EnsureCreated();
+            if (context.Products.Any())
+            {
+                return;
+            }
+        
+            var sections = new List<Section>()
             {
                 new Section()
                 {
@@ -230,7 +232,7 @@ namespace WebStore.Services.Interfaces
                     ParentId = null
                 }
             };
-            _brands = new List<Brand>()
+            var brands = new List<Brand>()
             {
                 new Brand()
                 {
@@ -276,7 +278,7 @@ namespace WebStore.Services.Interfaces
                     Order = 6
                 },
             };
-            _products = new List<Product>()
+            var products = new List<Product>()
             {
                 new Product()
                 {
@@ -399,28 +401,43 @@ namespace WebStore.Services.Interfaces
                     BrandId = 3
                 },
             };
-        }
 
-        public IEnumerable<Section> GetSections()
-        {
-            return _sections;
-        }
+            using (var trans = context.Database.BeginTransaction())
+            {
+                context.AddRange(sections);
 
-        public IEnumerable<Brand> GetBrands()
-        {
-            return _brands;
-        }
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Section] ON");
+                context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Section] OFF");
+                context.Database.CommitTransaction();
+               // trans.Commit();
+            }
 
-        public IEnumerable<Product> GetProducts(ProductFilter filter)
-        {
-            var products = _products;
-            if (filter.SectionId.HasValue)
-                products = products.Where(p =>
-                p.SectionId.Equals(filter.SectionId)).ToList();
-            if (filter.BrandId.HasValue)
-                products = products.Where(p => p.BrandId.HasValue &&
-                p.BrandId.Value.Equals(filter.BrandId.Value)).ToList();
-            return products;
+            using (var trans = context.Database.BeginTransaction())
+            {
+                foreach (var brand in brands)
+                {
+                    context.Brands.Add(brand);
+                }
+
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] ON");
+                context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] OFF");
+                trans.Commit();
+            }
+
+            using (var trans = context.Database.BeginTransaction())
+            {
+                foreach (var product in products)
+                {
+                    context.Products.Add(product);
+                }
+
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] ON");
+                context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
+                trans.Commit();
+            }
         }
     }
 }
