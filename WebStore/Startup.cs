@@ -1,19 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebStore.Infrastructure.Middleware;
 using WebStore.Services.Interfaces;
 using WebStore.Services;
 using WebStore.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using WebStore.Services.Implementations.Sql;
+using WebStore.Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebStore
 {
@@ -39,6 +36,33 @@ namespace WebStore
             services.AddScoped<IProductData, SqlProductData>();
             // services.AddMvc().AddMvcOptions(mvcOptions => mvcOptions.EnableEndpointRouting = false);
             services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<WebStoreContext>().AddDefaultTokenProviders();
+
+            //services.AddIdentityCore<User>().AddEntityFrameworkStores<WebStoreContext>().AddDefaultTokenProviders();
+            services.Configure<IdentityOptions>(options => 
+            {
+                //password
+                options.Password.RequiredLength = 6;
+                //lockout
+                options.Lockout.DefaultLockoutTimeSpan = System.TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.AllowedForNewUsers = true;
+                //user
+                options.User.RequireUniqueEmail = true;
+            });
+
+            services.ConfigureApplicationCookie(options => 
+            {
+                //Cookie
+                options.Cookie.HttpOnly = true;
+              // options.Cookie.Expiration = System.TimeSpan.FromDays(150);
+                options.ExpireTimeSpan = System.TimeSpan.FromDays(150);
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.SlidingExpiration = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,8 +81,11 @@ namespace WebStore
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseMiddleware<TestMiddleware>();
             app.UseWelcomePage("/welcome");
+            app.UseAuthentication();
+
+         //   app.UseMiddleware<TestMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
