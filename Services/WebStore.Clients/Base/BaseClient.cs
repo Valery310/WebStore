@@ -13,7 +13,7 @@ namespace WebStore.Clients.Base
         /// <summary>
         /// Http клиент для связи
         /// </summary>
-        protected HttpClient Client;
+        protected HttpClient _Client;
         /// <summary>
         /// Адрес сервиса
         /// </summary>
@@ -22,15 +22,18 @@ namespace WebStore.Clients.Base
         /// Конструктор
         /// </summary>
         /// <param name="configuration">Конфигурация проекта</param>
-        protected BaseClient(IConfiguration configuration)
+        protected BaseClient(HttpClient Client, string Address)
         {
+            _Client = Client;
+            ServiceAddress = _Client.BaseAddress + Address;
             // Создаем экземпляр клиента
-            Client = new HttpClient
+            _Client = new HttpClient
             {
                 // Базовый адрес, на котором будут хостится сервисы
-                BaseAddress = new Uri(configuration["ClientAdress"])
+                //  BaseAddress = new Uri(configuration["ClientAdress"])
+                BaseAddress = new Uri(ServiceAddress)
             };
-            Client.DefaultRequestHeaders.Accept.Clear();
+            _Client.DefaultRequestHeaders.Accept.Clear();
 
             // Устанавливаем хедер, который будет говорит серверу, чтобы он отправлял данные в формате json
         Client.DefaultRequestHeaders.Accept.Add(new

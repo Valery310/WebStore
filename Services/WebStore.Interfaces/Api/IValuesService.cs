@@ -14,6 +14,21 @@ namespace WebStore.Interfaces.Api
         /// Get all values
         /// </summary>
         /// <returns>array of strings</returns>
+        string GetCount();
+        /// <summary>
+        /// Get all values async
+        /// </summary>
+        /// <returns></returns>
+        Task<string> GetCountAsync();
+        /// <summary>
+        /// Get value by id
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        /// <summary>
+        /// Get all values
+        /// </summary>
+        /// <returns>array of strings</returns>
         IEnumerable<string> Get();
         /// <summary>
         /// Get all values async

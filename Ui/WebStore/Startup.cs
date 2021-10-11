@@ -39,7 +39,10 @@ namespace WebStore
             services.AddScoped<IOrdersService, SqlOrdersService>();
 
             // Добавляем реализацию клиента
-            services.AddTransient<IValuesService, ValuesClient>();
+           // services.AddTransient<IValuesService, ValuesClient>();
+
+            services.AddHttpClient("WebStoreAPI", client => client.BaseAddress = new Uri(Configuration["WebAPI"])).AddTypedClient<IValuesService, ValuesClient>();
+
 
             var database_type = Configuration["Database"];
 
