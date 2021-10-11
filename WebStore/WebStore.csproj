@@ -11,7 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Home\Partial\" />
     <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Webstore.Domain\Webstore.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -29,6 +29,7 @@ namespace WebStore
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
+            services.AddSingleton<IProductData, InMemoryProductData>();
             // services.AddMvc().AddMvcOptions(mvcOptions => mvcOptions.EnableEndpointRouting = false);
 
           //   services.AddMvc().AddMvcOptions(opt => opt.Conventions. );
