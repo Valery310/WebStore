@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using WebStore.Domain;
 using WebStore.Services.Filters;
 
+
 namespace WebStore.Services.Interfaces
 {
     public class InMemoryProductData : IProductData

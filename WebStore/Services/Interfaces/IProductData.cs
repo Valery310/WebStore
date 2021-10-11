@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using WebStore.Domain;
 using WebStore.Services.Filters;
 
 namespace WebStore.Services.Interfaces
 {
+    /// <summary>
+    /// Интерфейс для работы с товарами
+    /// </summary>
     public interface IProductData
     {
         /// <summary>
@@ -23,4 +26,5 @@ namespace WebStore.Services.Interfaces
         /// <returns></returns>
         IEnumerable<Product> GetProducts(ProductFilter filter);
     }
+
 }
