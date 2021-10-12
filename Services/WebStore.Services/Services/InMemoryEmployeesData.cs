@@ -10,7 +10,7 @@ namespace WebStore.Services.Services
 {
     public class InMemoryEmployeesData : IEmployeesData
     {
-        private static int _CurrentMaxId = TestData.Employees.Count;
+      //  private static int _CurrentMaxId = TestData.Employees.Count;
         private readonly ILogger<InMemoryEmployeesData> logger;
         private readonly List<EmployeeViewModel> _employees;
 
@@ -29,10 +29,11 @@ namespace WebStore.Services.Services
 
             if (TestData.Employees.Contains(employee))
             {
+               // throw new ArgumentException($"Такая запись сотрудника уже существует");
                 return employee.Id;
             }
-            
-            employee.Id = ++_CurrentMaxId;
+
+            employee.Id = _employees.Max(i => i.Id) + 1;
             TestData.Employees.Add(employee);
 
             return employee.Id;
@@ -49,7 +50,7 @@ namespace WebStore.Services.Services
             return false;
         }
 
-        IEnumerable<EmployeeViewModel> IEmployeesData.GetAll()
+        public IEnumerable<EmployeeViewModel> GetAll()
         {
             return _employees;
         }
@@ -67,7 +68,7 @@ namespace WebStore.Services.Services
             return employee;
         }
 
-        public void Update(EmployeeViewModel employee)
+        public EmployeeViewModel Update(EmployeeViewModel employee)
         {
             if (employee is null)
             {
@@ -75,7 +76,23 @@ namespace WebStore.Services.Services
             }
 
             var temp = TestData.Employees.SingleOrDefault(t => t.Id == employee.Id);
-            temp = employee;
+            if (temp is null)
+            {
+                throw new InvalidOperationException("Сотрудник не существует");
+            }
+            // temp = employee;
+            TestData.Employees.ElementAt(employee.Id-1).Age = employee.Age;
+            TestData.Employees.ElementAt(employee.Id-1).FirstName = employee.FirstName;
+            TestData.Employees.ElementAt(employee.Id-1).SurName = employee.SurName;
+            TestData.Employees.ElementAt(employee.Id-1).Patronymic = employee.Patronymic;
+            TestData.Employees.ElementAt(employee.Id-1).Position = employee.Position;
+
+            return temp;
+        }
+
+        public void Commit() 
+        {
+        
         }
     }
 

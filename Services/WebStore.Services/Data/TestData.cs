@@ -5,7 +5,7 @@ namespace WebStore.Services.Data
 {
     public static class TestData
     {
-        public static List<EmployeeViewModel> Employees { get; } = new(3)
+        public static List<EmployeeViewModel> Employees { get; set; } = new(3)
             {
                 new EmployeeViewModel
                 {

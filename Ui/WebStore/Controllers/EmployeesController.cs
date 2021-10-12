@@ -52,6 +52,7 @@ namespace WebStore.Controllers
             return View(model);
         }
 
+        [HttpPut]
         [HttpPost]
         [Route("edit/{id?}")]
         [Authorize(Roles = "Administrator")]
@@ -65,18 +66,19 @@ namespace WebStore.Controllers
             {
                 if (model.Id > 0)
                 {
-                    var dbitem = _employees.GetById(model.Id);
+                 //   var dbitem = _employees.GetById(model.Id);
 
-                    if (ReferenceEquals(dbitem, null))
-                    {
-                        return NotFound();
-                    }
+                    //if (ReferenceEquals(dbitem, null))
+                    //{
+                    //    return NotFound();
+                    //}
 
-                    dbitem.FirstName = model.FirstName;
-                    dbitem.SurName = model.SurName;
-                    dbitem.Age = model.Age;
-                    dbitem.Patronymic = model.Patronymic;
-                    dbitem.Position = model.Position;
+                    _employees.Update(model);
+                    //dbitem.FirstName = model.FirstName;
+                    //dbitem.SurName = model.SurName;
+                    //dbitem.Age = model.Age;
+                    //dbitem.Patronymic = model.Patronymic;
+                    //dbitem.Position = model.Position;
                 }
                 else
                 {
