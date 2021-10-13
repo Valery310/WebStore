@@ -12,6 +12,8 @@ using WebStore.Interfaces.Services;
 using WebStore.Services.Services;
 using WebStore.Services.Implementations.Sql;
 using WebStore.Services.Implementations;
+using WebStore.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebStore.ServicesHosting
 {
@@ -48,10 +50,16 @@ namespace WebStore.ServicesHosting
             //}
 
             services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            // Настройка Identity
+            services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<WebStoreContext>()
+            .AddDefaultTokenProviders();
+
             //разрешение зависимостей
             services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
-        //    services.AddScoped<IProductData, SqlProductData>();
-        //    services.AddScoped<IOrdersService, SqlOrdersService>();
+            services.AddScoped<IProductData, SqlProductData>();
+            services.AddScoped<IOrdersService, SqlOrdersService>();
 
             //настройки корзины
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

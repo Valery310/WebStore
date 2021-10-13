@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using WebStore.Domain.Dto.Order;
+using WebStore.Domain.Entities;
 using WebStore.Domain.Entities.Base;
 
-namespace WebStore.Domain.Entities
+namespace WebStore.Domain.Dto.Order
 {
-    public class Order : NamedEntity
+    public class OrderDto : NamedEntity
     {
         [Required]
         public User User { get; set; }
@@ -21,7 +21,7 @@ namespace WebStore.Domain.Entities
         public string Description { get; set; }
         public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
 
-        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public ICollection<OrderItemDto> OrderItems { get; set; } = new List<OrderItemDto>();
         [NotMapped]
         public decimal TotalPrice => OrderItems?.Sum(i => i.TotalItemPrice) ?? 0m;
     }

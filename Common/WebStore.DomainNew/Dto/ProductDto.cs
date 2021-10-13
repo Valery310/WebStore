@@ -1,10 +1,9 @@
-﻿using WebStore.Domain.Dto;
-using WebStore.Domain.Entities;
+﻿using WebStore.Domain.Entities;
 using WebStore.Domain.Entities.Base.Interfaces;
 
-namespace WebStore.Areas.Admin.Models
+namespace WebStore.Domain.Dto
 {
-    public class ProductViewModel : INamedEntity, IOrderedEntity
+    public class ProductDto : INamedEntity, IOrderedEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

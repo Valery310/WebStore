@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using WebStore.DAL.Context;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
-using WebStore.Interfaces.Services;
+using Microsoft.EntityFrameworkCore;
+using WebStore.DAL.Context;
+using WebStore.Domain.Dto;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
+using WebStore.Interfaces.Services;
 
 namespace WebStore.Services.Implementations.Sql
 {
@@ -29,9 +30,9 @@ namespace WebStore.Services.Implementations.Sql
             return _context.Brands.ToList();
         }
 
-        public IEnumerable<Product> GetProducts(ProductFilter filter) 
+        public IEnumerable<ProductDto> GetProducts(ProductFilter filter) 
         {
-            var query = _context.Products.Include("Section").AsQueryable().Include("Brand").AsQueryable();
+            var query = _context.Products.Include("Section").Include("Brand").AsQueryable();
 
             if (filter.BrandId.HasValue)
             {
@@ -43,26 +44,67 @@ namespace WebStore.Services.Implementations.Sql
                 query = query.Where(c => c.SectionId.Equals(filter.SectionId.Value));
             }
 
-            if (filter.Ids != null && filter.Ids.Length > 0)
-            {
-                List<Product> product = new List<Product>();
-                 foreach (var i in filter.Ids)
-                {
-                     product.Add(query.FirstOrDefault(p => p.Id == i));
-                }
+            //if (filter.Ids != null && filter.Ids.Length > 0)
+            //{
+            //    List<Product> product = new List<Product>();
+            //     foreach (var i in filter.Ids)
+            //    {
+            //         product.Add(query.FirstOrDefault(p => p.Id == i));
+            //    }
 
-                query = product.AsQueryable<Product>();
+            //    query = product.AsQueryable<Product>();
+            //}
+
+            //return query.ToList();
+
+            return query.Select(p => new ProductDto()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Order = p.Order,
+                Price = p.Price,
+                ImageUrl = p.ImageUrl,
+                Brand = p.BrandId.HasValue ? new BrandDto()
+                {
+                    Id = p.Brand.Id,
+                    Name = p.Brand.Name
+                } : null
+            }).ToList();
+        }
+
+        public ProductDto GetProductById(int id) 
+        {
+            var product = _context.Products.Include("Brand").Include("Section").FirstOrDefault(p => p.Id.Equals(id));
+
+            if (product == null)
+            {
+                return null;
             }
 
-            return query.ToList();
+            var dto = new ProductDto()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                ImageUrl = product.ImageUrl,
+                Order = product.Order,
+                Price = product.Price
+            };
+
+            if (product.Brand != null)
+            {
+                dto.Brand = new BrandDto()
+                {
+                    Id = product.Brand.Id,
+                    Name = product.Brand.Name
+                };
+            }
+
+            return dto;
+
+          //  return _context.Products.Include("Brand").Include("Section").FirstOrDefault(p => p.Id.Equals(id));
         }
 
-        public Product GetProductById(int id) 
-        {
-            return _context.Products.Include("Brand").Include("Section").FirstOrDefault(p => p.Id.Equals(id));
-        }
-
-        public async Task UpdateAsync(Product product)
+        public async Task UpdateAsync(ProductDto product)
         {
             if (product is null)
             {

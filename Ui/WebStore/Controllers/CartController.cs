@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebStore.Domain.Dto.Order;
 using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Services;
 
@@ -57,24 +59,38 @@ namespace WebStore.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckOut(OrderViewModel model, [FromServices] IOrdersService ordersService)
         {
-            if (ModelState.IsValid)
-            {
-                var orderResult = await _ordersService.CreateOrderAsync(model,
-                _cartService.TransformCart(), User.Identity.Name);
-                _cartService.RemoveAll();
-                return RedirectToAction("OrderConfirmed", new
+            if (!ModelState.IsValid)
+                return View(nameof(Details), new DetailsViewModel
                 {
-                    id = orderResult.Id
+                    Cart = _cartService.TransformCart(),
+                    Order = model
                 });
-            }
 
-            var detailsModel = new DetailsViewModel()
-            {
-                Cart = _cartService.TransformCart(),
-                Order = model
-            };
+            var order = await ordersService.CreateOrderAsync(model, _cartService.TransformCart(), User.Identity!.Name );
 
-            return View("Details", detailsModel);
+            _cartService.RemoveAll();
+
+            return View("Details", order);
+
+            //if (ModelState.IsValid)
+            //{
+            //    var orderResult = await _ordersService.CreateOrderAsync(new Domain.Dto.Order.CreateOrderModel() { OrderViewModel = model }, User.Identity.Name);
+            // //  var orderResult = await _ordersService.CreateOrderAsync(model, _cartService.TransformCart(), User.Identity.Name);
+
+            //    _cartService.RemoveAll();
+            //    return RedirectToAction("OrderConfirmed", new
+            //    {
+            //        id = orderResult.Id
+            //    });
+            //}
+
+            //var detailsModel = new DetailsViewModel()
+            //{
+            //    Cart = _cartService.TransformCart(),
+            //    Order = model
+            //};
+
+            //return View("Details", detailsModel);
         }
 
         public IActionResult OrderConfirmed(int id)

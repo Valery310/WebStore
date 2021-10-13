@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebStore.Domain.Dto;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
 
@@ -22,19 +23,19 @@ namespace WebStore.Interfaces.Services
         /// </summary>
         /// <param name="filter">Фильтр товаров</param>
         /// <returns></returns>
-        IEnumerable<Product> GetProducts(ProductFilter filter);
+        IEnumerable<ProductDto> GetProducts(ProductFilter filter);
         /// <summary>
         /// Продукт
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Сущность Product, если нашел, иначе null</returns>
-        Product GetProductById(int id);
+        ProductDto GetProductById(int id);
         /// <summary>
         /// Редактирование
         /// </summary>
         /// <param name="product">Сущность Product</param>
         /// <returns></returns>
-        Task UpdateAsync(Product product);
+        Task UpdateAsync(ProductDto product);
         /// <summary>
         /// Удаление
         /// </summary>
