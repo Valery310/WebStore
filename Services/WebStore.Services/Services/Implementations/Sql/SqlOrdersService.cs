@@ -27,31 +27,34 @@ namespace WebStore.Services.Implementations.Sql
             _logger = logger;
         }
 
-        public async Task<IEnumerable<OrderDto>> GetUserOrdersAsync(string userName)
+        public async Task<IEnumerable<Order>> GetUserOrdersAsync(string userName)
         {
             return await _context.Orders
-                .Include("User")
-                .Include("OrderItems")
-                .Where(o => o.User.UserName.Equals(userName))
-                .Select(o => new OrderDto()
-                {
-                    Id = o.Id,
-                    Name = o.Name,
-                    Address = o.Address,
-                    Date = o.Date,
-                    Phone = o.Phone,
-                    OrderItems = o.OrderItems.Select(oi => new OrderItemDto()
-                    {
-                        Id = oi.Id,
-                        Price = oi.Price,
-                        Quantity = oi.Quantity
-                    }).ToArray()
-                })
-                .ToArrayAsync()
-                .ConfigureAwait(false);
+           .Include(order => order.User)
+           .Include(order => order.OrderItems)
+           .ThenInclude(item => item.Product)
+           .Where(order => order.User.UserName == userName)
+           .ToArrayAsync();
+            //return await _context.Orders
+            //    .Include("User")
+            //    .Include("OrderItems")
+            //    .Include("Products")
+            //    .Where(o => o.User.UserName.Equals(userName))
+            //    .Select(o => new Order()
+            //    {
+            //        Id = o.Id,
+            //        Name = o.Name,
+            //        Address = o.Address,
+            //        Date = o.Date,
+            //        Phone = o.Phone,
+            //        OrderItems = o.OrderItems,
+            //        Description = o.Description
+            //    })
+            //    .ToArrayAsync()
+            //    .ConfigureAwait(false);
         }
 
-        public async Task<OrderDto> GetOrderByIdAsync(int id)
+        public async Task<Order> GetOrderByIdAsync(int id)
         {
             var order = await _context.Orders.Include("OrderItems").FirstOrDefaultAsync(o => o.Id.Equals(id)).ConfigureAwait(false);
 
@@ -60,23 +63,18 @@ namespace WebStore.Services.Implementations.Sql
                 return null;
             }
 
-            return new OrderDto()
+            return new Order()
             {
                 Id = order.Id,
                 Name = order.Name,
                 Address = order.Address,
                 Date = order.Date,
                 Phone = order.Phone,
-                OrderItems = order.OrderItems.Select(oi => new OrderItemDto()
-                {
-                    Id = oi.Id,
-                    Price = oi.Price,
-                    Quantity = oi.Quantity
-                }).ToArray()
+                OrderItems = order.OrderItems
             };
         }
 
-        public async Task<OrderDto> CreateOrderAsync(OrderViewModel OrderModel, CartViewModel Cart, string UserName)
+        public async Task<Order> CreateOrderAsync(CreateOrderDto orderModel, string UserName)
         {
             var user = await _userManager.FindByNameAsync(UserName);
             if (user is null)
@@ -84,29 +82,30 @@ namespace WebStore.Services.Implementations.Sql
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            var order = new OrderDto
+            var order = new Order
             {
                 User = user,
-                Address = OrderModel.Address,
-                Phone = OrderModel.Phone,
-                Name = OrderModel.Name,
+                Address = orderModel.OrderModel.Address,
+                Phone = orderModel.OrderModel.Phone,
+                Name = orderModel.OrderModel.Name,
+                Description = orderModel.OrderModel.Description
             };
-            var product_ids = Cart.Items.Select(item => item.Key.Id).ToArray();
+            var product_ids = orderModel.Items.Select(item => item.Id).ToArray();
 
             var cart_products = await _context.Products
                .Where(p => product_ids.Contains(p.Id))
                .ToArrayAsync();
 
-            order.OrderItems = Cart.Items.Join(
+            order.OrderItems = orderModel.Items.Join(
                 cart_products,
-                cart_item => cart_item.Key.Id,
+                cart_item => cart_item.Id,
                 cart_product => cart_product.Id,
-                (cart_item, cart_product) => new OrderItemDto
+                (cart_item, cart_product) => new OrderItem
                 {
                     Order = order,
                     Product = cart_product,
                     Price = cart_product.Price, // здесь можно применить скидки...
-                    Quantity = cart_item.Value,
+                    Quantity = cart_item.Quantity,
                 }).ToArray();
 
             await _context.Orders.AddAsync(order);
@@ -116,11 +115,11 @@ namespace WebStore.Services.Implementations.Sql
 
             await transaction.CommitAsync();
 
-            return new OrderDto() { Id = order.Id, 
+            return new Order() { Id = order.Id, 
                 Address = order.Address, 
                 Date = order.Date, 
-                Description = order.Description, 
-                Name = order.Name, 
+                Description = order.Description,
+                Name = order.Name,
                 OrderItems = order.OrderItems,
                 Phone = order.Phone, 
                 User = order.User };

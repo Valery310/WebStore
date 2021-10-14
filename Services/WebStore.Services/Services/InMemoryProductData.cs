@@ -439,17 +439,42 @@ namespace WebStore.Services.Services
             throw new NotImplementedException();
         }
 
-        IEnumerable<ProductDto> IProductData.GetProducts(ProductFilter filter)
+        Task<IEnumerable<Section>> IProductData.GetSections()
         {
             throw new NotImplementedException();
         }
 
-        ProductDto IProductData.GetProductById(int id)
+        Task<IEnumerable<Brand>> IProductData.GetBrands()
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(ProductDto product)
+        Task<IEnumerable<Product>> IProductData.GetProducts(ProductFilter filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Product> IProductData.GetProductById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<int> IProductData.UpdateAsync(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IProductData.DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Section> GetSectionsById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Brand> GetBrandsById(int id)
         {
             throw new NotImplementedException();
         }

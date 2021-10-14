@@ -48,7 +48,7 @@ namespace WebStore
             //  services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
          //   services.AddSingleton<IEmployeesData, EmployeesClient>();
         //    services.AddScoped<IProductData, SqlProductData>();
-            services.AddScoped<IOrdersService, SqlOrdersService>();
+           // services.AddScoped<IOrdersService, SqlOrdersService>();
 
 
 

@@ -32,24 +32,24 @@ namespace WebStore.ServicesHosting
            // services.AddControllersWithViews();
 
             services.AddControllers();
-            //var database_type = Configuration["Database"];
+            var database_type = Configuration["Database"];
 
-            //switch (database_type)
-            //{
-            //    case "SqlServer":
-            //        services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString(database_type)));
-            //        break;
-            //    case "Sqlite":
-            //        services.AddDbContext<WebStoreContext>(options => options.UseSqlite(Configuration.GetConnectionString(database_type), o => o.MigrationsAssembly("WebStore.DAL.Sqlite")));// Использование SQLite
-            //        break;
-            //    case "InMemory":
-            //        services.AddDbContext<WebStoreContext>(options => options.UseInMemoryDatabase("WebStore.db"));// Использование SQLite
-            //        break;
-            //    default:
-            //        throw new InvalidOperationException($"Тип БД {database_type} не поддерживается");
-            //}
+            switch (database_type)
+            {
+                case "SqlServer":
+                    services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString(database_type)));
+                    break;
+                case "Sqlite":
+                    services.AddDbContext<WebStoreContext>(options => options.UseSqlite(Configuration.GetConnectionString(database_type), o => o.MigrationsAssembly("WebStore.DAL.Sqlite")));// Использование SQLite
+                    break;
+                case "InMemory":
+                    services.AddDbContext<WebStoreContext>(options => options.UseInMemoryDatabase("WebStore.db"));// Использование SQLite
+                    break;
+                default:
+                    throw new InvalidOperationException($"Тип БД {database_type} не поддерживается");
+            }
 
-            services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //  services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Настройка Identity
             services.AddIdentity<User, IdentityRole>()
@@ -63,7 +63,7 @@ namespace WebStore.ServicesHosting
 
             //настройки корзины
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      //      services.AddScoped<ICartService, CookieCartService>();
+            services.AddScoped<ICartService, CookieCartService>();
 
             services.AddSwaggerGen(c =>
             {

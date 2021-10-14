@@ -21,11 +21,11 @@ namespace WebStore.Controllers
             _ordersService = ordersService;
         }
 
-        public IActionResult Details()
+        public async Task<IActionResult> Details()
         {
             var model = new DetailsViewModel()
             {
-                Cart = _cartService.TransformCart(),
+                Cart = await _cartService.TransformCart(),
                 Order = new OrderViewModel()
             };
             return View(model);
@@ -62,15 +62,18 @@ namespace WebStore.Controllers
             if (!ModelState.IsValid)
                 return View(nameof(Details), new DetailsViewModel
                 {
-                    Cart = _cartService.TransformCart(),
+                    Cart = _cartService.TransformCart().Result,
                     Order = model
                 });
 
-            var order = await ordersService.CreateOrderAsync(model, _cartService.TransformCart(), User.Identity!.Name );
+            CreateOrderDto orderModel = new() {Items = _cartService.TransformCart().Result.ToDTO(), OrderModel = model };
+            var order = await ordersService.CreateOrderAsync(orderModel, User.Identity!.Name );
+
 
             _cartService.RemoveAll();
 
-            return View("Details", order);
+            return RedirectToAction("OrderConfirmed", new { id = order.Id });
+            //return View("Details", order);
 
             //if (ModelState.IsValid)
             //{

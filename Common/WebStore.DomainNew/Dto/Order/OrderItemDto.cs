@@ -6,13 +6,15 @@ namespace WebStore.Domain.Dto.Order
 {
     public class OrderItemDto : BaseEntity
     {
-        public virtual OrderDto Order { get; set; }
-        [Required]
-        public virtual ProductDto Product { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
+       // public int Id { get; set; }
+        public int ProductId { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
-        [NotMapped]
-        public decimal TotalItemPrice => Price * Quantity;
+        public ProductDto Product { get; set; }
+        //public virtual OrderDto Order { get; set; }
+        //public virtual ProductDto Product { get; set; }
+        //public decimal Price { get; set; }
+        //public int Quantity { get; set; }
+        //public decimal TotalItemPrice => Price * Quantity;
     }
 }

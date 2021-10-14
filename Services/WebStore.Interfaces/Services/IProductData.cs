@@ -12,35 +12,47 @@ namespace WebStore.Interfaces.Services
         /// Список секций
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Section> GetSections();
+        Task<IEnumerable<Section>> GetSections();
         /// <summary>
         /// Список брендов
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Brand> GetBrands();
+        Task<IEnumerable<Brand>> GetBrands();
         /// <summary>
         /// Список товаров
         /// </summary>
         /// <param name="filter">Фильтр товаров</param>
         /// <returns></returns>
-        IEnumerable<ProductDto> GetProducts(ProductFilter filter);
+        Task<IEnumerable<Product>> GetProducts(ProductFilter filter);
         /// <summary>
         /// Продукт
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns>Сущность Product, если нашел, иначе null</returns>
-        ProductDto GetProductById(int id);
+        Task<Product> GetProductById(int id);
         /// <summary>
         /// Редактирование
         /// </summary>
         /// <param name="product">Сущность Product</param>
         /// <returns></returns>
-        Task UpdateAsync(ProductDto product);
+        Task<int> UpdateAsync(Product product);
         /// <summary>
         /// Удаление
         /// </summary>
         /// <param name="id">Идентификатор</param>
         /// <returns></returns>
-        Task DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
+        /// <summary>
+        /// Категория
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Сущность Section, если нашел, иначе null</returns>
+        Task<Section> GetSectionsById(int id);
+        /// <summary>
+        /// Бренд
+        /// </summary>
+        /// <param name="id">Идентификатор</param>
+        /// <returns>Сущность Brand, если нашел, иначе null</returns>
+        Task<Brand> GetBrandsById(int id);
     }
 }

@@ -10,7 +10,7 @@ namespace WebStore.ServicesHosting.Controllers
     [Produces("application/json")]
     [Route("api/employees")]
     [ApiController]
-    public class EmployeesApiController : ControllerBase, IEmployeesData
+    public class EmployeesApiController : ControllerBase
     {
         private readonly IEmployeesData _employeesData;
         private readonly ILogger<EmployeesApiController> _logger;
@@ -22,9 +22,10 @@ namespace WebStore.ServicesHosting.Controllers
         }
 
         [HttpPost, ActionName("Post")]
-        public int Add([FromBody]EmployeeViewModel employee)
+        public IActionResult Add([FromBody]EmployeeViewModel employee)
         {
-           return _employeesData.Add(employee);
+            var result = _employeesData.Add(employee);
+            return result > 0 ? NotFound() : Ok(result);
         }
 
         [NonAction]
@@ -34,27 +35,43 @@ namespace WebStore.ServicesHosting.Controllers
         }
 
         [HttpDelete("{id}")]
-        public bool Delete(int id)
+        public IActionResult Delete(int id)
         {
-            return _employeesData.Delete(id);
+            var result = _employeesData.Delete(id);
+            return result ? Ok(true) : NotFound(false);
         }
 
         [HttpGet, ActionName("Get")]
-        public IEnumerable<EmployeeViewModel> GetAll()
+        public IActionResult GetAll()
         {
-            return _employeesData.GetAll();
+            var result = _employeesData.GetAll();
+            if (result is null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
         [HttpGet("{id}"), ActionName("Get")]
-        public EmployeeViewModel GetById(int id)
+        public IActionResult GetById(int id)
         {
-            return _employeesData.GetById(id);
+            var result = _employeesData.GetById(id);
+            if (result is null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
         [HttpPut("{id}"), ActionName("Put")]
-        public EmployeeViewModel Update([FromBody]EmployeeViewModel employee)
+        public IActionResult Update([FromBody]EmployeeViewModel employee)
         {
-            return _employeesData.Update(employee);
+            var result = _employeesData.Update(employee);
+            if (result is null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
     }
 }

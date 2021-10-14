@@ -1,21 +1,22 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace WebStore.Clients.Base
 {
     /// <summary>
     /// Базовый клиент
     /// </summary>
-    public abstract class BaseClient
+    public abstract class BaseClient: IDisposable
     {
         /// <summary>
         /// Http клиент для связи
         /// </summary>
-        protected HttpClient _Client;
+        protected HttpClient _Client { get; }
         /// <summary>
         /// Адрес сервиса
         /// </summary>
@@ -42,59 +43,102 @@ namespace WebStore.Clients.Base
         MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        protected T Get<T>(string url) where T : new()
+        //protected T Get<T>(string url) where T : new()
+        //{
+        //    var result = new T();
+        //    var response = _Client.GetAsync(url).Result;
+        //    if (response.IsSuccessStatusCode)
+        //        result = response.Content.ReadFromJsonAsync<T>().Result;
+        //    return result;
+        //}
+
+        protected T Get<T>(string url) => GetAsync<T>(url).Result;
+        protected async Task<T> GetAsync<T>(string url, CancellationToken Cancel = default) //where T : new()
         {
-            var result = new T();
-            var response = _Client.GetAsync(url).Result;
-            if (response.IsSuccessStatusCode)
-                result = response.Content.ReadFromJsonAsync<T>().Result;//.ReadAsAsync<T>();
-            return result;
+            // var response = await _Client.GetAsync(url, Cancel).ConfigureAwait(false);
+            var response =  _Client.GetAsync(url).Result;
+            if (response.StatusCode == HttpStatusCode.NoContent) return default;
+            return response
+               .EnsureSuccessStatusCode()
+               .Content
+               .ReadFromJsonAsync<T>().Result;
+
+            //if (response.StatusCode == HttpStatusCode.NoContent) return default;
+            //return await response
+            //   .EnsureSuccessStatusCode()
+            //   .Content
+            //   .ReadFromJsonAsync<T>(cancellationToken: Cancel)
+            //   .ConfigureAwait(false);
+
+            //var list = new T();
+            //var response = await _Client.GetAsync(url);
+            //if (response.IsSuccessStatusCode)
+            //    list = await response.Content.ReadFromJsonAsync<T>();
+            //return list;
         }
-        protected async Task<T> GetAsync<T>(string url) where T : new()
+
+        //protected HttpResponseMessage Post<T>(string url, T value)
+        //{
+        //    var response = _Client.PostAsJsonAsync(url, value).Result;
+        //    response.EnsureSuccessStatusCode();
+        //    return response;
+        //}
+
+        protected HttpResponseMessage Post<T>(string url, T item) => PostAsync(url, item).Result;
+        protected async Task<HttpResponseMessage> PostAsync<T>(string url, T item, CancellationToken Cancel = default)
         {
-            var list = new T();
-            var response = await _Client.GetAsync(url);
-            if (response.IsSuccessStatusCode)
-                list = await response.Content.ReadFromJsonAsync<T>();//.ReadAsAsync<T>();
-            return list;
+            var response = await _Client.PostAsJsonAsync(url, item).ConfigureAwait(false);
+            return response.EnsureSuccessStatusCode();
         }
-        protected HttpResponseMessage Post<T>(string url, T value)
+
+        //protected HttpResponseMessage Put<T>(string url, T value)
+        //{
+        //    var response = _Client.PutAsJsonAsync(url, value).Result;
+        //    response.EnsureSuccessStatusCode();
+        //    return response;
+        //}
+
+        protected HttpResponseMessage Put<T>(string url, T item) => PutAsync(url, item).Result;
+        protected async Task<HttpResponseMessage> PutAsync<T>(string url, T value, CancellationToken Cancel = default)
         {
-            var response = _Client.PostAsJsonAsync(url, value).Result;
+            var response = await _Client.PutAsJsonAsync(url, value).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
-            return response;
-        }
-        protected async Task<HttpResponseMessage> PostAsync<T>(string url, T
-        value)
-        {
-            var response = await _Client.PostAsJsonAsync(url, value);
-            response.EnsureSuccessStatusCode();
-            return response;
-        }
-        protected HttpResponseMessage Put<T>(string url, T value)
-        {
-            var response = _Client.PutAsJsonAsync(url, value).Result;
-            response.EnsureSuccessStatusCode();
-            return response;
-        }
-        protected async Task<HttpResponseMessage> PutAsync<T>(string url, T
-        value)
-        {
-            var response = await _Client.PutAsJsonAsync(url, value);
-            response.EnsureSuccessStatusCode();
-            return response;
-        }
-        protected HttpResponseMessage Delete(string url)
-        {
-            var response = _Client.DeleteAsync(url).Result;
-            return response;
-        }
-        protected async Task<HttpResponseMessage> DeleteAsync(string url)
-        {
-            var response = await _Client.DeleteAsync(url);
             return response;
         }
 
+        //protected HttpResponseMessage Delete(string url)
+        //{
+        //    var response = _Client.DeleteAsync(url).Result;
+        //    return response;
+        //}
+
+        protected HttpResponseMessage Delete(string url) => DeleteAsync(url).Result;
+        protected async Task<HttpResponseMessage> DeleteAsync(string url, CancellationToken Cancel = default)
+        {
+            var response = await _Client.DeleteAsync(url, Cancel).ConfigureAwait(false);
+            return response;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            //GC.SuppressFinalize(this);
+        }
+
+        private bool _Disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_Disposed) return;
+            _Disposed = true;
+
+            if (disposing)
+            {
+                // должны освободить управляемые ресурсы
+                //Http.Dispose(); - вызывать нельзя!!! Не мы его создали.
+            }
+
+            // освобождаем управляемые ресурсы
+        }
 
     }
 }

@@ -19,50 +19,63 @@ namespace WebStore.Clients.Services.Products
 
         protected sealed override string ServiceAddress { get; set; }
 
-        public IEnumerable<Section> GetSections()
+        public async Task<IEnumerable<Section>> GetSections()
         {
             var url = $"{ServiceAddress}/sections";
-            var result = Get<List<Section>>(url);
+            var result = Get<IEnumerable<SectionDto>>(url).FromDTO();
             return result;
         }
 
-        public IEnumerable<Brand> GetBrands()
+        public async Task<IEnumerable<Brand>> GetBrands()
         {
             var url = $"{ServiceAddress}/brands";
-            var result = Get<List<Brand>>(url);
+            var result = Get<IEnumerable<BrandDto>>(url).FromDTO();
             return result;
         }
 
-        public IEnumerable<ProductDto> GetProducts(ProductFilter filter)
+        public async Task<IEnumerable<Product>> GetProducts(ProductFilter filter)
         {
             var url = $"{ServiceAddress}";
             var response = Post(url, filter);
-            var result =
-            response.Content.ReadAsAsync<IEnumerable<ProductDto>>().Result;
-            return result;
+            var result = await response.Content.ReadAsAsync<IEnumerable<ProductDto>>();
+            return result.FromDTO();
         }
 
-        public ProductDto GetProductById(int id)
+        public async Task<Product> GetProductById(int id)
         {
             var url = $"{ServiceAddress}/{id}";
             var result = Get<ProductDto>(url);
-            return result;
+            return result.FromDTO();
         }
 
-        public Task UpdateAsync(ProductDto product)
+        public async Task<int> UpdateAsync(Product product)
         {
             var url = $"{ServiceAddress}/{product.Id}";
             var response = Put(url, product);
             var result = response.Content.ReadAsAsync<ProductDto>().Result;
-            return null;
+            return result.Id;
         }
 
-        public Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var url = $"{ServiceAddress}/{id}";
             var result = Delete(url);
-            return null;
-           // return result.Content.ReadAsAsync<bool>().Result;
+            return result.Content.ReadAsAsync<bool>().Result;
+            // return result.Content.ReadAsAsync<bool>().Result;
+        }
+
+        public async Task<Section> GetSectionsById(int id)
+        {
+            var url = $"{ServiceAddress}/sections/{id}";
+            var result = Get<SectionDto>(url).FromDTO();
+            return result;
+        }
+
+        public async Task<Brand> GetBrandsById(int id)
+        {
+            var url = $"{ServiceAddress}/brands/{id}";
+            var result = Get<BrandDto>(url).FromDTO();
+            return result;
         }
     }
 

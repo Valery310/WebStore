@@ -6,6 +6,7 @@ using WebStore.Interfaces.Services;
 using WebStore.Domain.Entities;
 using WebStore.Domain.ViewModel;
 using WebStore.Domain.Filters;
+using System.Threading.Tasks;
 
 namespace WebStore.Services.Implementations
 {
@@ -106,13 +107,15 @@ namespace WebStore.Services.Implementations
             Cart = cart;
         }
 
-        public CartViewModel TransformCart()
+        public async Task<CartViewModel> TransformCart()
         {
 
-            var products = _productData.GetProducts(new ProductFilter()
+            var products = await _productData.GetProducts(new ProductFilter()
             {
                 Ids = Cart.Items.Select(i => i.ProductId).ToArray()
-            }).Select(p => new ProductViewModel()
+            }).ConfigureAwait(false);
+            
+            var productsVM = products.Select(p => new ProductViewModel()
             {
                 Id = p.Id,
                 ImageUrl = p.ImageUrl,
@@ -124,7 +127,7 @@ namespace WebStore.Services.Implementations
 
             var r = new CartViewModel
             {
-                Items = Cart.Items.ToDictionary(x => products.First(y => y.Id ==
+                Items = Cart.Items.ToDictionary(x => productsVM.First(y => y.Id ==
                 x.ProductId), x => x.Quantity)
             };
             return r;

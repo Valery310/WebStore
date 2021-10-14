@@ -20,17 +20,27 @@ namespace WebStore.Services.Implementations.Sql
             _context = context;
         }
 
-        public IEnumerable<Section> GetSections()
+        public async Task<IEnumerable<Section>> GetSections()
         {
-            return _context.Sections.ToList();
+            return await _context.Sections.ToListAsync().ConfigureAwait(false);
         }
 
-        public IEnumerable<Brand> GetBrands()
+        public async Task<IEnumerable<Brand>> GetBrands()
         {
-            return _context.Brands.ToList();
+            return await _context.Brands.ToListAsync().ConfigureAwait(false);
         }
 
-        public IEnumerable<ProductDto> GetProducts(ProductFilter filter) 
+        public async Task<Section> GetSectionsById(int id)
+        {
+            return await _context.Sections.SingleOrDefaultAsync(o => o.Id == id).ConfigureAwait(false);
+        }
+
+        public async Task<Brand> GetBrandsById(int id)
+        {
+            return await _context.Brands.SingleOrDefaultAsync(o => o.Id == id).ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Product>> GetProducts(ProductFilter filter) 
         {
             var query = _context.Products.Include("Section").Include("Brand").AsQueryable();
 
@@ -57,31 +67,31 @@ namespace WebStore.Services.Implementations.Sql
 
             //return query.ToList();
 
-            return query.Select(p => new ProductDto()
+            return await query.Select(p => new Product()
             {
                 Id = p.Id,
                 Name = p.Name,
                 Order = p.Order,
                 Price = p.Price,
                 ImageUrl = p.ImageUrl,
-                Brand = p.BrandId.HasValue ? new BrandDto()
+                Brand = p.BrandId.HasValue ? new Brand()
                 {
                     Id = p.Brand.Id,
                     Name = p.Brand.Name
                 } : null
-            }).ToList();
+            }).ToListAsync().ConfigureAwait(false);
         }
 
-        public ProductDto GetProductById(int id) 
+        public async Task<Product> GetProductById(int id) 
         {
-            var product = _context.Products.Include("Brand").Include("Section").FirstOrDefault(p => p.Id.Equals(id));
+            var product = await _context.Products.Include("Brand").Include("Section").FirstOrDefaultAsync(p => p.Id.Equals(id));
 
             if (product == null)
             {
                 return null;
             }
 
-            var dto = new ProductDto()
+            var dto = new Product()
             {
                 Id = product.Id,
                 Name = product.Name,
@@ -92,7 +102,7 @@ namespace WebStore.Services.Implementations.Sql
 
             if (product.Brand != null)
             {
-                dto.Brand = new BrandDto()
+                dto.Brand = new Brand()
                 {
                     Id = product.Brand.Id,
                     Name = product.Brand.Name
@@ -104,11 +114,11 @@ namespace WebStore.Services.Implementations.Sql
           //  return _context.Products.Include("Brand").Include("Section").FirstOrDefault(p => p.Id.Equals(id));
         }
 
-        public async Task UpdateAsync(ProductDto product)
+        public async Task<int> UpdateAsync(Product product)
         {
             if (product is null)
             {
-                throw new ArgumentNullException(nameof(product));
+                return -1;
             }
             using (await _context.Database.BeginTransactionAsync())
             {
@@ -123,12 +133,15 @@ namespace WebStore.Services.Implementations.Sql
                     await _context.SaveChangesAsync();
              
                     await _context.Database.CommitTransactionAsync();
+
+                    return p.Id;
                 }
             }
+            return -1;
                 
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             using (await _context.Database.BeginTransactionAsync()) 
             {
@@ -140,10 +153,11 @@ namespace WebStore.Services.Implementations.Sql
                   // _context.Products.Remove(await _context.Products.FindAsync(id));
                    await _context.SaveChangesAsync();
                    await _context.Database.CommitTransactionAsync();
+                   return true;
                 }
                 else
                 {
-                    throw new ArgumentNullException(nameof(id));
+                    return false;
                 }
             }
                 

@@ -18,13 +18,13 @@ namespace WebStore.Components
 
         public async Task<IViewComponentResult> InvokeAsync() 
         {
-            var sections = GetSections();
+            var sections = await GetSections().ConfigureAwait(false);
             return View(sections);
         }
 
-        private List<SectionViewModel> GetSections() 
+        private async Task<List<SectionViewModel>> GetSections() 
         {
-            var categories = _productData.GetSections();
+            var categories = await _productData.GetSections().ConfigureAwait(false);
             var parentCategories = categories.Where(p => !p.ParentId.HasValue).ToArray();
             var parentSections = new List<SectionViewModel>();
             foreach (var parentCategory in parentCategories)

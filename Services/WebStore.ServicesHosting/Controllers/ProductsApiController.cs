@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WebStore.Domain.Dto;
 using WebStore.Domain.Entities;
@@ -14,7 +11,7 @@ namespace WebStore.ServicesHosting.Controllers
     [Produces("application/json")]
     [Route("api/products")]
     [ApiController]
-    public class ProductsApiController : ControllerBase, IProductData
+    public class ProductsApiController : ControllerBase
     {
         private readonly IProductData _productData;
         private readonly ILogger<ProductsApiController> _logger;
@@ -26,43 +23,60 @@ namespace WebStore.ServicesHosting.Controllers
         }
 
         [HttpGet("sections")]
-        public IEnumerable<Section> GetSections()
+        public async Task<IActionResult> GetSections()
         {
-            return _productData.GetSections();
+            var result = await _productData.GetSections();
+            return result is null ? NotFound() : Ok(result.ToDTO());
+        }
+
+        [HttpGet("sections/{id}")]
+        public async Task<IActionResult> GetSections(int id)
+        {
+            var result = await _productData.GetSectionsById(id);
+            return result is null ? NotFound():Ok(result.ToDTO());
         }
 
         [HttpGet("brands")]
-        public IEnumerable<Brand> GetBrands()
+        public async Task<IActionResult> GetBrands()
         {
-            return _productData.GetBrands();
+            var result = await _productData.GetBrands();
+            return result is null ? NotFound() : Ok(result.ToDTO());
+        }
+
+        [HttpGet("brands/{id}")]
+        public async Task<IActionResult> GetBrands(int id)
+        {
+            var result = await _productData.GetBrandsById(id);
+            return result is null ? NotFound() : Ok(result.ToDTO()); ;
         }
 
         [HttpPost]
         [ActionName("Post")]
-        public IEnumerable<ProductDto> GetProducts([FromBody]ProductFilter filter)
+        public async Task<IActionResult> GetProducts([FromBody]ProductFilter filter)
         {
-            return _productData.GetProducts(filter);
+            var result = await _productData.GetProducts(filter);
+            return result is null ? NotFound() : Ok(result.ToDTO()); ;
         }
 
         [HttpGet("{id}"), ActionName("Get")]
-        public ProductDto GetProductById(int id)
+        public async Task<IActionResult> GetProductById(int id)
         {
-            var product = _productData.GetProductById(id);
-            return product;
+            var product = await _productData.GetProductById(id);
+            return product is null ? NotFound() : Ok(product.ToDTO());
         }
 
         [HttpPut("{id}"), ActionName("Put")]
-        public Task UpdateAsync([FromBody] ProductDto product)
+        public async Task<IActionResult> UpdateAsync([FromBody] Product product)
         {
-            _productData.UpdateAsync(product);
-            return null;
+            var result = _productData.UpdateAsync(product).Result;
+            return result > 0 ? Ok(result) : NotFound();
         }
 
         [HttpDelete("{id}")]
-        public Task DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            _productData.DeleteAsync(id);
-            return null;
+            var result = _productData.DeleteAsync(id).Result;
+            return result ? Ok() : NotFound();
         }
     }
 }

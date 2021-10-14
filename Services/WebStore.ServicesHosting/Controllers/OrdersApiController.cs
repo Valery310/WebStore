@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using WebStore.Domain.Dto;
 using WebStore.Domain.Dto.Order;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
+using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Services;
 
 namespace WebStore.ServicesHosting.Controllers
@@ -15,7 +17,7 @@ namespace WebStore.ServicesHosting.Controllers
     [Produces("application/json")]
     [Route("api/orders")]
     [ApiController]
-    public class OrdersApiController : ControllerBase, IOrdersService
+    public class OrdersApiController : ControllerBase
     {
         private readonly IOrdersService _ordersService;
         private readonly ILogger<OrdersApiController> _logger;
@@ -27,21 +29,28 @@ namespace WebStore.ServicesHosting.Controllers
         }
 
         [HttpGet("user/{userName}")]
-        public async Task<IEnumerable<OrderDto>> GetUserOrdersAsync(string userName)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<OrderDto>))]
+        public async Task<IActionResult> GetUserOrdersAsync(string userName)
         {
-            return await _ordersService.GetUserOrdersAsync(userName);
+            var orders = await _ordersService.GetUserOrdersAsync(userName);
+            return Ok(orders.ToDTO());
         }
 
-        [HttpGet("{id}"), ActionName("Get")]
-        public async Task<OrderDto> GetOrderByIdAsync(int id)
+        [HttpGet("{id:int}"), ActionName("Get")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
+        public async Task<IActionResult> GetOrderByIdAsync(int id)
         {
-            return await _ordersService.GetOrderByIdAsync(id);
+            var order = await _ordersService.GetOrderByIdAsync(id);
+            return Ok(order.ToDTO());
         }
 
-        [HttpPost("{userName?}")]
-        public async Task<OrderDto> CreateOrderAsync([FromBody] CreateOrderModel orderModel, string userName)
+        [HttpPost("{userName}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
+        public async Task<IActionResult> CreateOrderAsync([FromBody] CreateOrderDto orderModel, string userName)
         {
-            return await _ordersService.CreateOrderAsync(orderModel, userName);
+            var order = _ordersService.CreateOrderAsync(orderModel, userName).Result;
+            return Ok(order.ToDTO());
+          //  return _ordersService.CreateOrderAsync(orderModel, userName);
         }
     }
 }

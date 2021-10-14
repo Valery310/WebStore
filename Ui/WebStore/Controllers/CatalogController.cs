@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 using WebStore.Domain.Filters;
 using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Services;
@@ -15,9 +16,9 @@ namespace WebStore.Controllers
             _productData = productData;
         }
 
-        public IActionResult Shop(int? sectionId, int? brandId)
+        public async Task<IActionResult> Shop(int? sectionId, int? brandId)
         {
-            var products = _productData.GetProducts(new ProductFilter { BrandId = brandId, SectionId = sectionId });
+            var products = await _productData.GetProducts(new ProductFilter { BrandId = brandId, SectionId = sectionId }).ConfigureAwait(false);
 
             var model = new CatalogViewModel()
             {
@@ -38,9 +39,9 @@ namespace WebStore.Controllers
         }
 
 
-        public IActionResult ProductDetails(int id)
+        public async Task<IActionResult> ProductDetails(int id)
         {
-            var product = _productData.GetProductById(id);
+            var product = await _productData.GetProductById(id);
             if (product == null)
             {
                 return NotFound();

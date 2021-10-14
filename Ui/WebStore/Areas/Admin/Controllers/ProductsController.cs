@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using WebStore.Areas.Admin.Models;
 using WebStore.Domain.Filters;
 using WebStore.Interfaces.Services;
@@ -24,11 +25,11 @@ namespace WebStore.Areas.Admin.Controllers
      //   public IActionResult Delete(int id) => RedirectToAction(nameof(Index));
 
         [Route("edit/{id?}")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             ProductViewModel model;
 
-                var temp = _productData.GetProductById(id);
+                var temp = await _productData.GetProductById(id).ConfigureAwait(false);
                 model = new ProductViewModel
                 {
                     Id = temp.Id,
@@ -49,7 +50,7 @@ namespace WebStore.Areas.Admin.Controllers
 
         [HttpPost]
         [Route("edit/{id?}")]
-        public IActionResult Edit(ProductViewModel model)
+        public async Task<IActionResult> Edit(ProductViewModel model)
         {
             if (model.Price < 0)
             {
@@ -59,7 +60,7 @@ namespace WebStore.Areas.Admin.Controllers
             {
                 if (model.Id > 0)
                 {
-                    var dbitem = _productData.GetProductById(model.Id);
+                    var dbitem = await _productData.GetProductById(model.Id).ConfigureAwait(false);
 
                     if (ReferenceEquals(dbitem, null))
                     {
@@ -72,7 +73,7 @@ namespace WebStore.Areas.Admin.Controllers
                     dbitem.Brand = model.Brand;
                     dbitem.Section = model.Section;
 
-                    _productData.UpdateAsync(dbitem);
+                    await _productData.UpdateAsync(dbitem);
                 }
                 return RedirectToAction(nameof(Index));
             }
