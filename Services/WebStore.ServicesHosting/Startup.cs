@@ -14,6 +14,8 @@ using WebStore.Services.Implementations.Sql;
 using WebStore.Services.Implementations;
 using WebStore.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using WebStore.Services.Data;
+using System.IO;
 
 namespace WebStore.ServicesHosting
 {
@@ -29,9 +31,6 @@ namespace WebStore.ServicesHosting
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           // services.AddControllersWithViews();
-
-            services.AddControllers();
             var database_type = Configuration["Database"];
 
             switch (database_type)
@@ -49,25 +48,60 @@ namespace WebStore.ServicesHosting
                     throw new InvalidOperationException($"Тип БД {database_type} не поддерживается");
             }
 
-            //  services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient<DbInitializer>();
 
             // Настройка Identity
-            services.AddIdentity<User, IdentityRole>()
-            .AddEntityFrameworkStores<WebStoreContext>()
-            .AddDefaultTokenProviders();
+            services.AddIdentity<User, Role>().AddEntityFrameworkStores<WebStoreContext>().AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(opt =>
+            {
+#if DEBUG
+                opt.Password.RequireDigit = false;
+                opt.Password.RequiredLength = 3;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredUniqueChars = 3;
+#endif
+
+                opt.User.RequireUniqueEmail = false;
+                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+                opt.Lockout.AllowedForNewUsers = false;
+                opt.Lockout.MaxFailedAccessAttempts = 10;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            });
 
             //разрешение зависимостей
-            services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
+            services.AddScoped<IEmployeesData, InMemoryEmployeesData>();
             services.AddScoped<IProductData, SqlProductData>();
             services.AddScoped<IOrdersService, SqlOrdersService>();
 
+
             //настройки корзины
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+           // services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICartService, CookieCartService>();
+
+            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStore.ServicesHosting", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStore.WebAPI", Version = "v1" });
+
+                const string webstore_api_xml = "WebStore.WebAPI.xml";
+                const string webstore_domain_xml = "WebStore.Domain.xml";
+                const string debug_path = "bin/debug/net5.0";
+
+                //c.IncludeXmlComments("WebStore.WebAPI.xml");
+                if (File.Exists(webstore_api_xml))
+                    c.IncludeXmlComments(webstore_api_xml);
+                else if (File.Exists(Path.Combine(debug_path, webstore_api_xml)))
+                    c.IncludeXmlComments(Path.Combine(debug_path, webstore_api_xml));
+
+                if (File.Exists(webstore_domain_xml))
+                    c.IncludeXmlComments(webstore_domain_xml);
+                else if (File.Exists(Path.Combine(debug_path, webstore_domain_xml)))
+                    c.IncludeXmlComments(Path.Combine(debug_path, webstore_domain_xml));
             });
         }
 

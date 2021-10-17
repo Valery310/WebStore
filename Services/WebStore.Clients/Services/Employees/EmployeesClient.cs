@@ -12,7 +12,7 @@ namespace WebStore.Clients.Services.Employees
         {
           //  ServiceAddress = "api/employees";
         }
-        protected sealed override string ServiceAddress { get; set; }
+     //   protected sealed override string ServiceAddress { get; set; }
 
         public IEnumerable<EmployeeViewModel> GetAll()
         {

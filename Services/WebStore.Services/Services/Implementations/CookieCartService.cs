@@ -122,7 +122,6 @@ namespace WebStore.Services.Implementations
                 Name = p.Name,
                 Order = p.Order,
                 Price = p.Price,
-               // Brand = p.Brand != null ? p.Brand.Name : string.Empty
             }).ToList();
 
             var r = new CartViewModel
@@ -131,31 +130,6 @@ namespace WebStore.Services.Implementations
                 x.ProductId), x => x.Quantity)
             };
             return r;
-            //var filter = new ProductFilter();
-            //filter.Ids = Cart.Items.Select(i => i.ProductId).ToArray();
-
-            //var products = _productData.GetProducts(filter);
-
-            ////var products = _productData.GetProducts(new ProductFilter()
-            ////{
-            ////    Ids = Cart.Items.Select(i => i.ProductId).ToArray()
-
-            ////});
-
-            //var products_views = products.ToDictionary(p => p.Id);
-
-            //var r = new CartViewModel
-            //{
-            //    Items = (Dictionary<ProductViewModel, int>)Cart.Items
-            //       .Where(item => products_views.ContainsKey(item.ProductId))
-            //       .Select(item => (products_views[item.ProductId], item.Quantity))
-
-            //    //Items = Cart.Items.Where(x => products.First(y => y.Id == x.ProductId).Select
-
-            //    //.ToDictionary(x => products.First(y => y.Id ==
-            //    //x.ProductId), x => x.Quantity)
-            //};
-            //return r;
         }
     }
 }

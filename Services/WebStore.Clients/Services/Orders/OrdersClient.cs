@@ -18,7 +18,7 @@ namespace WebStore.Clients.Services.Orders
            // ServiceAddress = "api/orders";
         }
 
-        protected sealed override string ServiceAddress { get; set; }
+    //    protected sealed override string ServiceAddress { get; set; }
 
         public async Task<IEnumerable<Order>> GetUserOrdersAsync(string userName)
         {

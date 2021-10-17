@@ -20,7 +20,7 @@ namespace WebStore.Clients.Base
         /// <summary>
         /// Адрес сервиса
         /// </summary>
-        protected abstract string ServiceAddress { get; set; }
+        protected string ServiceAddress { get; }
         /// <summary>
         /// Конструктор
         /// </summary>

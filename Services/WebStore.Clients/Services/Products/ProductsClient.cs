@@ -17,7 +17,7 @@ namespace WebStore.Clients.Services.Products
          //   ServiceAddress = "api/products";
         }
 
-        protected sealed override string ServiceAddress { get; set; }
+      //  protected sealed override string ServiceAddress { get; set; }
 
         public async Task<IEnumerable<Section>> GetSections()
         {

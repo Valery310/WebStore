@@ -14,7 +14,6 @@ namespace WebStore.Domain.ViewModel
         public string Password { get; set; }
 
         [Display(Name = "Запомнить?")]
-        [Required]
         public bool RememberMe { get; set; }
 
         [HiddenInput(DisplayValue = false)]
