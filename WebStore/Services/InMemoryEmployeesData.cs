@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebStore.Data;
-using WebStore.Models;
 using WebStore.Services.Interfaces;
+using WebStore.ViewModel;
 
 namespace WebStore.Services
 {
@@ -13,7 +12,7 @@ namespace WebStore.Services
     {
         private static int _CurrentMaxId = TestData.Employees.Count;
         private readonly ILogger<InMemoryEmployeesData> logger;
-        private readonly List<EmployeeView> _employees;
+        private readonly List<EmployeeViewModel> _employees;
 
         public InMemoryEmployeesData(ILogger<InMemoryEmployeesData> Logger)
         {
@@ -21,7 +20,7 @@ namespace WebStore.Services
             logger = Logger;
         }
 
-        public int Add(EmployeeView employee)
+        public int Add(EmployeeViewModel employee)
         {
             if (employee is null)
             {
@@ -50,12 +49,12 @@ namespace WebStore.Services
             return false;
         }
 
-        IEnumerable<EmployeeView> IEmployeesData.GetAll()
+        IEnumerable<EmployeeViewModel> IEmployeesData.GetAll()
         {
             return _employees;
         }
 
-        public EmployeeView GetById(int id)
+        public EmployeeViewModel GetById(int id)
         {
             //Получаем сотрудника по Id
             var employee = _employees.SingleOrDefault(t => t.Id.Equals(id));
@@ -68,7 +67,7 @@ namespace WebStore.Services
             return employee;
         }
 
-        public void Update(EmployeeView employee)
+        public void Update(EmployeeViewModel employee)
         {
             if (employee is null)
             {

@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebStore.DomainNew\WebStore.DomainNew.csproj" />
+    <ProjectReference Include="..\WebStore.DomainNew\WebStore.Domain.csproj" />
   </ItemGroup>
 
 </Project>

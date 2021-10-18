@@ -1,14 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebStore.Models;
-using WebStore.Data;
-using WebStore.Infrastructure.Middleware;
-using WebStore.Infrastructure;
 using WebStore.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using WebStore.ViewModel;
 
 namespace WebStore.Controllers
 {
@@ -43,7 +36,7 @@ namespace WebStore.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int? id)
         {
-            EmployeeView model;
+            EmployeeViewModel model;
             if (id.HasValue)
             {
                 model = _employees.GetById(id.Value);
@@ -54,7 +47,7 @@ namespace WebStore.Controllers
             }
             else
             {
-                model = new EmployeeView();
+                model = new EmployeeViewModel();
             }
             return View(model);
         }
@@ -62,7 +55,7 @@ namespace WebStore.Controllers
         [HttpPost]
         [Route("edit/{id?}")]
         [Authorize(Roles = "Administrator")]
-        public IActionResult Edit(EmployeeView model)
+        public IActionResult Edit(EmployeeViewModel model)
         {
             if (model.Age< 18 && model.Age > 75)
             {

@@ -5,6 +5,9 @@ using WebStore.Domain;
 using WebStore.Services.Interfaces;
 using WebStore.Services.Filters;
 using Microsoft.EntityFrameworkCore;
+using WebStore.Areas.Admin.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace WebStore.Services.Implementations.Sql
 {
@@ -29,7 +32,7 @@ namespace WebStore.Services.Implementations.Sql
 
         public IEnumerable<Product> GetProducts(ProductFilter filter) 
         {
-            var query = _context.Products.Include("Section").AsQueryable();
+            var query = _context.Products.Include("Section").AsQueryable().Include("Brand").AsQueryable();
 
             if (filter.BrandId.HasValue)
             {
@@ -41,7 +44,7 @@ namespace WebStore.Services.Implementations.Sql
                 query = query.Where(c => c.SectionId.Equals(filter.SectionId.Value));
             }
 
-            if (filter.Ids.Length > 0)
+            if (filter.Ids != null && filter.Ids.Length > 0)
             {
                 List<Product> product = new List<Product>();
                  foreach (var i in filter.Ids)
@@ -58,6 +61,51 @@ namespace WebStore.Services.Implementations.Sql
         public Product GetProductById(int id) 
         {
             return _context.Products.Include("Brand").Include("Section").FirstOrDefault(p => p.Id.Equals(id));
+        }
+
+        public async Task UpdateAsync(Product product)
+        {
+            if (product is null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+            using (await _context.Database.BeginTransactionAsync())
+            {
+                Product p = await _context.Products.FindAsync(product.Id);
+
+                if (!(p is null))
+                {
+                    //  _context.Database.ExecuteSqlRaw($"UPDATE [dbo].[Products] SET Price = {product.Price}, Name = \'{product.Name}\' WHERE Id = {product.Id}");
+                    p.Name = product.Name;
+                     p.Price = product.Price;
+                  //  _context.Products.Update(p);
+                    await _context.SaveChangesAsync();
+             
+                    await _context.Database.CommitTransactionAsync();
+                }
+            }
+                
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            using (await _context.Database.BeginTransactionAsync()) 
+            {
+                var productToDelete = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+
+                if (productToDelete != null)
+                {
+                   _context.Products.Remove(productToDelete);
+                  // _context.Products.Remove(await _context.Products.FindAsync(id));
+                   await _context.SaveChangesAsync();
+                   await _context.Database.CommitTransactionAsync();
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+            }
+                
         }
     }
 }

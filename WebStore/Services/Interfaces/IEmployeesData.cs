@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebStore.Models;
+﻿using System.Collections.Generic;
+using WebStore.ViewModel;
 
 namespace WebStore.Services.Interfaces
 {
     public interface IEmployeesData
     {
-        IEnumerable<EmployeeView> GetAll();
+        IEnumerable<EmployeeViewModel> GetAll();
 
-        EmployeeView GetById(int id);
+        EmployeeViewModel GetById(int id);
 
-        int Add(EmployeeView employee);
+        int Add(EmployeeViewModel employee);
 
-        void Update(EmployeeView employee);
+        void Update(EmployeeViewModel employee);
 
         bool Delete(int id);
     }

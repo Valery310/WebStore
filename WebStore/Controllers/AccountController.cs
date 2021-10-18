@@ -85,32 +85,6 @@ namespace WebStore.Controllers
             return View(new RegisterUserViewModel());
         }
 
-        //[HttpPost, ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Register(RegisterUserViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        // var user = new User { UserName = model.UserName, Email = model.Email, EmailConfirmed = true };              
-        //        var user = new User { UserName = model.UserName, Email = model.Email };
-
-        //        var createResult = await _userManager.CreateAsync(user, model.Password);
-
-        //        if (createResult.Succeeded)
-        //        {
-        //            await _signInManager.SignInAsync(user, false);
-        //            RedirectToAction("Index", "Home");
-        //        }
-        //        else
-        //        {
-        //            foreach (var identityError in createResult.Errors)
-        //            {
-        //                ModelState.AddModelError("", identityError.Description);
-        //            }
-        //        }
-        //    }
-        //    return View(model);
-        //}
-
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {

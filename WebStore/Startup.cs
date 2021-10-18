@@ -13,6 +13,7 @@ using WebStore.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using WebStore.Services.Implementations;
+using System;
 
 namespace WebStore
 {
@@ -31,13 +32,28 @@ namespace WebStore
         {
             
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-                 
+            
             services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
-            //  services.AddSingleton<IProductData, InMemoryProductData>();
-            //  services.AddSingleton<IProductData, SqlProductData>();
             services.AddScoped<IProductData, SqlProductData>();
-            // services.AddMvc().AddMvcOptions(mvcOptions => mvcOptions.EnableEndpointRouting = false);
-            services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IOrdersService, SqlOrdersService>();
+
+            var database_type = Configuration["Database"];
+
+            switch (database_type)
+            {
+                case "SqlServer":
+                    services.AddDbContext<WebStoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString(database_type)));
+                    break;
+                case "Sqlite":
+                    services.AddDbContext<WebStoreContext>(options => options.UseSqlite(Configuration.GetConnectionString(database_type), o => o.MigrationsAssembly("WebStore.DAL.Sqlite")));// Использование SQLite
+                    break;
+                case "InMemory":
+                    services.AddDbContext<WebStoreContext>(options => options.UseInMemoryDatabase("WebStore.db"));// Использование SQLite
+                    break;
+                default:
+                    throw new InvalidOperationException($"Тип БД {database_type} не поддерживается");
+            }
+
 
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<WebStoreContext>().AddDefaultTokenProviders();
 
@@ -71,7 +87,7 @@ namespace WebStore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
             if (env.IsDevelopment())
             {
@@ -96,6 +112,10 @@ namespace WebStore
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

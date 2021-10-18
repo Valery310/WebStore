@@ -427,5 +427,15 @@ namespace WebStore.Services.Interfaces
         {
             throw new NotImplementedException();
         }
+
+        public Task UpdateAsync(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using WebStore.DomainNew;
-using WebStore.Infrastructure;
-using WebStore.Models;
+using WebStore.Domain;
+using WebStore.ViewModel;
 using WebStore.Services.Filters;
 using WebStore.Services.Interfaces;
-using WebStore.ViewModel;
 
 namespace WebStore.Services.Implementations
 {
@@ -124,6 +121,7 @@ namespace WebStore.Services.Implementations
                 Price = p.Price,
                // Brand = p.Brand != null ? p.Brand.Name : string.Empty
             }).ToList();
+
             var r = new CartViewModel
             {
                 Items = Cart.Items.ToDictionary(x => products.First(y => y.Id ==

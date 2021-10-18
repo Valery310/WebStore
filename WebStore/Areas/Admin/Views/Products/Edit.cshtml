@@ -1,0 +1,39 @@
+﻿@model WebStore.Areas.Admin.Models.ProductViewModel
+@{
+    ViewData["Title"] = "Редактирование товара";
+}
+<div id="page-wrapper">
+    <div id="page-inner">
+        <h2>@ViewData["Title"]</h2>
+        <h4>Товар</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="Order" type="hidden">
+                    <input asp-for="Id" type="hidden">
+                    <input asp-for="ImageUrl" type="hidden">
+                    <input asp-for="Brand" type="hidden">
+                    <input asp-for="Section" type="hidden">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Наименование</label>
+                        <input asp-for="Name" class="form-control" value="@Model.Name" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label">Цена</label>
+                        <input asp-for="Price" class="form-control" value="@Model.Price" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Сохранить" class="btn btn-default" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div>
+            <a asp-action="Index">Назад к списку</a>
+        </div>
+        </div>
+</div>
