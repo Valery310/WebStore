@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebStore.ViewModel
 {
@@ -12,10 +13,11 @@ namespace WebStore.ViewModel
         [Required(AllowEmptyStrings = false, ErrorMessage = "Пароль является обязательным"), DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Display(Name = "Запоммнить?")]
+        [Display(Name = "Запомнить?")]
         [Required]
         public bool RememberMe { get; set; }
 
+        [HiddenInput(DisplayValue = false)]
         public string ReturnUrl { get; set; }
     }
 }

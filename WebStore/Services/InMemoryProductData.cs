@@ -422,5 +422,10 @@ namespace WebStore.Services.Interfaces
                 p.BrandId.Value.Equals(filter.BrandId.Value)).ToList();
             return products;
         }
+
+        public Product GetProductById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
