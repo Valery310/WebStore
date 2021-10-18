@@ -3,12 +3,13 @@ using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using WebStore.Clients.Base;
 using WebStore.Domain.ViewModel;
+using WebStore.Interfaces;
 using WebStore.Interfaces.Services;
 namespace WebStore.Clients.Services.Employees
 {
     public class EmployeesClient : BaseClient, IEmployeesData
     {
-        public EmployeesClient(HttpClient client) : base(client, "api/employees")
+        public EmployeesClient(HttpClient client) : base(client, WebAPIAddresses.Employees)
         {
           //  ServiceAddress = "api/employees";
         }

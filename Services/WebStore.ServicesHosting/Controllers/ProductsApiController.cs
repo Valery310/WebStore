@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 using WebStore.Domain.Dto;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
+using WebStore.Interfaces;
 using WebStore.Interfaces.Services;
 
 namespace WebStore.ServicesHosting.Controllers
 {
     [Produces("application/json")]
-    [Route("api/products")]
+    [Route(WebAPIAddresses.Products)]
     [ApiController]
     public class ProductsApiController : ControllerBase
     {

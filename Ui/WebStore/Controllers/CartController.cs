@@ -73,27 +73,6 @@ namespace WebStore.Controllers
             _cartService.RemoveAll();
 
             return RedirectToAction("OrderConfirmed", new { id = order.Id });
-            //return View("Details", order);
-
-            //if (ModelState.IsValid)
-            //{
-            //    var orderResult = await _ordersService.CreateOrderAsync(new Domain.Dto.Order.CreateOrderModel() { OrderViewModel = model }, User.Identity.Name);
-            // //  var orderResult = await _ordersService.CreateOrderAsync(model, _cartService.TransformCart(), User.Identity.Name);
-
-            //    _cartService.RemoveAll();
-            //    return RedirectToAction("OrderConfirmed", new
-            //    {
-            //        id = orderResult.Id
-            //    });
-            //}
-
-            //var detailsModel = new DetailsViewModel()
-            //{
-            //    Cart = _cartService.TransformCart(),
-            //    Order = model
-            //};
-
-            //return View("Details", detailsModel);
         }
 
         public IActionResult OrderConfirmed(int id)

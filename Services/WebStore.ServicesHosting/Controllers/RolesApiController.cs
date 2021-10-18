@@ -11,11 +11,11 @@ namespace WebStore.ServicesHosting.Controllers
 {
     [ApiController]
     [Route(WebAPIAddresses.Identity.Roles)]
-    public class RolesController : ControllerBase
+    public class RolesApiController : ControllerBase
     {
         private readonly RoleStore<Role> _RoleStore;
 
-        public RolesController(WebStoreContext db)
+        public RolesApiController(WebStoreContext db)
         {
             _RoleStore = new RoleStore<Role>(db);
         }

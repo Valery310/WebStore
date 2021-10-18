@@ -22,8 +22,4 @@
     <ProjectReference Include="..\WebStore.Services\WebStore.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Infrastructure\Implementations\" />
-  </ItemGroup>
-
 </Project>

@@ -16,11 +16,11 @@ namespace WebStore.ServicesHosting.Controllers
 {
     [ApiController]
     [Route(WebAPIAddresses.Identity.Users)]
-    public class UsersController : ControllerBase
+    public class UsersApiController : ControllerBase
     {
         public readonly UserStore<User, Role, WebStoreContext> _UserStore;
 
-        public UsersController(WebStoreContext db)
+        public UsersApiController(WebStoreContext db)
         {
             _UserStore = new UserStore<User, Role, WebStoreContext>(db);
             //_UserStore.AutoSaveChanges = false; // выключение отслеживания изменений для повышения быстродействия
@@ -132,7 +132,7 @@ namespace WebStore.ServicesHosting.Controllers
         public async Task<IList<Claim>> GetClaimsAsync([FromBody] User user) => await _UserStore.GetClaimsAsync(user);
 
         [HttpPost("AddClaims")]
-        public async Task AddClaimsAsync([FromBody] AddClaimDTO ClaimInfo/*, [FromServices] WebStoreDB db*/)
+        public async Task AddClaimsAsync([FromBody] AddClaimDto ClaimInfo/*, [FromServices] WebStoreDB db*/)
         {
             await _UserStore.AddClaimsAsync(ClaimInfo.User, ClaimInfo.Claims);
             await _UserStore.Context.SaveChangesAsync();
@@ -140,7 +140,7 @@ namespace WebStore.ServicesHosting.Controllers
         }
 
         [HttpPost("ReplaceClaim")]
-        public async Task ReplaceClaimAsync([FromBody] ReplaceClaimDTO ClaimInfo/*, [FromServices] WebStoreDB db*/)
+        public async Task ReplaceClaimAsync([FromBody] ReplaceClaimDto ClaimInfo/*, [FromServices] WebStoreDB db*/)
         {
             await _UserStore.ReplaceClaimAsync(ClaimInfo.User, ClaimInfo.Claim, ClaimInfo.NewClaim);
             await _UserStore.Context.SaveChangesAsync();
@@ -148,7 +148,7 @@ namespace WebStore.ServicesHosting.Controllers
         }
 
         [HttpPost("RemoveClaim")]
-        public async Task RemoveClaimsAsync([FromBody] RemoveClaimDTO ClaimInfo/*, [FromServices] WebStoreDB db*/)
+        public async Task RemoveClaimsAsync([FromBody] RemoveClaimDto ClaimInfo/*, [FromServices] WebStoreDB db*/)
         {
             await _UserStore.RemoveClaimsAsync(ClaimInfo.User, ClaimInfo.Claims);
             await _UserStore.Context.SaveChangesAsync();

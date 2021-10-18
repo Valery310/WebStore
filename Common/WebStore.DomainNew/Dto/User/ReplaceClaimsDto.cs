@@ -2,10 +2,10 @@
 
 namespace WebStore.Domain.Dto.User
 {
-    public class ReplaceClaimsDto
+    public class ReplaceClaimDto : UserDto
     {
-        public Entities.User User { get; set; }
-        public Claim Claim { get; set; }
-        public Claim NewClaim { get; set; }
+        public Claim Claim { get; init; }
+
+        public Claim NewClaim { get; init; }
     }
 }

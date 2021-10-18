@@ -455,7 +455,7 @@ namespace WebStore.Clients.Services.Users
         {
             await PostAsync(
                     $"{ServiceAddress}/AddClaims",
-                    new AddClaimsDto { User = user, Claims = claims },
+                    new AddClaimDto { User = user, Claims = claims },
                     cancel)
                .ConfigureAwait(false);
         }
@@ -464,7 +464,7 @@ namespace WebStore.Clients.Services.Users
         {
             await PostAsync(
                     $"{ServiceAddress}/ReplaceClaim",
-                    new ReplaceClaimsDto { User = user, Claim = OldClaim, NewClaim = NewClaim },
+                    new ReplaceClaimDto { User = user, Claim = OldClaim, NewClaim = NewClaim },
                     cancel)
                .ConfigureAwait(false);
         }
@@ -473,7 +473,7 @@ namespace WebStore.Clients.Services.Users
         {
             await PostAsync(
                     $"{ServiceAddress}/RemoveClaims",
-                    new RemoveClaimsDto { User = user, Claims = claims },
+                    new RemoveClaimDto { User = user, Claims = claims },
                     cancel)
                .ConfigureAwait(false);
         }
