@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebStore.Domain;
 using WebStore.Services.Filters;
 
 namespace WebStore.Services.Interfaces
 {
+    /// <summary>
+    /// Интерфейс для работы с товарами
+    /// </summary>
     public interface IProductData
     {
         /// <summary>
@@ -42,4 +45,5 @@ namespace WebStore.Services.Interfaces
         /// <returns></returns>
         Task DeleteAsync(int id);
     }
+
 }
