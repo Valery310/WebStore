@@ -81,7 +81,7 @@ namespace WebStore.Controllers
             {
                 await _signInManager.SignInAsync(user, false);
                 await _userManager.AddToRoleAsync(user, "User");
-                RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -89,9 +89,9 @@ namespace WebStore.Controllers
                 {
                     ModelState.AddModelError("", identityError.Description);
                 }
-            }
 
-            return View(new RegisterUserViewModel());
+                return View(model);
+            }
         }
 
         [HttpPost, ValidateAntiForgeryToken]

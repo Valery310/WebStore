@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebStore.ServicesHosting</name>
+    </assembly>
+    <members>
+        <member name="M:WebStore.ServicesHosting.Controllers.EmployeesApiController.Delete(System.Int32)">
+            <summary>
+            Удалить сотрудника по идентификатору
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebStore.ServicesHosting.Controllers.EmployeesApiController.GetAll">
+            <summary>
+            Получение всех сотрудников
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebStore.ServicesHosting.Controllers.EmployeesApiController.GetById(System.Int32)">
+            <summary>
+            Получить сотрудника по идентификатору
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebStore.ServicesHosting.Controllers.EmployeesApiController.Update(WebStore.Domain.ViewModel.EmployeeViewModel)">
+            <summary>
+            Обновить информацию о сотруднике по идентифтикатору
+            </summary>
+            <param name="employee"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

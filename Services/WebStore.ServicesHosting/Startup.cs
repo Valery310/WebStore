@@ -88,7 +88,7 @@ namespace WebStore.ServicesHosting
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStore.WebAPI", Version = "v1" });
 
-                const string webstore_api_xml = "WebStore.WebAPI.xml";
+                const string webstore_api_xml = "WebStore.ServicesHosting.xml";
                 const string webstore_domain_xml = "WebStore.Domain.xml";
                 const string debug_path = "bin/debug/net5.0";
 

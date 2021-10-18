@@ -50,7 +50,7 @@ namespace WebStore.Services.Implementations
             _httpContextAccessor = httpContextAccessor;
             var user_name = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated ? _httpContextAccessor.HttpContext.User.Identity.Name : null;
 
-            _cartName = $"WebStore.Cart{user_name}";
+            _cartName = $"WebStore.Cart{user_name}"; 
         }
 
 
@@ -109,26 +109,40 @@ namespace WebStore.Services.Implementations
 
         public async Task<CartViewModel> TransformCart()
         {
+            var r = new CartViewModel();
 
-            var products = await _productData.GetProducts(new ProductFilter()
+            if (Cart.ItemsCount > 0)
             {
-                Ids = Cart.Items.Select(i => i.ProductId).ToArray()
-            }).ConfigureAwait(false);
-            
-            var productsVM = products.Select(p => new ProductViewModel()
-            {
-                Id = p.Id,
-                ImageUrl = p.ImageUrl,
-                Name = p.Name,
-                Order = p.Order,
-                Price = p.Price,
-            }).ToList();
+                var products = (await _productData.GetProducts(new ProductFilter()
+                {
+                    Ids = Cart.Items.Select(i => i.ProductId).ToArray()
+                })
+                .ConfigureAwait(false));
 
-            var r = new CartViewModel
+                var productsVM = products.Select(p => new ProductViewModel()
+                {
+                    Id = p.Id,
+                    ImageUrl = p.ImageUrl,
+                    Name = p.Name,
+                    Order = p.Order,
+                    Price = p.Price,
+                }).ToList();
+
+                r = new CartViewModel
+                {
+                    Items = Cart.Items.ToDictionary(x => productsVM.First(y => y.Id ==
+                    x.ProductId), x => x.Quantity)
+                };
+            }
+            else
             {
-                Items = Cart.Items.ToDictionary(x => productsVM.First(y => y.Id ==
-                x.ProductId), x => x.Quantity)
-            };
+                r = new CartViewModel
+                {
+                    Items = new Dictionary<ProductViewModel, int>()
+
+                };
+            }
+
             return r;
         }
     }

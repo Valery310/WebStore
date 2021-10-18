@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WebStore.Domain.Entities;
 using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Services;
 
@@ -34,6 +36,11 @@ namespace WebStore.ServicesHosting.Controllers
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Удалить сотрудника по идентификатору
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -41,6 +48,10 @@ namespace WebStore.ServicesHosting.Controllers
             return result ? Ok(true) : NotFound(false);
         }
 
+        /// <summary>
+        /// Получение всех сотрудников
+        /// </summary>
+        /// <returns></returns>
         [HttpGet, ActionName("Get")]
         public IActionResult GetAll()
         {
@@ -52,7 +63,14 @@ namespace WebStore.ServicesHosting.Controllers
             return Ok(result);
         }
 
+         /// <summary>
+         /// Получить сотрудника по идентификатору
+         /// </summary>
+         /// <param name="id"></param>
+         /// <returns></returns>
         [HttpGet("{id}"), ActionName("Get")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetById(int id)
         {
             var result = _employeesData.GetById(id);
@@ -63,6 +81,11 @@ namespace WebStore.ServicesHosting.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Обновить информацию о сотруднике по идентифтикатору
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <returns></returns>
         [HttpPut("{id}"), ActionName("Put")]
         public IActionResult Update([FromBody]EmployeeViewModel employee)
         {

@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebStore.Domain</name>
+    </assembly>
+    <members>
+        <!-- Badly formed XML comment ignored for member "T:WebStore.Domain.Entities.Brand" -->
+        <member name="T:WebStore.Domain.Entities.Employee">
+            <summary>
+            Информация о сотруднике
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Employee.FirstName">
+            <summary>
+            Имя сотрудника
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Employee.LastName">
+            <summary>
+            Фамилия сотрудника
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Employee.Patronymic">
+            <summary>
+            Отчество сотрудника
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Employee.Age">
+            <summary>
+            Возраст сотрудника
+            </summary>
+        </member>
+        <member name="T:WebStore.Domain.Entities.Product">
+            <inheritdoc cref="T:WebStore.Domain.Entities.Base.NamedEntity" />
+            <summary>
+            Сущность продукт
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Product.SectionId">
+            <summary>
+            Секция к которой принадлежит товар
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Product.BrandId">
+            <summary>
+            Бренд товара
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Product.ImageUrl">
+            <summary>
+            Ссылка на картинку
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Product.Price">
+            <summary>
+            Цена
+            </summary>
+        </member>
+        <member name="T:WebStore.Domain.Entities.Section">
+            <inheritdoc cref="T:WebStore.Domain.Entities.Base.NamedEntity" />
+            <summary>
+            Сущность секция
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Section.ParentId">
+            <summary>
+            Родительская секция (при наличии)
+            </summary>
+        </member>
+        <member name="T:WebStore.Domain.Filters.ProductFilter">
+            <summary>
+            Класс для фильтрации товаров
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Filters.ProductFilter.SectionId">
+            <summary>
+            Секция, к которой принадлежит товар
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Filters.ProductFilter.BrandId">
+            <summary>
+            Бренд товара
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.ViewModel.BrandViewModel.ProductsCount">
+            <summary>
+            Количество товаров бренда
+            </summary>
+        </member>
+    </members>
+</doc>

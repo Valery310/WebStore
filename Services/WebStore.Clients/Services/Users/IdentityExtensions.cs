@@ -7,7 +7,7 @@ using System;
 namespace WebStore.Clients.Services.Users
 {
     public static class IdentityExtensions
-    {
+    {                                      
         public static IServiceCollection AddIdentityWebStoreWebAPIClients(this IServiceCollection services)
         {
             services.AddHttpClient("WebStoreAPI", (s, client) => client.BaseAddress = new Uri(s.GetRequiredService<IConfiguration>()["WebAPI"]))

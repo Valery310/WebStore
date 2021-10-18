@@ -93,6 +93,7 @@ namespace WebStore.ServicesHosting.Controllers
             //await db.SaveChangesAsync();
         }
 
+        [HttpDelete("Role/{role}")]
         [HttpPost("Role/Delete/{role}")]
         public async Task RemoveFromRoleAsync([FromBody] User user, string role/*, [FromServices] WebStoreDB db*/)
         {
