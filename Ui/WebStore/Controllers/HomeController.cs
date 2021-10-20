@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using WebStore.Domain.ViewModel;
@@ -22,6 +22,8 @@ namespace WebStore.Controllers
 
         public async Task<IActionResult> Index()
         {
+            throw new InvalidOperationException();
+
             _logger.LogInformation("Start : Open Index view");
 
             var values = await _valuesService.GetAsync();
@@ -68,6 +70,15 @@ namespace WebStore.Controllers
         {
             return View();
         }
+
+        [Route("/ErrorStatus/{id}")]
+        public IActionResult ErrorStatus(string id)
+        {
+            if (id == "404")
+                return RedirectToAction("Error");
+            return Content($"Статуcный код ошибки: {id}");
+        }
+
 
     }
 }

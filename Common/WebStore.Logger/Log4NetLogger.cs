@@ -14,6 +14,7 @@ namespace WebStore.Logger
         private readonly ILog _log;
         private ILoggerRepository _loggerRepository;
 
+
         public Log4NetLogger(string name, XmlElement xmlElement)
         {
             _name = name;

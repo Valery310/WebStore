@@ -15,7 +15,6 @@ using WebStore.Clients.Services.Values;
 using WebStore.Interfaces.Api;
 using WebStore.Services.Services.Implementations;
 using WebStore.Services.Implementations;
-using WebStore.Logger;
 using Microsoft.Extensions.Logging;
 using WebStore.Services.MiddleWare;
 
@@ -88,13 +87,15 @@ namespace WebStore
 
             WebStore.Logger.Log4NetExtensions.AddLog4Net(loggerFactory, "log4net.config");
 
+          //  env.EnvironmentName = "Production";
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Shared/Error");
+                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -106,7 +107,13 @@ namespace WebStore
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseStatusCodePagesWithRedirects("~/errorstatus/{0}");
+            //app.UseStatusCodePages();
+
+            //app.UseStatusCodePagesWithReExecute("/Home/ErrorStatus", "?statusCode={0}");
+
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+            //app.UseMiddleware<ErrorHandlingMiddleware>();
 
             // app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             // app.UseWelcomePage("/welcome");

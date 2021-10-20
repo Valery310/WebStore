@@ -124,7 +124,8 @@ namespace WebStore.ServicesHosting
 
             app.UseAuthorization();
 
-            app.UseMiddleware<ErrorHandlingMiddleware>();
+            //app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseEndpoints(endpoints =>
             {
