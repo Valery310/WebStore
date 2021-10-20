@@ -4,7 +4,12 @@
         <name>WebStore.Domain</name>
     </assembly>
     <members>
-        <!-- Badly formed XML comment ignored for member "T:WebStore.Domain.Entities.Brand" -->
+        <member name="T:WebStore.Domain.Entities.Brand">
+            <inheritdoc cref="T:WebStore.Domain.Entities.Base.NamedEntity" />
+            <summary>
+            Сущность брен
+            </summary>
+        </member>
         <member name="T:WebStore.Domain.Entities.Employee">
             <summary>
             Информация о сотруднике

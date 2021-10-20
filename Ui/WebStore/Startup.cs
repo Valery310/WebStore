@@ -2,19 +2,11 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using WebStore.DAL.Context;
 using WebStore.Domain.Entities;
 using WebStore.Interfaces.Services;
-//using WebStore.Interfaces.TestAPI;
-//using WebStore.Logger;
-using WebStore.Services.Data;
-using WebStore.Services.Services;
-//using WebStore.Services.Services.InCookies;
 using WebStore.Clients.Services.Employees;
 using WebStore.Clients.Services.Users;
 using WebStore.Clients.Services.Orders;
@@ -23,6 +15,8 @@ using WebStore.Clients.Services.Values;
 using WebStore.Interfaces.Api;
 using WebStore.Services.Services.Implementations;
 using WebStore.Services.Implementations;
+using WebStore.Logger;
+using Microsoft.Extensions.Logging;
 
 namespace WebStore
 {
@@ -87,8 +81,12 @@ namespace WebStore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp, ILoggerFactory loggerFactory)
         {
+           // loggerFactory.AddLog4Net();
+
+            WebStore.Logger.Log4NetExtensions.AddLog4Net(loggerFactory, "log4net.config");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

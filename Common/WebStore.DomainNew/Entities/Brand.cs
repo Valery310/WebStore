@@ -8,6 +8,7 @@ namespace WebStore.Domain.Entities
     /// <inheritdoc cref="NamedEntity" />
     /// <summary>
     /// Сущность брен
+    /// </summary>
     [Table("Brands")]
     public class Brand: NamedEntity, IOrderedEntity
     {

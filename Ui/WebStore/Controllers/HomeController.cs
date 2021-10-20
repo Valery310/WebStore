@@ -22,8 +22,7 @@ namespace WebStore.Controllers
 
         public async Task<IActionResult> Index()
         {
-           // List<string> values = new ();
-           // var  values1 = _valuesService.Get();
+            _logger.LogInformation("Start : Open Index view");
             var values = await _valuesService.GetAsync();
             return View(values);
         }
