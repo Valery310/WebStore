@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using WebStore.DAL.Context;
 using WebStore.Interfaces.Services;
@@ -16,6 +15,8 @@ using WebStore.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using WebStore.Services.Data;
 using System.IO;
+using Microsoft.Extensions.Logging;
+using WebStore.Services.MiddleWare;
 
 namespace WebStore.ServicesHosting
 {
@@ -106,21 +107,24 @@ namespace WebStore.ServicesHosting
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            WebStore.Logger.Log4NetExtensions.AddLog4Net(loggerFactory, "log4net.config");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebStore.ServicesHosting v1"));
             }
-          //  app.UseMvc();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

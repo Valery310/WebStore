@@ -17,6 +17,7 @@ using WebStore.Services.Services.Implementations;
 using WebStore.Services.Implementations;
 using WebStore.Logger;
 using Microsoft.Extensions.Logging;
+using WebStore.Services.MiddleWare;
 
 namespace WebStore
 {
@@ -104,8 +105,12 @@ namespace WebStore
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-          //  app.UseWelcomePage("/welcome");
-         //   app.UseMiddleware<TestMiddleware>();
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
+            // app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+            // app.UseWelcomePage("/welcome");
+            // app.UseMiddleware<TestMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

@@ -23,6 +23,7 @@ namespace WebStore.Controllers
         public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Start : Open Index view");
+
             var values = await _valuesService.GetAsync();
             return View(values);
         }
