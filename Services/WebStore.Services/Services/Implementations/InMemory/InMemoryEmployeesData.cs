@@ -22,31 +22,40 @@ namespace WebStore.Services.Services
 
         public int Add(EmployeeViewModel employee)
         {
+            logger.LogInformation("Добавление сотрудника");
+
             if (employee is null)
             {
+                logger.LogError("Данные пусты");
                 throw new ArgumentNullException(nameof(employee));
             }
 
             if (TestData.Employees.Contains(employee))
             {
-               // throw new ArgumentException($"Такая запись сотрудника уже существует");
+                logger.LogError("Такая запись сотрудника уже существует");
+                // throw new ArgumentException($"Такая запись сотрудника уже существует");
                 return employee.Id;
             }
 
             employee.Id = _employees.Max(i => i.Id) + 1;
             TestData.Employees.Add(employee);
+            logger.LogInformation("Сотрудник усешно добавлен");
 
             return employee.Id;
         }
 
         public bool Delete(int id)
         {
+            logger.LogInformation("Удаление сотрудника с id = {0}", id);
+
             var employee = GetById(id);
             if (employee!=null)
-            {
+            {              
                 _employees.Remove(employee);
+                logger.LogInformation("Сотрудник успешно удален");
                 return true;
             }
+            logger.LogError("Сотрудник не найден");
             return false;
         }
 
@@ -72,12 +81,14 @@ namespace WebStore.Services.Services
         {
             if (employee is null)
             {
+                logger.LogError("Данные пусты");
                 throw new ArgumentNullException(nameof(employee));
             }
 
             var temp = TestData.Employees.SingleOrDefault(t => t.Id == employee.Id);
             if (temp is null)
             {
+                logger.LogError("Сотрудник не существует");
                 throw new InvalidOperationException("Сотрудник не существует");
             }
             // temp = employee;

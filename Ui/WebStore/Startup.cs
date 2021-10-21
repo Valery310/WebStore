@@ -82,12 +82,12 @@ namespace WebStore
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp, ILoggerFactory loggerFactory)
-        {
-           // loggerFactory.AddLog4Net();
+        {   
+            loggerFactory.AddLog4Net();
 
-            WebStore.Logger.Log4NetExtensions.AddLog4Net(loggerFactory, "log4net.config");
+            // WebStore.Logger.Log4NetExtensions.AddLog4Net(loggerFactory, "log4net.config");
 
-          //  env.EnvironmentName = "Production";
+            //  env.EnvironmentName = "Production";
 
             if (env.IsDevelopment())
             {

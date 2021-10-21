@@ -22,9 +22,9 @@ namespace WebStore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            throw new InvalidOperationException();
+           // throw new InvalidOperationException();
 
-            _logger.LogInformation("Start : Open Index view");
+            _logger.LogInformation("Открытие {0} контроллера {1}", ControllerContext.ActionDescriptor.ActionName, ControllerContext.ActionDescriptor.ControllerName);
 
             var values = await _valuesService.GetAsync();
             return View(values);
@@ -38,6 +38,7 @@ namespace WebStore.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            _logger.LogError("Error page : {0}", Activity.Current?.Id ?? HttpContext.TraceIdentifier);
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 

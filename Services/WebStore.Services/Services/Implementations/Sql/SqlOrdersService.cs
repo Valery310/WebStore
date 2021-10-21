@@ -61,51 +61,60 @@ namespace WebStore.Services.Implementations.Sql
         {
             var user = await _userManager.FindByNameAsync(UserName);
             if (user is null)
-                throw new InvalidOperationException($"Пользователь {UserName} отсутствует в БД");
-
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-
-            var order = new Order
             {
-                User = user,
-                Address = orderModel.OrderModel.Address,
-                Phone = orderModel.OrderModel.Phone,
-                Name = orderModel.OrderModel.Name,
-                Description = orderModel.OrderModel.Description
-            };
-            var product_ids = orderModel.Items.Select(item => item.Id).ToArray();
+                _logger.LogError("Пользователь {0} отсутствует в БД", UserName);
+                throw new InvalidOperationException($"Пользователь {UserName} отсутствует в БД");
+            }
 
-            var cart_products = await _context.Products
-               .Where(p => product_ids.Contains(p.Id))
-               .ToArrayAsync();
+            using (_logger.BeginScope("Создание заказа от {0}", UserName))
+            {
+                await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            order.OrderItems = orderModel.Items.Join(
-                cart_products,
-                cart_item => cart_item.Id,
-                cart_product => cart_product.Id,
-                (cart_item, cart_product) => new OrderItem
+                var order = new Order
                 {
-                    Order = order,
-                    Product = cart_product,
-                    Price = cart_product.Price, // здесь можно применить скидки...
+                    User = user,
+                    Address = orderModel.OrderModel.Address,
+                    Phone = orderModel.OrderModel.Phone,
+                    Name = orderModel.OrderModel.Name,
+                    Description = orderModel.OrderModel.Description
+                };
+                var product_ids = orderModel.Items.Select(item => item.Id).ToArray();
+
+                var cart_products = await _context.Products
+                   .Where(p => product_ids.Contains(p.Id))
+                   .ToArrayAsync();
+
+                order.OrderItems = orderModel.Items.Join(
+                    cart_products,
+                    cart_item => cart_item.Id,
+                    cart_product => cart_product.Id,
+                    (cart_item, cart_product) => new OrderItem
+                    {
+                        Order = order,
+                        Product = cart_product,
+                        Price = cart_product.Price, // здесь можно применить скидки...
                     Quantity = cart_item.Quantity,
-                }).ToArray();
+                    }).ToArray();
 
-            await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
+                await _context.Orders.AddAsync(order);
+                await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Заказ для пользователя {0} сформирован с id:{1}", UserName, order.Id);
+                _logger.LogInformation("Заказ для пользователя {0} сформирован с id:{1}", UserName, order.Id);
 
-            await transaction.CommitAsync();
+                await transaction.CommitAsync();
 
-            return new Order() { Id = order.Id, 
-                Address = order.Address, 
-                Date = order.Date, 
-                Description = order.Description,
-                Name = order.Name,
-                OrderItems = order.OrderItems,
-                Phone = order.Phone, 
-                User = order.User };
+                return new Order()
+                {
+                    Id = order.Id,
+                    Address = order.Address,
+                    Date = order.Date,
+                    Description = order.Description,
+                    Name = order.Name,
+                    OrderItems = order.OrderItems,
+                    Phone = order.Phone,
+                    User = order.User
+                };
+            }      
         }
     }
 }

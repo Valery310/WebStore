@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using WebStore.DAL.Context;
 using WebStore.Domain.Dto;
 using WebStore.Domain.Dto.User;
@@ -19,10 +20,12 @@ namespace WebStore.ServicesHosting.Controllers
     public class UsersApiController : ControllerBase
     {
         public readonly UserStore<User, Role, WebStoreContext> _UserStore;
+        private readonly ILogger<UsersApiController> _Logger;
 
-        public UsersApiController(WebStoreContext db)
+        public UsersApiController(WebStoreContext db, ILogger<UsersApiController> Logger)
         {
             _UserStore = new UserStore<User, Role, WebStoreContext>(db);
+            _Logger = Logger;
             //_UserStore.AutoSaveChanges = false; // выключение отслеживания изменений для повышения быстродействия
         }
 

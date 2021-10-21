@@ -30,10 +30,17 @@ namespace WebStore
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                }).ConfigureLogging(builder =>
-                {
-                    builder.SetMinimumLevel(LogLevel.Trace);
-                    builder.AddLog4Net("log4net.config");
-                });
+                })
+            //.ConfigureLogging(builder =>
+            //    {
+                    //builder.SetMinimumLevel(LogLevel.Trace);
+                   // builder.AddLog4Net("log4net.config")
+                    //.AddConsole(c => c.IncludeScopes = true)
+                    //.AddDebug()
+                    //.AddEventLog()
+                    //.AddFilter("Microsoft", LogLevel.Information)
+                //    ;
+                //})
+            ;
     }
 }
