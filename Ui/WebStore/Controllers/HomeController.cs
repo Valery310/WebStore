@@ -14,7 +14,7 @@ namespace WebStore.Controllers
 
         private readonly IValuesService _valuesService;
 
-        public HomeController(ILogger<HomeController> logger, IValuesService valuesService)
+        public HomeController(IValuesService valuesService, ILogger<HomeController> logger)
         {
             _logger = logger;
             _valuesService = valuesService;
@@ -24,7 +24,7 @@ namespace WebStore.Controllers
         {
            // throw new InvalidOperationException();
 
-            _logger.LogInformation("Открытие {0} контроллера {1}", ControllerContext.ActionDescriptor.ActionName, ControllerContext.ActionDescriptor.ControllerName);
+            _logger.LogInformation("Открытие {0} контроллера {1}", ControllerContext.ActionDescriptor?.ActionName, ControllerContext.ActionDescriptor?.ControllerName);
 
             var values = await _valuesService.GetAsync();
             return View(values);
@@ -76,8 +76,16 @@ namespace WebStore.Controllers
         public IActionResult ErrorStatus(string id)
         {
             if (id == "404")
-                return RedirectToAction("Error");
+            {
+                 return RedirectToAction("Error");
+            }
             return Content($"Статуcный код ошибки: {id}");
+
+            //if (id == "404")
+            //{
+            //    return RedirectToAction("NotFound");
+            //}
+            //return RedirectToAction("Error", $"Статуcный код ошибки: {id}");
         }
 
 
