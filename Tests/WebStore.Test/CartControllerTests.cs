@@ -22,8 +22,9 @@ namespace WebStore.Test
         {
             var mockCartService = new Mock<ICartService>();
             var mockOrdersService = new Mock<IOrdersService>();
+
             var controller = new CartController(mockCartService.Object, mockOrdersService.Object);
-            controller.ModelState.AddModelError("error", "InvalidModel");
+            controller.ModelState.AddModelError("error", "Invalid Model");
 
             var result = await controller.CheckOut(new OrderViewModel()
             {
@@ -33,6 +34,9 @@ namespace WebStore.Test
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<DetailsViewModel>(viewResult.ViewData.Model);
             Assert.Equal("test", model.Order.Name);
+
+            mockCartService.Verify(s => s.TransformCart());
+            mockOrdersService.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -41,7 +45,7 @@ namespace WebStore.Test
             #region Arrange
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.NameIdentifier, "1"),
+                new Claim(ClaimTypes.NameIdentifier, "1", ClaimTypes.Name, "1"),
             }));
             // setting up cartService
             var mockCartService = new Mock<ICartService>();
@@ -85,6 +89,12 @@ namespace WebStore.Test
             Assert.Null(redirectResult.ControllerName);
             Assert.Equal("OrderConfirmed", redirectResult.ActionName);
             Assert.Equal(1, redirectResult.RouteValues["id"]);
+
+            mockCartService.Verify(s => s.TransformCart());
+            mockCartService.Verify(s => s.RemoveAll());
+            mockCartService.VerifyNoOtherCalls();
+            mockOrdersService.Verify(s => s.CreateOrderAsync(It.IsAny<CreateOrderDto>(), It.IsAny<string>()));
+            mockOrdersService.VerifyNoOtherCalls();
         }
     }
 }

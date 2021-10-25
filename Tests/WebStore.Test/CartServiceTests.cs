@@ -11,6 +11,7 @@ using WebStore.Domain.Filters;
 using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Services;
 using WebStore.Services.Implementations;
+using WebStore.Services.Services;
 using Xunit;
 using Assert = Xunit.Assert;
 
@@ -84,13 +85,17 @@ namespace WebStore.Test
             };
 
             var productData = new Mock<IProductData>();
+            productData.Setup(c => c.GetProducts(It.IsAny<ProductFilter>())).ReturnsAsync(new[] { new Product { Id = 1 }, new Product { Id = 2 }, new Product { Id = 3 } } );
+
             var cartStore = new Mock<ICartStore>();
             cartStore.Setup(c => c.Cart).Returns(cart);
 
-            var cartService = new CookieCartService(productData.Object, cartStore.Object);
+            var cartService = new CartService(cartStore.Object, productData.Object);
+
             cartService.AddToCart(5);
             Assert.Equal(1, cart.ItemsCount);
-            Assert.Equal(1, cart.Items.Count);
+            Assert.Single(cart.Items);
+        //    Assert.Equal(1, cart.Items.Count);
             Assert.Equal(5, cart.Items[0].ProductId);
         }
 
@@ -107,9 +112,10 @@ namespace WebStore.Test
             var productData = new Mock<IProductData>();
             var cartStore = new Mock<ICartStore>();
             cartStore.Setup(c => c.Cart).Returns(cart);
-            var cartService = new CookieCartService(productData.Object, cartStore.Object);
+            var cartService = new CartService(cartStore.Object, productData.Object);
             cartService.AddToCart(5);
             Assert.Equal(1, cart.Items.Count);
+            Assert.Single(cart.Items);
             Assert.Equal(3, cart.ItemsCount);
         }
 
@@ -127,7 +133,7 @@ namespace WebStore.Test
             var productData = new Mock<IProductData>();
             var cartStore = new Mock<ICartStore>();
             cartStore.Setup(c => c.Cart).Returns(cart);
-            var cartService = new CookieCartService(productData.Object, cartStore.Object);
+            var cartService = new CartService(cartStore.Object, productData.Object);
             cartService.RemoveFromCart(1);
             Assert.Equal(1, cart.Items.Count);
             Assert.Equal(2, cart.Items[0].ProductId);
@@ -147,7 +153,7 @@ namespace WebStore.Test
             var productData = new Mock<IProductData>();
             var cartStore = new Mock<ICartStore>();
             cartStore.Setup(c => c.Cart).Returns(cart);
-            var cartService = new CookieCartService(productData.Object, cartStore.Object);
+            var cartService = new CartService(cartStore.Object, productData.Object);
             cartService.RemoveAll();
             Assert.Equal(0, cart.Items.Count);
         }
@@ -166,7 +172,7 @@ namespace WebStore.Test
             var productData = new Mock<IProductData>();
             var cartStore = new Mock<ICartStore>();
             cartStore.Setup(c => c.Cart).Returns(cart);
-            var cartService = new CookieCartService(productData.Object, cartStore.Object);
+            var cartService = new CartService(cartStore.Object, productData.Object);
             cartService.DecrementFromCart(1);
             Assert.Equal(3, cart.ItemsCount);
             Assert.Equal(2, cart.Items.Count);
@@ -188,7 +194,7 @@ namespace WebStore.Test
             var productData = new Mock<IProductData>();
             var cartStore = new Mock<ICartStore>();
             cartStore.Setup(c => c.Cart).Returns(cart);
-            var cartService = new CookieCartService(productData.Object, cartStore.Object);
+            var cartService = new CartService(cartStore.Object, productData.Object);
             cartService.DecrementFromCart(2);
             Assert.Equal(3, cart.ItemsCount);
             Assert.Equal(1, cart.Items.Count);
@@ -219,7 +225,7 @@ namespace WebStore.Test
             productData.Setup(c => c.GetProducts(It.IsAny<ProductFilter>()).Result).Returns(products.FromDTO());
             var cartStore = new Mock<ICartStore>();
             cartStore.Setup(c => c.Cart).Returns(cart);
-            var cartService = new CookieCartService(productData.Object, cartStore.Object);
+            var cartService = new CartService(cartStore.Object, productData.Object);
             var result = await cartService.TransformCart();
             Assert.Equal(4, result.ItemsCount);
             Assert.Equal(1.11m, result.Items.First().Key.Price);

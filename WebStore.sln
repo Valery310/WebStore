@@ -35,13 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.TestConsole", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.Test", "Tests\WebStore.Test\WebStore.Test.csproj", "{8C3F85F8-ADD8-4DF1-8F25-E19154234EE5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{B73438FC-B3B7-402A-87C3-4BFFDF843F9B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{691413B1-8BB3-488B-A433-73D02BB4DD56}"
-	ProjectSection(SolutionItems) = preProject
-		Testing.yml = Testing.yml
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,7 +101,6 @@ Global
 		{B1BA5F5B-6071-4873-AF94-8BE74D8B7545} = {4173DD0A-2580-418B-A70A-E792543086F0}
 		{4297B436-9DC0-49A9-AF5D-49419F0CA198} = {09E18DC6-0785-46C9-B13B-B8524C82AD9D}
 		{8C3F85F8-ADD8-4DF1-8F25-E19154234EE5} = {09E18DC6-0785-46C9-B13B-B8524C82AD9D}
-		{691413B1-8BB3-488B-A433-73D02BB4DD56} = {B73438FC-B3B7-402A-87C3-4BFFDF843F9B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B96ABF28-F383-46CD-A749-E44DA622C52F}
