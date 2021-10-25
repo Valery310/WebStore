@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using WebStore.Domain.Dto.Order;
 using WebStore.Domain.Entities.Base;
 
 namespace WebStore.Domain.Entities

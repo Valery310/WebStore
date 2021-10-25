@@ -4,7 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using WebStore.DAL.Context;
+using WebStore.Domain.Dto;
+using WebStore.Domain.Dto.Order;
 using WebStore.Domain.Entities;
 using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Services;
@@ -14,93 +17,154 @@ namespace WebStore.Services.Implementations.Sql
     public class SqlOrdersService : IOrdersService
     {
         private readonly WebStoreContext _context;
+        private readonly ILogger<SqlOrdersService> _logger;
         private readonly UserManager<User> _userManager;
-        public SqlOrdersService(WebStoreContext context, UserManager<User> userManager)
+
+        public SqlOrdersService(WebStoreContext context, UserManager<User> userManager, ILogger<SqlOrdersService> logger)
         {
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
+
         public async Task<IEnumerable<Order>> GetUserOrdersAsync(string userName)
         {
             return await _context.Orders
-                .Include(o => o.User)
-                .Include(o => o.OrderItems)
-                .ThenInclude(o =>o.Product)
-                .Where(o => o.User.UserName == userName)
-                .ToArrayAsync()
-                .ConfigureAwait(false);
+           .Include(order => order.User)
+           .Include(order => order.OrderItems)
+           .ThenInclude(item => item.Product)
+           .Where(order => order.User.UserName == userName)
+           .ToArrayAsync();
+            //return await _context.Orders
+            //    .Include("User")
+            //    .Include("OrderItems")
+            //    .Include("Products")
+            //    .Where(o => o.User.UserName.Equals(userName))
+            //    .Select(o => new Order()
+            //    {
+            //        Id = o.Id,
+            //        Name = o.Name,
+            //        Address = o.Address,
+            //        Date = o.Date,
+            //        Phone = o.Phone,
+            //        OrderItems = o.OrderItems,
+            //        Description = o.Description
+            //    })
+            //    .ToArrayAsync()
+            //    .ConfigureAwait(false);
         }
+
         public async Task<Order> GetOrderByIdAsync(int id)
         {
-            return await _context.Orders
-               .Include(o => o.User)
-               .Include(o => o.OrderItems)
-               .ThenInclude(o => o.Product)
-               .FirstOrDefaultAsync(o => o.Id == id)
-               .ConfigureAwait(false);
+            var order = await _context.Orders.Include("OrderItems").FirstOrDefaultAsync(o => o.Id.Equals(id)).ConfigureAwait(false);
+
+            if (order == null)
+            {
+                return null;
+            }
+
+            return new Order()
+            {
+                Id = order.Id,
+                Name = order.Name,
+                Address = order.Address,
+                Date = order.Date,
+                Phone = order.Phone,
+                OrderItems = order.OrderItems
+            };
         }
-        public async Task<Order> CreateOrderAsync(OrderViewModel orderModel, CartViewModel transformCart, string userName)
+
+        public async Task<Order> CreateOrderAsync(CreateOrderDto orderModel, string UserName)
         {
-            var user = await _userManager.FindByNameAsync(userName).ConfigureAwait(false);
-
+            var user = await _userManager.FindByNameAsync(UserName);
             if (user is null)
-            {
-                throw new InvalidOperationException($"Пользователь {userName} не найден");
-            }
+                throw new InvalidOperationException($"Пользователь {UserName} отсутствует в БД");
 
-            await using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
 
-                var order = new Order()
+            var order = new Order
+            {
+                User = user,
+                Address = orderModel.OrderModel.Address,
+                Phone = orderModel.OrderModel.Phone,
+                Name = orderModel.OrderModel.Name,
+                Description = orderModel.OrderModel.Description
+            };
+            var product_ids = orderModel.Items.Select(item => item.Id).ToArray();
+
+            var cart_products = await _context.Products
+               .Where(p => product_ids.Contains(p.Id))
+               .ToArrayAsync();
+
+            order.OrderItems = orderModel.Items.Join(
+                cart_products,
+                cart_item => cart_item.Id,
+                cart_product => cart_product.Id,
+                (cart_item, cart_product) => new OrderItem
                 {
-                    Address = orderModel.Address,
-                    Phone = orderModel.Phone,
-                    User = user,
-                    Description = orderModel.Description,
-                    Name = orderModel.Name 
-                };
+                    Order = order,
+                    Product = cart_product,
+                    Price = cart_product.Price, // здесь можно применить скидки...
+                    Quantity = cart_item.Quantity,
+                }).ToArray();
 
-              //  var products_ids = transformCart.Items.Select(Items => Items.Key.Product.Id).ToArray();
-                var products_ids = transformCart.Items.Select(Items => Items.Key.Id).ToArray();
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
 
-                var cart_products = await _context.Products.Where(p => products_ids.Contains(p.Id)).ToArrayAsync();
+            _logger.LogInformation("Заказ для пользователя {0} сформирован с id:{1}", UserName, order.Id);
 
-                order.OrderItems = transformCart.Items.Join(
-                    cart_products,
-                    cart_item => cart_item.Key.Id,
-                    cart_product => cart_product.Id,
-                    (cart_item, cart_product) => new OrderItem
-                    {
-                        Order = order,
-                        Product = cart_product,
-                        Price = cart_product.Price, //тут можно добавить скидку
-                                                    //  Quantity = cart_item.Key.Quantity
-                        Quantity = cart_item.Value
-                    }
-                    ).ToArray();
+            await transaction.CommitAsync();
 
-                await _context.Orders.AddAsync(order);
-
-                //foreach (var item in transformCart.Items)
-                //{
-                //    var productVm = item.Key;
-                //    var product = await _context.Products.FirstOrDefaultAsync(p => p.Id.Equals(productVm.Id));
-                //    if (product == null)
-                //        throw new InvalidOperationException("Продукт не найден в базе");
-                //        var orderItem = new OrderItem()
-                //        {
-                //            Order = order,
-                //            Price = product.Price,
-                //            Quantity = item.Value,
-                //            Product = product
-                //        };
-
-                //    await _context.OrderItems.AddRangeAsync(order.OrderItems); нет неообходимости, так как контекст сам определит, что в order есть и orderitems и отправит в БД.
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                return order;
-            }
+            return new Order() { Id = order.Id, 
+                Address = order.Address, 
+                Date = order.Date, 
+                Description = order.Description,
+                Name = order.Name,
+                OrderItems = order.OrderItems,
+                Phone = order.Phone, 
+                User = order.User };
         }
+
+
+        //public async Task<OrderDto> CreateOrderAsync(CreateOrderModel orderModel, string userName)
+        //{
+        //    var user = await _userManager.FindByNameAsync(userName).ConfigureAwait(false);
+
+        //    using (var transaction = await _context.Database.BeginTransactionAsync())
+        //    {
+        //        var order = new Order()
+        //        {
+        //            Address = orderModel.OrderViewModel.Address,
+        //            Name = orderModel.OrderViewModel.Name,
+        //            Date = DateTime.Now,
+        //            Phone = orderModel.OrderViewModel.Phone,
+        //            User = user
+        //        };
+        //        _context.Orders.Add(order);
+
+        //        foreach (var item in orderModel.OrderItems)
+        //        {
+        //            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id.Equals(item.Id));
+
+        //            if (product == null)
+        //            {
+        //                throw new InvalidOperationException("Продукт не найден в базе");
+        //            }
+        //            var orderItem = new OrderItem()
+        //            {
+        //                Order = order,
+        //                Price = product.Price,
+        //                Quantity = item.Quantity,
+        //                Product = product
+        //            };
+
+        //            _context.OrderItems.Add(orderItem);
+        //        }
+        //        await _context.SaveChangesAsync();
+        //        await transaction.CommitAsync();
+
+        //        return await GetOrderByIdAsync(order.Id);
+        //    }
+        //}
     }
 }

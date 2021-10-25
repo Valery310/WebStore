@@ -16,12 +16,12 @@ namespace WebStore.Components
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var brands = GetBrands();
+            var brands = await GetBrands();
             return View(brands);
         }
-        private IEnumerable<BrandViewModel> GetBrands()
+        private async Task<IEnumerable<BrandViewModel>> GetBrands()
         {
-            var dbBrands = _productData.GetBrands();
+            var dbBrands = await _productData.GetBrands();
             return dbBrands.Select(b => new BrandViewModel
             {
                 Id = b.Id,

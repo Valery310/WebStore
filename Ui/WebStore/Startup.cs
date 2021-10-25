@@ -15,6 +15,9 @@ using WebStore.Services.Services;
 using WebStore.Domain.Entities;
 using WebStore.Interfaces.Api;
 using WebStore.Clients.Services.Values;
+using WebStore.Clients.Services.Employees;
+using WebStore.Clients.Services.Products;
+using WebStore.Clients.Services.Orders;
 
 namespace WebStore
 {
@@ -33,15 +36,23 @@ namespace WebStore
         {
             
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            
-            services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
-            services.AddScoped<IProductData, SqlProductData>();
-            services.AddScoped<IOrdersService, SqlOrdersService>();
 
             // Добавляем реализацию клиента
-           // services.AddTransient<IValuesService, ValuesClient>();
+            // services.AddTransient<IValuesService, ValuesClient>();
+            services.AddHttpClient("WebStoreAPI", client => client.BaseAddress = new Uri(Configuration["WebAPI"]))
+                .AddTypedClient<IValuesService, ValuesClient>()
+                .AddTypedClient<IEmployeesData, EmployeesClient>()
+                .AddTypedClient<IProductData, ProductsClient>()
+                .AddTypedClient<IOrdersService, OrdersClient>();
 
-            services.AddHttpClient("WebStoreAPI", client => client.BaseAddress = new Uri(Configuration["WebAPI"])).AddTypedClient<IValuesService, ValuesClient>();
+            //  services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
+         //   services.AddSingleton<IEmployeesData, EmployeesClient>();
+        //    services.AddScoped<IProductData, SqlProductData>();
+           // services.AddScoped<IOrdersService, SqlOrdersService>();
+
+
+
+          
 
 
             var database_type = Configuration["Database"];

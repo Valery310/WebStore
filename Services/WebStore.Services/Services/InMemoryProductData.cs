@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebStore.Domain.Dto;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
 using WebStore.Interfaces.Services;
@@ -434,6 +435,46 @@ namespace WebStore.Services.Services
         }
 
         public Task DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Section>> IProductData.GetSections()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Brand>> IProductData.GetBrands()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Product>> IProductData.GetProducts(ProductFilter filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Product> IProductData.GetProductById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<int> IProductData.UpdateAsync(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IProductData.DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Section> GetSectionsById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Brand> GetBrandsById(int id)
         {
             throw new NotImplementedException();
         }
