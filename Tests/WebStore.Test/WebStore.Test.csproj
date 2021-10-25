@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\WebStore.Logger\WebStore.Logger.csproj" />
+    <ProjectReference Include="..\..\Services\WebStore.ServicesHosting\WebStore.ServicesHosting.csproj" />
     <ProjectReference Include="..\..\Ui\WebStore\WebStore.csproj" />
   </ItemGroup>
 

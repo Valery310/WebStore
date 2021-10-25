@@ -40,9 +40,9 @@ namespace WebStore.Test
             _controller = new HomeController(mockService.Object, logger);
             _controller.ControllerContext = new ControllerContext()
             {
-                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor() {ActionName = "Index", ControllerName = "Home" },
+                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor() { ActionName = "Index", ControllerName = "Home" },
                 HttpContext = new DefaultHttpContext(),
-        };  
+            };
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace WebStore.Test
             var redirectToActionResult = Xunit.Assert.IsType<RedirectToActionResult>(result);
             Xunit.Assert.Null(redirectToActionResult.ControllerName);
             // Xunit.Assert.Equal("NotFound", redirectToActionResult.ActionName);Error
-            Xunit.Assert.Equal("Error", redirectToActionResult.ActionName); 
+            Xunit.Assert.Equal("Error", redirectToActionResult.ActionName);
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace WebStore.Test
             var result = _controller.Error();
             // Assert
             var viewResult = Xunit.Assert.IsType<ViewResult>(result);
-             Xunit.Assert.IsType<ViewResult>(result);
+            Xunit.Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -117,6 +117,18 @@ namespace WebStore.Test
             var result = _controller.ErrorStatus("500");
             var contentResult = Xunit.Assert.IsType<ContentResult>(result);
             Xunit.Assert.Equal("Статуcный код ошибки: 500", contentResult.Content);
+        }
+
+        [Theory]
+        [InlineData("123")]
+        [InlineData("QWE")]
+        public void Status_with_id_Returns_View(string id)
+        {
+            var exp_content = "Статуcный код ошибки: " + id;
+            var result = _controller.ErrorStatus(id);
+            var content_result = Xunit.Assert.IsType<ContentResult>(result);
+            var actual_content = content_result.Content;
+            Xunit.Assert.Equal(exp_content, actual_content);
         }
     }
 }
