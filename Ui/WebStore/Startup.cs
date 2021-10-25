@@ -13,10 +13,11 @@ using WebStore.Clients.Services.Orders;
 using WebStore.Clients.Services.Products;
 using WebStore.Clients.Services.Values;
 using WebStore.Interfaces.Api;
-using WebStore.Services.Services.Implementations;
 using WebStore.Services.Implementations;
 using Microsoft.Extensions.Logging;
 using WebStore.Services.MiddleWare;
+using WebStore.Services.Services.Implementations;
+using WebStore.Services.Services;
 
 namespace WebStore
 {
@@ -68,7 +69,7 @@ namespace WebStore
             });
 
             services.AddScoped<ICartStore, CookieCartStore>();
-            services.AddScoped<ICartService, CookieCartService>();
+            services.AddScoped<ICartService, CartService>();
 
 
             services.AddHttpClient("WebStoreAPI", client => client.BaseAddress = new Uri(Configuration["WebAPI"]))

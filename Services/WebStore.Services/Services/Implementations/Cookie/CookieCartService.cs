@@ -7,6 +7,7 @@ using WebStore.Domain.Entities;
 using WebStore.Domain.ViewModel;
 using WebStore.Domain.Filters;
 using System.Threading.Tasks;
+using System;
 
 namespace WebStore.Services.Implementations
 {
@@ -15,8 +16,9 @@ namespace WebStore.Services.Implementations
         private readonly IProductData _productData;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _cartName;
+      //  private readonly ICartStore _cartStore;
 
-        private Cart Cart
+        public Cart Cart
         {
             get
             {
@@ -26,22 +28,34 @@ namespace WebStore.Services.Implementations
                 var cart_cookie = context.Request.Cookies[_cartName];
                 if (cart_cookie is null)
                 {
-                    var cart = new Cart();
-                    cookies.Append(_cartName, JsonConvert.SerializeObject(cart));
+                    var cart = new Cart() { Items = new System.Collections.Generic.List<CartItem>() };
+                    cookies.Append(_cartName, JsonConvert.SerializeObject(cart), new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(1)
+                    });
                     return cart;
                 }
 
-                ReplaceCookies(cookies, cart_cookie);
+                ReplaceCookies(cookies, cart_cookie, new CookieOptions() { Expires = DateTime.Now.AddDays(1) });
                 return JsonConvert.DeserializeObject<Cart>(cart_cookie);
             }
-            set => ReplaceCookies(_httpContextAccessor.HttpContext!.Response.Cookies, JsonConvert.SerializeObject(value));
-            
+            set => ReplaceCookies(_httpContextAccessor.HttpContext!.Response.Cookies, JsonConvert.SerializeObject(value), new CookieOptions() { Expires = DateTime.Now.AddDays(1) });
+            //{
+            //    var json = JsonConvert.SerializeObject(value);
+            //    _httpContextAccessor.HttpContext.Response.Cookies.Delete(_cartName);
+            //    _httpContextAccessor.HttpContext.Response.Cookies.Append(_cartName, json, new
+            //    CookieOptions()
+            //    {
+            //        Expires = DateTime.Now.AddDays(1)
+            //    });
+            //}
+
         }
 
-        private void ReplaceCookies(IResponseCookies cookies, string cookie)
+        private void ReplaceCookies(IResponseCookies cookies, string cookie, CookieOptions cookieOptions = null)
         {
             cookies.Delete(_cartName);
-            cookies.Append(_cartName, cookie);
+            cookies.Append(_cartName, cookie, cookieOptions);
         }
 
         public CookieCartService(IProductData productData, IHttpContextAccessor httpContextAccessor)
@@ -50,9 +64,17 @@ namespace WebStore.Services.Implementations
             _httpContextAccessor = httpContextAccessor;
             var user_name = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated ? _httpContextAccessor.HttpContext.User.Identity.Name : null;
 
-            _cartName = $"WebStore.Cart{user_name}"; 
+            _cartName = $"WebStore.Cart{user_name}";
         }
 
+        public CookieCartService(IProductData productData, ICartStore cart)
+        {
+            _cartName = "";
+            _productData = productData;
+            _httpContextAccessor = new HttpContextAccessor() { HttpContext = new DefaultHttpContext(), };
+           // _httpContextAccessor.HttpContext.Response.Headers.Add("name", _cartName);
+            Cart = cart.Cart;           
+        }
 
         public void AddToCart(int id)
         {
@@ -71,7 +93,7 @@ namespace WebStore.Services.Implementations
             {
                 cart.Items.Add(new CartItem { ProductId = id, Quantity = 1 });
             }
-               
+
             Cart = cart;
         }
 
@@ -92,7 +114,8 @@ namespace WebStore.Services.Implementations
 
         public void RemoveAll()
         {
-            Cart = new Cart { Items = new List<CartItem>() };
+            Cart.Items.Clear();
+           // Cart = new Cart { Items = new List<CartItem>() };
         }
 
 
@@ -111,26 +134,34 @@ namespace WebStore.Services.Implementations
         {
             var r = new CartViewModel();
 
-            if (Cart.ItemsCount > 0)
+            if (Cart.ItemsCount >= 0)
             {
                 var products = (await _productData.GetProducts(new ProductFilter()
                 {
                     Ids = Cart.Items.Select(i => i.ProductId).ToArray()
                 })
-                .ConfigureAwait(false));
-
-                var productsVM = products.Select(p => new ProductViewModel()
+                .ConfigureAwait(false))
+                .Select(p => new ProductViewModel()
                 {
                     Id = p.Id,
                     ImageUrl = p.ImageUrl,
                     Name = p.Name,
                     Order = p.Order,
                     Price = p.Price,
-                }).ToList();
+                }).ToList(); 
+
+                //var productsVM = products.Select(p => new ProductViewModel()
+                //{
+                //    Id = p.Id,
+                //    ImageUrl = p.ImageUrl,
+                //    Name = p.Name,
+                //    Order = p.Order,
+                //    Price = p.Price,
+                //}).ToList();
 
                 r = new CartViewModel
                 {
-                    Items = Cart.Items.ToDictionary(x => productsVM.First(y => y.Id ==
+                    Items = Cart.Items.ToDictionary(x => products.First(y => y.Id ==
                     x.ProductId), x => x.Quantity)
                 };
             }

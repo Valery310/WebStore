@@ -14,7 +14,7 @@ namespace WebStore.Controllers
 
         private readonly IValuesService _valuesService;
 
-        public HomeController(ILogger<HomeController> logger, IValuesService valuesService)
+        public HomeController(IValuesService valuesService, ILogger<HomeController> logger)
         {
             _logger = logger;
             _valuesService = valuesService;
@@ -38,8 +38,10 @@ namespace WebStore.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            _logger.LogError("Error page : {0}", Activity.Current?.Id ?? HttpContext.TraceIdentifier);
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            string _RequestId = "";
+            _RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            _logger.LogError("Error page : {0}", _RequestId);
+            return View(new ErrorViewModel { RequestId = _RequestId });
         }
 
         public IActionResult ContactUs()
@@ -76,8 +78,16 @@ namespace WebStore.Controllers
         public IActionResult ErrorStatus(string id)
         {
             if (id == "404")
-                return RedirectToAction("Error");
+            {
+                 return RedirectToAction("Error");
+            }
             return Content($"Статуcный код ошибки: {id}");
+
+            //if (id == "404")
+            //{
+            //    return RedirectToAction("NotFound");
+            //}
+            //return RedirectToAction("Error", $"Статуcный код ошибки: {id}");
         }
 
 
