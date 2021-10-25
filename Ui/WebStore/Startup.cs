@@ -15,8 +15,8 @@ using WebStore.Clients.Services.Values;
 using WebStore.Interfaces.Api;
 using WebStore.Services.Services.Implementations;
 using WebStore.Services.Implementations;
-using WebStore.Logger;
 using Microsoft.Extensions.Logging;
+using WebStore.Services.MiddleWare;
 
 namespace WebStore
 {
@@ -82,10 +82,12 @@ namespace WebStore
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp, ILoggerFactory loggerFactory)
-        {
-           // loggerFactory.AddLog4Net();
+        {   
+            loggerFactory.AddLog4Net();
 
-            WebStore.Logger.Log4NetExtensions.AddLog4Net(loggerFactory, "log4net.config");
+            // WebStore.Logger.Log4NetExtensions.AddLog4Net(loggerFactory, "log4net.config");
+
+            //  env.EnvironmentName = "Production";
 
             if (env.IsDevelopment())
             {
@@ -93,7 +95,7 @@ namespace WebStore
             }
             else
             {
-                app.UseExceptionHandler("/Shared/Error");
+                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -104,8 +106,18 @@ namespace WebStore
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-          //  app.UseWelcomePage("/welcome");
-         //   app.UseMiddleware<TestMiddleware>();
+
+            app.UseStatusCodePagesWithRedirects("~/errorstatus/{0}");
+            //app.UseStatusCodePages();
+
+            //app.UseStatusCodePagesWithReExecute("/Home/ErrorStatus", "?statusCode={0}");
+
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+            //app.UseMiddleware<ErrorHandlingMiddleware>();
+
+            // app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+            // app.UseWelcomePage("/welcome");
+            // app.UseMiddleware<TestMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

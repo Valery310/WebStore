@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -26,6 +27,7 @@ namespace WebStore.ServicesHosting.Controllers
         [HttpPost, ActionName("Post")]
         public IActionResult Add([FromBody]EmployeeViewModel employee)
         {
+            _logger.LogInformation("Добавление сотрудника пользователем {0}", User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var result = _employeesData.Add(employee);
             return result > 0 ? NotFound() : Ok(result);
         }
@@ -44,6 +46,7 @@ namespace WebStore.ServicesHosting.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            _logger.LogInformation("Удаление сотрудника с id = {0} пользователем {1}", id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var result = _employeesData.Delete(id);
             return result ? Ok(true) : NotFound(false);
         }
@@ -55,11 +58,15 @@ namespace WebStore.ServicesHosting.Controllers
         [HttpGet, ActionName("Get")]
         public IActionResult GetAll()
         {
+            _logger.LogInformation("Получение всех сотрудников пользователем {0}", User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var result = _employeesData.GetAll();
             if (result is null)
             {
+                _logger.LogInformation("Сотрудники отсутствуют");
                 return NotFound();
             }
+
+            _logger.LogInformation("Сотрудники найдены");
             return Ok(result);
         }
 
@@ -73,12 +80,19 @@ namespace WebStore.ServicesHosting.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetById(int id)
         {
-            var result = _employeesData.GetById(id);
-            if (result is null)
+            using (_logger.BeginScope("Получение сотрудника по id"))
             {
-                return NotFound();
+                _logger.LogInformation("Удаление сотрудника с id = {0} пользователем {1}", id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var result = _employeesData.GetById(id);
+                if (result is null)
+                {
+                    _logger.LogInformation("Не существует сотрудника с id = {0}", id);
+                    return NotFound();
+                }
+                _logger.LogInformation("Сотрудник найден");
+
+                return Ok(result);
             }
-            return Ok(result);
         }
 
         /// <summary>
@@ -89,12 +103,17 @@ namespace WebStore.ServicesHosting.Controllers
         [HttpPut("{id}"), ActionName("Put")]
         public IActionResult Update([FromBody]EmployeeViewModel employee)
         {
-            var result = _employeesData.Update(employee);
-            if (result is null)
+            using (_logger.BeginScope("Редактирование сотрудника по id"))
             {
-                return NotFound();
-            }
-            return Ok(result);
+                _logger.LogInformation("Удаление сотрудника с id = {0} пользователем {1}", employee.Id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var result = _employeesData.Update(employee);
+                if (result is null)
+                {
+                    _logger.LogInformation("Не существует сотрудника с id = {0}", employee.Id);
+                    return NotFound();
+                }
+                return Ok(result);
+            }               
         }
     }
 }

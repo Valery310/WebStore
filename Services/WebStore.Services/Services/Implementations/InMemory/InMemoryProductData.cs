@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +15,13 @@ namespace WebStore.Services.Services
         private readonly List<Section> _sections;
         private readonly List<Brand> _brands;
         private readonly List<Product> _products;
+        private readonly ILogger<InMemoryProductData> _logger;
 
-        public InMemoryProductData()
+        public InMemoryProductData(ILogger<InMemoryProductData> logger)
         {
+            _logger = logger;
+
+            _logger.LogInformation("Создание тестовых данных по товарам в памяти");
             _sections = new List<Section>()
             {
                 new Section()
@@ -400,6 +405,7 @@ namespace WebStore.Services.Services
                     BrandId = 3
                 },
             };
+            _logger.LogInformation("Создание тестовых данных прошло успешно");
         }
 
         public IEnumerable<Section> GetSections()
