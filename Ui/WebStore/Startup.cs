@@ -13,7 +13,6 @@ using WebStore.Clients.Services.Orders;
 using WebStore.Clients.Services.Products;
 using WebStore.Clients.Services.Values;
 using WebStore.Interfaces.Api;
-using WebStore.Services.Services.Implementations;
 using WebStore.Services.Implementations;
 using Microsoft.Extensions.Logging;
 using WebStore.Services.MiddleWare;
@@ -67,7 +66,8 @@ namespace WebStore
                 opt.SlidingExpiration = true;
             });
 
-            services.AddScoped<ICartStore, CookieCartStore>();
+         //   services.AddScoped<ICartStore, CookieCartStore>();
+
             services.AddScoped<ICartService, CookieCartService>();
 
 

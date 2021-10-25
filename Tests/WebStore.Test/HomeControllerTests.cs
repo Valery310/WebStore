@@ -6,10 +6,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebStore.Controllers;
+using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Api;
 using Xunit;
 
@@ -25,7 +27,8 @@ namespace WebStore.Test
             var mockService = new Mock<IValuesService>();
             mockService.Setup(c => c.GetAsync()).ReturnsAsync(new List<string> { "1", "2" });
 
-            var mockHttpContext = new Mock<HttpContext>(MockBehavior.Strict);
+            var mockHttpContext = new Mock<HttpContext>(MockBehavior.Loose);
+            mockHttpContext.Object.TraceIdentifier = "500";
 
             var serviceProvider = new ServiceCollection()
             .AddLogging()
@@ -33,16 +36,13 @@ namespace WebStore.Test
 
             var factory = serviceProvider.GetService<ILoggerFactory>();
             var logger = WebStore.Logger.Log4NetExtensions.AddLog4Net(factory).CreateLogger<HomeController>();
-           // var logger = factory.CreateLogger<HomeController>();
-
-            //var mock = new Mock<ILogger<HomeController>>();
-            //ILogger<HomeController> logger = mock.Object;
-
-            //or use this short equivalent 
-            // logger = Mock.Of<ILogger<BlogController>>()
 
             _controller = new HomeController(mockService.Object, logger);
-            _controller.ControllerContext = new ControllerContext();  
+            _controller.ControllerContext = new ControllerContext()
+            {
+                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor() {ActionName = "Index", ControllerName = "Home" },
+                HttpContext = new DefaultHttpContext(),
+        };  
         }
 
         [Fact]
@@ -97,8 +97,11 @@ namespace WebStore.Test
         [Fact]
         public void Error_Returns_View()
         {
+            _controller.HttpContext.TraceIdentifier = "500";
             var result = _controller.Error();
-            Xunit.Assert.IsType<ViewResult>(result);
+            // Assert
+            var viewResult = Xunit.Assert.IsType<ViewResult>(result);
+             Xunit.Assert.IsType<ViewResult>(result);
         }
 
         [Fact]

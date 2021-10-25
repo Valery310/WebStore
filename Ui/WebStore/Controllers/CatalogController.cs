@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
 using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Services;
@@ -42,6 +43,7 @@ namespace WebStore.Controllers
         public async Task<IActionResult> ProductDetails(int id)
         {
             var product = await _productData.GetProductById(id);
+
             if (product == null)
             {
                 return NotFound();
@@ -54,7 +56,8 @@ namespace WebStore.Controllers
                 Name = product.Name,
                 Order = product.Order,
                 Price = product.Price,
-           //     Brand = product.Brand != null ? product.Brand.Name : string.Empty
+                Brand = product.Brand
+              //  Brand = product.Brand != null ? product.Brand.Name : string.Empty
             });
 
         }
