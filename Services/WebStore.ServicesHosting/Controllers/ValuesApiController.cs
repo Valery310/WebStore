@@ -5,20 +5,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebStore.Interfaces;
 
 namespace WebStore.ServicesHosting.Controllers
 {
-    [Route("api/[controller]")]
+    [Route(WebAPIAddresses.Values)]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesApiController : ControllerBase
     {
-        private readonly ILogger<ValuesController> _logger;
+        private readonly ILogger<ValuesApiController> _logger;
 
         private readonly Dictionary<int, string> _values = Enumerable.Range(1, 10)
             .Select(i => (Id: i, Value: $"Value-{i}"))
             .ToDictionary(v => v.Id, v => v.Value);
 
-        public ValuesController(ILogger<ValuesController> logger) 
+        public ValuesApiController(ILogger<ValuesApiController> logger) 
         {
             _logger = logger;
         }

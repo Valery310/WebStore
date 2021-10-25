@@ -10,6 +10,7 @@ namespace WebStore.Domain.ViewModel
         public int Order { get; set; }
         public string ImageUrl { get; set; }
         public decimal Price { get; set; }
+        public Section Section { get; set; }
         public Brand Brand { get; set; }
     }
 

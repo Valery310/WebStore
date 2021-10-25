@@ -1,13 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>WebStore.ServicesHosting.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="microsoft.entityframeworkcore.inmemory" Version="5.0.10" />
-    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="5.0.10" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="microsoft.entityframeworkcore.inmemory" Version="5.0.11" />
+    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="5.0.11" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,10 +24,6 @@
     <ProjectReference Include="..\..\Data\WebStore.DAL\WebStore.DAL.csproj" />
     <ProjectReference Include="..\WebStore.Interfaces\WebStore.Interfaces.csproj" />
     <ProjectReference Include="..\WebStore.Services\WebStore.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Infrastructure\Implementations\" />
   </ItemGroup>
 
 </Project>

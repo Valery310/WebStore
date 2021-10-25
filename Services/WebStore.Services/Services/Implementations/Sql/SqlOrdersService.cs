@@ -35,23 +35,6 @@ namespace WebStore.Services.Implementations.Sql
            .ThenInclude(item => item.Product)
            .Where(order => order.User.UserName == userName)
            .ToArrayAsync();
-            //return await _context.Orders
-            //    .Include("User")
-            //    .Include("OrderItems")
-            //    .Include("Products")
-            //    .Where(o => o.User.UserName.Equals(userName))
-            //    .Select(o => new Order()
-            //    {
-            //        Id = o.Id,
-            //        Name = o.Name,
-            //        Address = o.Address,
-            //        Date = o.Date,
-            //        Phone = o.Phone,
-            //        OrderItems = o.OrderItems,
-            //        Description = o.Description
-            //    })
-            //    .ToArrayAsync()
-            //    .ConfigureAwait(false);
         }
 
         public async Task<Order> GetOrderByIdAsync(int id)
@@ -124,47 +107,5 @@ namespace WebStore.Services.Implementations.Sql
                 Phone = order.Phone, 
                 User = order.User };
         }
-
-
-        //public async Task<OrderDto> CreateOrderAsync(CreateOrderModel orderModel, string userName)
-        //{
-        //    var user = await _userManager.FindByNameAsync(userName).ConfigureAwait(false);
-
-        //    using (var transaction = await _context.Database.BeginTransactionAsync())
-        //    {
-        //        var order = new Order()
-        //        {
-        //            Address = orderModel.OrderViewModel.Address,
-        //            Name = orderModel.OrderViewModel.Name,
-        //            Date = DateTime.Now,
-        //            Phone = orderModel.OrderViewModel.Phone,
-        //            User = user
-        //        };
-        //        _context.Orders.Add(order);
-
-        //        foreach (var item in orderModel.OrderItems)
-        //        {
-        //            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id.Equals(item.Id));
-
-        //            if (product == null)
-        //            {
-        //                throw new InvalidOperationException("Продукт не найден в базе");
-        //            }
-        //            var orderItem = new OrderItem()
-        //            {
-        //                Order = order,
-        //                Price = product.Price,
-        //                Quantity = item.Quantity,
-        //                Product = product
-        //            };
-
-        //            _context.OrderItems.Add(orderItem);
-        //        }
-        //        await _context.SaveChangesAsync();
-        //        await transaction.CommitAsync();
-
-        //        return await GetOrderByIdAsync(order.Id);
-        //    }
-        //}
     }
 }

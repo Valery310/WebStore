@@ -14,7 +14,7 @@ namespace WebStore.Clients.Services.Values
     {
         public ValuesClient(HttpClient client) : base(client, "api/Values") { }
 
-        protected sealed override string ServiceAddress { get; set; }
+     //   protected sealed override string ServiceAddress { get; set; }
 
         public IEnumerable<string> Get()
         {

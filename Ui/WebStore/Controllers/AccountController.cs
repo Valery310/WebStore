@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using WebStore.Domain.Entities;
 using WebStore.Domain.ViewModel;
+using Microsoft.Extensions.Logging;
 
 namespace WebStore.Controllers
 {
@@ -11,11 +12,13 @@ namespace WebStore.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ILogger<AccountController> _Logger;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountController> Logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _Logger = Logger;
         }
 
       //  [HttpGet]
@@ -32,16 +35,22 @@ namespace WebStore.Controllers
 
             if (ModelState.IsValid)
             {         
-                var loginResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var loginResult = await _signInManager.PasswordSignInAsync
+                    (model.UserName,
+                    model.Password,
+                    model.RememberMe,
+#if DEBUG
+                false
+#else
+                true
+# endif
+                );
 
                 if (loginResult.Succeeded)
                 {
-                    if (Url.IsLocalUrl(model.ReturnUrl))
-                    {
-                        return Redirect(model.ReturnUrl);
-                    }
+                    _Logger.LogInformation("Успешный вход в систему {0}", model.UserName);
 
-                    return RedirectToAction("Index", "Home");
+                    return LocalRedirect(model.ReturnUrl ?? "/");
                 }        
             }
 
@@ -72,7 +81,7 @@ namespace WebStore.Controllers
             {
                 await _signInManager.SignInAsync(user, false);
                 await _userManager.AddToRoleAsync(user, "User");
-                RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -80,9 +89,9 @@ namespace WebStore.Controllers
                 {
                     ModelState.AddModelError("", identityError.Description);
                 }
-            }
 
-            return View(new RegisterUserViewModel());
+                return View(model);
+            }
         }
 
         [HttpPost, ValidateAntiForgeryToken]

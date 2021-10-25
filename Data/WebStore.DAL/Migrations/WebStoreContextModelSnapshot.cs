@@ -16,35 +16,8 @@ namespace WebStore.DAL.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
@@ -150,7 +123,7 @@ namespace WebStore.DAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Brand", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Brand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,7 +141,35 @@ namespace WebStore.DAL.Migrations
                     b.ToTable("Brands");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Order", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Patronymic")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("WebStore.Domain.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,6 +196,7 @@ namespace WebStore.DAL.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -204,7 +206,7 @@ namespace WebStore.DAL.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.OrderItem", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -217,7 +219,7 @@ namespace WebStore.DAL.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -232,7 +234,7 @@ namespace WebStore.DAL.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Product", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -266,7 +268,34 @@ namespace WebStore.DAL.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Section", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Role", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("WebStore.Domain.Entities.Section", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -289,7 +318,7 @@ namespace WebStore.DAL.Migrations
                     b.ToTable("Section");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.User", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -356,7 +385,7 @@ namespace WebStore.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("WebStore.Domain.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -365,7 +394,7 @@ namespace WebStore.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("WebStore.Domain.User", null)
+                    b.HasOne("WebStore.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -374,7 +403,7 @@ namespace WebStore.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("WebStore.Domain.User", null)
+                    b.HasOne("WebStore.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -383,13 +412,13 @@ namespace WebStore.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("WebStore.Domain.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebStore.Domain.User", null)
+                    b.HasOne("WebStore.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -398,44 +427,49 @@ namespace WebStore.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("WebStore.Domain.User", null)
+                    b.HasOne("WebStore.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Order", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Order", b =>
                 {
-                    b.HasOne("WebStore.Domain.User", "User")
+                    b.HasOne("WebStore.Domain.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.OrderItem", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("WebStore.Domain.Order", "Order")
+                    b.HasOne("WebStore.Domain.Entities.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("WebStore.Domain.Product", "Product")
+                    b.HasOne("WebStore.Domain.Entities.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Product", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("WebStore.Domain.Brand", "Brand")
+                    b.HasOne("WebStore.Domain.Entities.Brand", "Brand")
                         .WithMany("Products")
                         .HasForeignKey("BrandId");
 
-                    b.HasOne("WebStore.Domain.Section", "Section")
+                    b.HasOne("WebStore.Domain.Entities.Section", "Section")
                         .WithMany("Products")
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -446,26 +480,26 @@ namespace WebStore.DAL.Migrations
                     b.Navigation("Section");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Section", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Section", b =>
                 {
-                    b.HasOne("WebStore.Domain.Section", "ParentSection")
+                    b.HasOne("WebStore.Domain.Entities.Section", "ParentSection")
                         .WithMany()
                         .HasForeignKey("ParentId");
 
                     b.Navigation("ParentSection");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Brand", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Brand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Order", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("WebStore.Domain.Section", b =>
+            modelBuilder.Entity("WebStore.Domain.Entities.Section", b =>
                 {
                     b.Navigation("Products");
                 });

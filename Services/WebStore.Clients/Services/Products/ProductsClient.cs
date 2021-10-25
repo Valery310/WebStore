@@ -6,18 +6,19 @@ using WebStore.Clients.Base;
 using WebStore.Domain.Dto;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
+using WebStore.Interfaces;
 using WebStore.Interfaces.Services;
 
 namespace WebStore.Clients.Services.Products
 {
     public class ProductsClient : BaseClient, IProductData
     {
-        public ProductsClient(HttpClient client) : base(client, "api/products")
+        public ProductsClient(HttpClient client) : base(client, WebAPIAddresses.Products)
         {
          //   ServiceAddress = "api/products";
         }
 
-        protected sealed override string ServiceAddress { get; set; }
+      //  protected sealed override string ServiceAddress { get; set; }
 
         public async Task<IEnumerable<Section>> GetSections()
         {

@@ -10,12 +10,13 @@ using WebStore.Domain.Dto.Order;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
 using WebStore.Domain.ViewModel;
+using WebStore.Interfaces;
 using WebStore.Interfaces.Services;
 
 namespace WebStore.ServicesHosting.Controllers
 {
     [Produces("application/json")]
-    [Route("api/orders")]
+    [Route(WebAPIAddresses.Orders)]
     [ApiController]
     public class OrdersApiController : ControllerBase
     {

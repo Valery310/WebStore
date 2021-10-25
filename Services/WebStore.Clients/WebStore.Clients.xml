@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebStore.Clients</name>
+    </assembly>
+    <members>
+        <member name="T:WebStore.Clients.Base.BaseClient">
+            <summary>
+            Базовый клиент
+            </summary>
+        </member>
+        <member name="P:WebStore.Clients.Base.BaseClient._Client">
+            <summary>
+            Http клиент для связи
+            </summary>
+        </member>
+        <member name="P:WebStore.Clients.Base.BaseClient.ServiceAddress">
+            <summary>
+            Адрес сервиса
+            </summary>
+        </member>
+        <member name="M:WebStore.Clients.Base.BaseClient.#ctor(System.Net.Http.HttpClient,System.String)">
+            <summary>
+            Конструктор
+            </summary>
+            <param name="configuration">Конфигурация проекта</param>
+        </member>
+    </members>
+</doc>
