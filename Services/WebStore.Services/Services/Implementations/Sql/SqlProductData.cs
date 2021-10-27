@@ -68,7 +68,12 @@ namespace WebStore.Services.Implementations.Sql
                 {
                     Id = p.Brand.Id,
                     Name = p.Brand.Name
-                } : null
+                } : null,
+                Section = new Section()
+                {
+                    Id = p.SectionId,
+                    Name = p.Section.Name
+                }
             }).ToListAsync().ConfigureAwait(false);
         }
 
@@ -90,7 +95,12 @@ namespace WebStore.Services.Implementations.Sql
                 Name = product.Name,
                 ImageUrl = product.ImageUrl,
                 Order = product.Order,
-                Price = product.Price
+                Price = product.Price,
+                Section = new Section()
+                {
+                    Id = product.SectionId,
+                    Name = product.Section.Name
+                }
             };
 
             if (product.Brand != null)
