@@ -4,6 +4,12 @@
         <name>WebStore</name>
     </assembly>
     <members>
+        <member name="M:WebStore.Components.SectionsViewComponent.GetSections(System.Nullable{System.Int32},System.Nullable{System.Int32}@)">
+            <summary>
+            Получает секции из базы и строит дерево
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:WebStore.TagHelpers.ActiveRouteTagHelper.Action">
             <summary>The name of the action method.</summary>
             <remarks>Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Route" /> is non-<c>null</c>.</remarks>

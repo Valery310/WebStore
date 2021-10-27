@@ -12,6 +12,10 @@ body {
     font-weight: 400;
 }
 
+.panel-body ul li.active {
+    text-decoration: underline;
+}
+
 ul li {
     list-style: none;
 }
