@@ -64,8 +64,7 @@
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a asp-controller="Employees"
-                                       asp-action="Index"><i class="fa fa-user"></i> Список сотрудников</a>
+                                    <a asp-controller="Employees" asp-action="Index"><i class="fa fa-user"></i> Список сотрудников</a>
                                 </li>
                                 <li>
                                     <a href="#">
@@ -74,8 +73,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a asp-controller="Home"
-                                       asp-action="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a>
+                                    <a asp-controller="Home" asp-action="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a>
                                 </li>
                                 <li>
                                     <a asp-controller="Cart" asp-action="Details">
@@ -122,26 +120,26 @@
                         </div>
                         <div class="mainmenu pull-left">
                             <ul class="nav navbar-nav navbar-collapse">
-                                <li><a asp-controller="Home" asp-action="Index" class="active">Home</a></li>
+                                <li><a is-active-route asp-controller="Home" asp-action="Index" >Home</a></li>
                                 <li class="dropdown">
                                     <a href="#">Shop<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
-                                        <li><a asp-controller="Catalog" asp-action="Shop">Products</a></li>
-                                        <li><a asp-controller="Home" asp-action="Checkout">Checkout</a></li>
-                                        <li><a asp-controller="Cart" asp-action="Details">Cart</a></li>
-                                        <li><a asp-controller="Home" asp-action="Login" asp-route-returnUrl="@Context.Request.PathBase.Value">Login</a></li>
+                                        <li><a is-active-route asp-controller="Catalog" asp-action="Shop">Products</a></li>
+                                        <li><a is-active-route asp-controller="Home" asp-action="Checkout">Checkout</a></li>
+                                        <li><a is-active-route asp-controller="Cart" asp-action="Details">Cart</a></li>
+                                        <li><a is-active-route asp-controller="Home" asp-action="Login" asp-route-returnUrl="@Context.Request.PathBase.Value">Login</a></li>
                                     </ul>
                                 </li>
                                 <li class="dropdown">
                                     <a href="#">Blog<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
-                                        <li><a asp-controller="Home" asp-action="Blog">Blog List</a></li>
-                                        <li><a asp-controller="Home" asp-action="BlogSingle">Blog Single</a></li>
+                                        <li><a is-active-route asp-controller="Home" asp-action="Blog">Blog List</a></li>
+                                        <li><a is-active-route asp-controller="Home" asp-action="BlogSingle">Blog Single</a></li>
                                     </ul>
                                 </li>
-                                <li><a asp-controller="Home" asp-action="NotFound">404</a></li>
-                                <li><a asp-controller="Home" asp-action="ContactUs">Contact</a></li>
-                                <li><a asp-controller="Employees" asp-action="Index">Employees</a></li>
+                                <li><a is-active-route asp-controller="Home" asp-action="NotFound">404</a></li>
+                                <li><a is-active-route asp-controller="Home" asp-action="ContactUs">Contact</a></li>
+                                <li><a is-active-route asp-controller="Employees" asp-action="Index">Employees</a></li>
                             </ul>
                         </div>
                     </div>

@@ -4,5 +4,21 @@
         <name>WebStore</name>
     </assembly>
     <members>
+        <member name="P:WebStore.TagHelpers.ActiveRouteTagHelper.Action">
+            <summary>The name of the action method.</summary>
+            <remarks>Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Route" /> is non-<c>null</c>.</remarks>
+        </member>
+        <member name="P:WebStore.TagHelpers.ActiveRouteTagHelper.Controller">
+            <summary>The name of the controller.</summary>
+            <remarks>Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Route" /> is non-<c>null</c>.</remarks>
+        </member>
+        <member name="P:WebStore.TagHelpers.ActiveRouteTagHelper.RouteValues">
+            <summary>Additional parameters for the route.</summary>
+        </member>
+        <member name="P:WebStore.TagHelpers.ActiveRouteTagHelper.ViewContext">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext" /> for the current request.
+            </summary>
+        </member>
     </members>
 </doc>
