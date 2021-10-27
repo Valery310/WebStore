@@ -14,14 +14,20 @@ namespace WebStore.Components
         {
             _productData = productData;
         }
-        public async Task<IViewComponentResult> InvokeAsync()
+
+        public async Task<IViewComponentResult> InvokeAsync(string brandId)
         {
-            var brands = await GetBrands();
-            return View(brands);
+            int.TryParse(brandId, out var brandIdResult);
+            var brands = GetBrands();
+            return View(new BrandCompleteViewModel()
+            {
+                Brands = brands,
+                CurrentBrandId = brandIdResult
+            });
         }
-        private async Task<IEnumerable<BrandViewModel>> GetBrands()
+        private IEnumerable<BrandViewModel> GetBrands()
         {
-            var dbBrands = await _productData.GetBrands();
+            var dbBrands = _productData.GetBrands().Result;
             return dbBrands.Select(b => new BrandViewModel
             {
                 Id = b.Id,
@@ -30,5 +36,22 @@ namespace WebStore.Components
                 ProductsCount = 0
             }).OrderBy(b => b.Order).ToList();
         }
+
+        //public async Task<IViewComponentResult> InvokeAsync()
+        //{
+        //    var brands = await GetBrands();
+        //    return View(brands);
+        //}
+        //private async Task<IEnumerable<BrandViewModel>> GetBrands()
+        //{
+        //    var dbBrands = await _productData.GetBrands();
+        //    return dbBrands.Select(b => new BrandViewModel
+        //    {
+        //        Id = b.Id,
+        //        Name = b.Name,
+        //        Order = b.Order,
+        //        ProductsCount = 0
+        //    }).OrderBy(b => b.Order).ToList();
+        //}
     }
 }
