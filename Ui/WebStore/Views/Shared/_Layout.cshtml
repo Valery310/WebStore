@@ -11,6 +11,8 @@
 
     <!--Секция для отображения кастомных стилей, если понадобятся-->
     <partial name="Partial/_Styles" />
+
+    @await RenderSectionAsync("Styles", false)
     <!--[if lt IE 9]>
         <script src="js/html5shiv.js"></script>
     <![endif]-->
@@ -28,5 +30,7 @@
 
     <!--Секция для отображения кастомных скриптов, если понадобятся-->
     <partial name="Partial/_Scripts" />
+
+    @await RenderSectionAsync("Scripts", false)
 </body>
 </html>

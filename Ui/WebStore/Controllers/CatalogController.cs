@@ -56,7 +56,8 @@ namespace WebStore.Controllers
                 Name = product.Name,
                 Order = product.Order,
                 Price = product.Price,
-                Brand = product.Brand
+                Brand = product.Brand,
+                Section = product.Section
               //  Brand = product.Brand != null ? product.Brand.Name : string.Empty
             });
 

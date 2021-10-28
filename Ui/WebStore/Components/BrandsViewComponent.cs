@@ -14,10 +14,16 @@ namespace WebStore.Components
         {
             _productData = productData;
         }
-        public async Task<IViewComponentResult> InvokeAsync()
+
+        public async Task<IViewComponentResult> InvokeAsync(string brandId)
         {
+            int.TryParse(brandId, out var brandIdResult);
             var brands = await GetBrands();
-            return View(brands);
+            return View(new BrandCompleteViewModel()
+            {
+                Brands = brands,
+                CurrentBrandId = brandIdResult
+            });
         }
         private async Task<IEnumerable<BrandViewModel>> GetBrands()
         {

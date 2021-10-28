@@ -58,7 +58,7 @@ namespace WebStore.ServicesHosting.Controllers
         [HttpGet, ActionName("Get")]
         public IActionResult GetAll()
         {
-            _logger.LogInformation("Получение всех сотрудников пользователем {0}", User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _logger.LogInformation("Получение всех сотрудников");
             var result = _employeesData.GetAll();
             if (result is null)
             {
