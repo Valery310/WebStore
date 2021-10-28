@@ -57,20 +57,21 @@ namespace WebStore.TagHelpers
         {
             var currentController = ViewContext.RouteData.Values["Controller"].ToString();
             var currentAction = ViewContext.RouteData.Values["Action"].ToString();
+            var route_values = ViewContext.RouteData.Values;
 
-            if (!string.IsNullOrWhiteSpace(Controller) && !string.Equals(Controller, currentController, StringComparison.CurrentCultureIgnoreCase))
+            if (Controller is { Length: > 0 } controller && !string.Equals(controller, currentController))
             {
                 return false;
             }
 
-            if (!ignoreAction && !string.IsNullOrWhiteSpace(Action) && !string.Equals(Action, currentAction, StringComparison.CurrentCultureIgnoreCase))
+            if (Action is { Length: > 0 } action && !string.Equals(action, currentAction))
             {
                 return false;
             }
 
-            foreach (var routeValue in RouteValues)
+            foreach (var (key, value) in RouteValues)
             {
-                if (!ViewContext.RouteData.Values.ContainsKey(routeValue.Key) || ViewContext.RouteData.Values[routeValue.Key].ToString() != routeValue.Value)
+                if (!route_values.ContainsKey(key) || route_values[key]?.ToString() != value)
                 {
                     return false;
                 }
@@ -83,13 +84,15 @@ namespace WebStore.TagHelpers
         {
             var classAttr = output.Attributes.FirstOrDefault(a => a.Name == "class");
 
-            if (classAttr == null)
+            if (classAttr is null)
             {
-                classAttr = new TagHelperAttribute("class", "active");
-                output.Attributes.Add(classAttr);
+                output.Attributes.Add("class", "active");
             }
-            else if (classAttr.Value == null || classAttr.Value.ToString().IndexOf("active", StringComparison.Ordinal) < 0)
+            else 
             {
+                if (classAttr.Value?.ToString()?.Contains("active") ?? false)
+                    return;
+
                 output.Attributes.SetAttribute("class", classAttr.Value == null ? "active" : classAttr.Value + " active");
             }
         }
