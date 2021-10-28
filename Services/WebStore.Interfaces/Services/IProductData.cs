@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebStore.Domain.Dto;
 using WebStore.Domain.Entities;
@@ -6,6 +6,9 @@ using WebStore.Domain.Filters;
 
 namespace WebStore.Interfaces.Services
 {
+    /// <summary>
+    /// Интерфейс для работы с товарами
+    /// </summary>
     public interface IProductData
     {
         /// <summary>
@@ -55,4 +58,5 @@ namespace WebStore.Interfaces.Services
         /// <returns>Сущность Brand, если нашел, иначе null</returns>
         Task<Brand> GetBrandsById(int id);
     }
+
 }
