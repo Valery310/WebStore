@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebStore.Domain.Entities;
+using Product = WebStore.Domain.Entities.Product;
 
 namespace WebStore.Domain.Dto
 {
     public static class ProductDtoMapper
     {
-        public static ProductDto ToDTO(this Product product) => product is null ? null : new ProductDto
+        public static ProductDto ToDTO(this WebStore.Domain.Entities.Product product) => product is null ? null : new ProductDto
         {
            Id = product.Id,
            Name = product.Name,

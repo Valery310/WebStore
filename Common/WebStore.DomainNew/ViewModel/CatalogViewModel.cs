@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace WebStore.Domain.ViewModel
 {
@@ -11,6 +8,7 @@ namespace WebStore.Domain.ViewModel
         public int? SectionId { get; set; }
 
         public IEnumerable<ProductViewModel> Products { get; set; }
+        public PageViewModel PageViewModel { get; set; }
     }
 
 }

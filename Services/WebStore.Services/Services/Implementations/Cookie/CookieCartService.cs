@@ -140,7 +140,7 @@ namespace WebStore.Services.Implementations
                 {
                     Ids = Cart.Items.Select(i => i.ProductId).ToArray()
                 })
-                .ConfigureAwait(false))
+                .ConfigureAwait(false)).Products
                 .Select(p => new ProductViewModel()
                 {
                     Id = p.Id,

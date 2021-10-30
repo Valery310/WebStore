@@ -91,15 +91,30 @@ namespace WebStore.Services.Services
                 {
                     Ids = _CartStore.Cart.Items.Select(i => i.ProductId).ToArray()
                 })
-                .ConfigureAwait(false))
-                .Select(p => new ProductViewModel()
-                {
-                    Id = p.Id,
-                    ImageUrl = p.ImageUrl,
-                    Name = p.Name,
-                    Order = p.Order,
-                    Price = p.Price,
-                }).ToList();
+           .ConfigureAwait(false));
+
+                var tenp = products.Products.Select(p => new ProductViewModel()
+               {
+                   Id = p.Id,
+                   ImageUrl = p.ImageUrl,
+                   Name = p.Name,
+                   Order = p.Order,
+                   Price = p.Price,
+               }).ToList();
+
+                //var products = (await _ProductData.GetProducts(new ProductFilter()
+                //{
+                //    Ids = _CartStore.Cart.Items.Select(i => i.ProductId).ToArray()
+                //})
+                //.ConfigureAwait(false)).Products
+                //.Select(p => new ProductViewModel()
+                //{
+                //    Id = p.Id,
+                //    ImageUrl = p.ImageUrl,
+                //    Name = p.Name,
+                //    Order = p.Order,
+                //    Price = p.Price,
+                //}).ToList();
 
                 //var productsVM = products.Select(p => new ProductViewModel()
                 //{
@@ -110,9 +125,14 @@ namespace WebStore.Services.Services
                 //    Price = p.Price,
                 //}).ToList();
 
+                //r = new CartViewModel
+                //{
+                //    Items = _CartStore.Cart.Items.ToDictionary(x => products.First(y => y.Id ==
+                //    x.ProductId), x => x.Quantity)
+                //};
                 r = new CartViewModel
                 {
-                    Items = _CartStore.Cart.Items.ToDictionary(x => products.First(y => y.Id ==
+                    Items = _CartStore.Cart.Items.ToDictionary(x => tenp.First(y => y.Id ==
                     x.ProductId), x => x.Quantity)
                 };
             }

@@ -132,6 +132,7 @@
         $('.cart_total_price', container).data('price', totalPrice);
         // Меняем значение
         $('.cart_total_price', container).html(value);
+        Cart.refreshTotalPrice();
     },
     refreshTotalPrice: function () {
         var total = 0;

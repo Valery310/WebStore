@@ -23,12 +23,12 @@ namespace WebStore.Interfaces.Services
         /// </summary>
         /// <param name="filter">Фильтр товаров</param>
         /// <returns></returns>
-        Task<IEnumerable<Product>> GetProducts(ProductFilter filter);
-        /// <summary>
-        /// Продукт
-        /// </summary>
-        /// <param name="id">Идентификатор</param>
-        /// <returns>Сущность Product, если нашел, иначе null</returns>
+        //Task<IEnumerable<Product>> GetProducts(ProductFilter filter);
+        ///// <summary>
+        ///// Продукт
+        ///// </summary>
+        ///// <param name="id">Идентификатор</param>
+        ///// <returns>Сущность Product, если нашел, иначе null</returns>
         Task<Product> GetProductById(int id);
         /// <summary>
         /// Редактирование
@@ -54,5 +54,11 @@ namespace WebStore.Interfaces.Services
         /// <param name="id">Идентификатор</param>
         /// <returns>Сущность Brand, если нашел, иначе null</returns>
         Task<Brand> GetBrandsById(int id);
+        /// <summary>
+        /// Список товаров с постраничным разбиением
+        /// </summary>
+        /// <param name="filter">Фильтр товаров</param>
+        /// <returns></returns>
+        Task<PageProduct> GetProducts(ProductFilter filter);
     }
 }

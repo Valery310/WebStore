@@ -4,6 +4,16 @@
         <name>WebStore.Domain</name>
     </assembly>
     <members>
+        <member name="P:WebStore.Domain.Dto.PageProductDto.Products">
+            <summary>
+            Выборка продуктов для текущей страницы
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Dto.PageProductDto.TotalCount">
+            <summary>
+            Общее количество в запросе
+            </summary>
+        </member>
         <member name="T:WebStore.Domain.Entities.Brand">
             <inheritdoc cref="T:WebStore.Domain.Entities.Base.NamedEntity" />
             <summary>
@@ -33,6 +43,16 @@
         <member name="P:WebStore.Domain.Entities.Employee.Age">
             <summary>
             Возраст сотрудника
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.PageProduct.Products">
+            <summary>
+            Выборка продуктов для текущей страницы
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.PageProduct.TotalCount">
+            <summary>
+            Общее количество в запросе
             </summary>
         </member>
         <member name="T:WebStore.Domain.Entities.Product">
@@ -87,9 +107,44 @@
             Бренд товара
             </summary>
         </member>
+        <member name="P:WebStore.Domain.Filters.ProductFilter.PageSize">
+            <summary>
+            Количество товара на странице
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Filters.ProductFilter.Page">
+            <summary>
+            Страница товара
+            </summary>
+        </member>
         <member name="P:WebStore.Domain.ViewModel.BrandViewModel.ProductsCount">
             <summary>
             Количество товаров бренда
+            </summary>
+        </member>
+        <member name="T:WebStore.Domain.ViewModel.PageViewModel">
+            <summary>
+            Модель постраничного разбития
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.ViewModel.PageViewModel.TotalItems">
+            <summary>
+            Общее количество элементов
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.ViewModel.PageViewModel.PageSize">
+            <summary>
+            Количество элементов на странице
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.ViewModel.PageViewModel.PageNumber">
+            <summary>
+            Текущая страница
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.ViewModel.PageViewModel.TotalPages">
+            <summary>
+            Общее количество страниц
             </summary>
         </member>
     </members>
