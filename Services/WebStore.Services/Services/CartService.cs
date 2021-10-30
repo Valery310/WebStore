@@ -48,6 +48,18 @@ namespace WebStore.Services.Services
             _CartStore.Cart = cart;
         }
 
+        public int GetItemsCoumtFromCart()
+        {
+            var cart = _CartStore.Cart;
+            return cart.ItemsCount;          
+        }
+
+        public Cart GetItemsFromCart()
+        {
+            var cart = _CartStore.Cart;
+            return cart;
+        }
+
         public void RemoveFromCart(int Id)
         {
             var cart = _CartStore.Cart;

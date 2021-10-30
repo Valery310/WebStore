@@ -176,5 +176,10 @@ namespace WebStore.Services.Implementations
 
             return r;
         }
+
+        public int GetItemsCoumtFromCart()
+        {
+            return Cart.ItemsCount;
+        }
     }
 }

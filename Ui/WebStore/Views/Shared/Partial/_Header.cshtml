@@ -76,9 +76,9 @@
                                 <a asp-controller="Home" asp-action="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a>
                             </li>
                             <li>
-                                <a asp-controller="Cart" asp-action="Details">
-                                    <i class="fa fa-shopping-cart"></i> Cart
-                                </a>
+                                <div class="pull-right" id="cartContainer">
+                                    @await Component.InvokeAsync("Cart")
+                                </div>
                             </li>
                             <li>
                                 <a asp-controller="WebAPI" asp-action="Index">

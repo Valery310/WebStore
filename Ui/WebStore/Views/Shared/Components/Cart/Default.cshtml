@@ -1,0 +1,6 @@
+﻿@model CartViewModel
+<div>
+    <a asp-controller="Cart" asp-action="Details" id="cartContainer">
+        <i class="fa fa-shopping-cart"></i> Корзина. Товаров в корзине: @Model.ItemsCount
+    </a>
+</div>
