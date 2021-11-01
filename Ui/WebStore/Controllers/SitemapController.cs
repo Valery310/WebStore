@@ -50,7 +50,7 @@ namespace WebStore.Controllers
 
             var products = await _productData.GetProducts(new ProductFilter());
 
-            foreach (var productDto in products)
+            foreach (var productDto in products.Products)
             {
                 nodes.Add(new SitemapNode(Url.Action("ProductDetails",
                 "Catalog", new { id = productDto.Id })));

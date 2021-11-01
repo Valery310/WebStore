@@ -55,6 +55,41 @@ namespace WebStore.Controllers
             return Redirect(returnUrl);
         }
 
+        #region JSON
+
+        public IActionResult AddToCartApi(int id, string returnUrl)
+        {
+            _cartService.AddToCart(id);
+            return Json(new { id, message = "Товар добавлен в корзину" });
+            //   return Redirect(returnUrl);
+        }
+
+        public IActionResult RemoveFromCartApi(int id)
+        {
+            _cartService.RemoveFromCart(id);
+            //  return RedirectToAction("Details");
+            return Json(new { id, message = "Товар удален из корзины" });
+        }
+
+        public IActionResult DecrementFromCartApi(int id)
+        {
+            _cartService.DecrementFromCart(id);
+            // return RedirectToAction("Details");
+            return Json(new
+            {
+                id,
+                message = "Количество товара уменьшено на 1"
+            });
+        }
+
+        #endregion
+
+        [HttpGet]
+        public IActionResult GetCartView()
+        {
+            return ViewComponent("Cart");
+        }
+
         [Authorize]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckOut(OrderViewModel model, [FromServices] IOrdersService ordersService)

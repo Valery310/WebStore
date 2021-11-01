@@ -1,0 +1,10 @@
+﻿    <a asp-controller="Cart" asp-action="Details" id="cartContainer">
+       @if (ViewBag.Count > 0)
+        {
+            <i class="fa fa-shopping-cart">Корзина.Товаров в корзине: @ViewBag.Count </i>
+        }
+        else
+        {
+            <i class="fa fa-shopping-cart">Корзина</i>
+        }
+    </a>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -418,16 +419,65 @@ namespace WebStore.Services.Services
             return _brands;
         }
 
-        public IEnumerable<Product> GetProducts(ProductFilter filter)
+        public async Task<PageProduct> GetProducts(ProductFilter filter)
         {
-            var products = _products;
+            var products = _products.AsQueryable();
             if (filter.SectionId.HasValue)
-                products = products.Where(p =>
-                p.SectionId.Equals(filter.SectionId)).ToList();
+                products = products.Where(p => p.SectionId.Equals(filter.SectionId));
             if (filter.BrandId.HasValue)
-                products = products.Where(p => p.BrandId.HasValue &&
-                p.BrandId.Value.Equals(filter.BrandId.Value)).ToList();
-            return products;
+                products = products.Where(p => p.BrandId.HasValue && p.BrandId.Value.Equals(filter.BrandId.Value));
+
+            var model = new PageProduct
+            {
+                TotalCount = products.Count()
+            };
+
+            if (filter.PageSize.HasValue)
+            {
+                model.Products = await products.OrderBy(c => c.Order).Skip(((filter.Page - 1) * filter.PageSize.Value)).Take(filter.PageSize.Value)
+                    .Select(p =>
+                    new Product
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Order = p.Order,
+                        Price = p.Price,
+                        ImageUrl = p.ImageUrl,
+                        Brand = p.BrandId.HasValue ? new Brand()
+                        {
+                            Id = p.Brand.Id,
+                            Name = p.Brand.Name
+                        } : null,
+                        Section = new Section()
+                        {
+                            Id = p.SectionId,
+                            Name = p.Section.Name
+                        }
+                    }).ToListAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                model.Products = await products.OrderBy(c => c.Order).Select(p =>
+                new Product
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Order = p.Order,
+                    Price = p.Price,
+                    ImageUrl = p.ImageUrl,
+                    Brand = p.BrandId.HasValue ? new Brand()
+                    {
+                        Id = p.Brand.Id,
+                        Name = p.Brand.Name
+                    } : null,
+                    Section = new Section()
+                    {
+                        Id = p.SectionId,
+                        Name = p.Section.Name
+                    }
+                }).ToListAsync().ConfigureAwait(false);
+            }
+            return model;
         }
 
         public Product GetProductById(int id)
@@ -451,11 +501,6 @@ namespace WebStore.Services.Services
         }
 
         Task<IEnumerable<Brand>> IProductData.GetBrands()
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<IEnumerable<Product>> IProductData.GetProducts(ProductFilter filter)
         {
             throw new NotImplementedException();
         }

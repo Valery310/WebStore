@@ -1,0 +1,33 @@
+﻿@model CatalogViewModel
+<paging page-model="Model.PageViewModel" page-action="Shop"
+        page-url-sectionId="@Model.SectionId"
+        page-url-brandId="@Model.BrandId">
+</paging>
+<ul class="pagination">
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <li>
+            <a asp-action="Shop" asp-route-page="@(Model.PageViewModel.PageNumber - 1)" asp-route-sectionId="@Model.SectionId" asp-route-brandId="@Model.BrandId" class="btn btn-outline-dark">
+                <i class="glyphicon glyphicon-chevron-left"></i>
+                Назад
+            </a>
+        </li>
+    }
+
+    <li class="active">
+        <a asp-action="Shop" asp-route-page="@(Model.PageViewModel.PageNumber)" asp-route-sectionId="@Model.SectionId" asp-route-brandId="@Model.BrandId" class="btn btn-outline-dark">
+
+            <i class="glyphicon">@(Model.PageViewModel.PageNumber)</i>
+        </a>
+    </li>
+
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <li>
+            <a asp-action="Shop" asp-route-page="@(Model.PageViewModel.PageNumber + 1)" asp-route-sectionId="@Model.SectionId" asp-route-brandId="@Model.BrandId" class="btn btn-outline-dark">
+                Вперед
+                <i class="glyphicon glyphicon-chevron-right"></i>
+            </a>
+        </li>
+    }
+</ul>

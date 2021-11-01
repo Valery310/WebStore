@@ -64,36 +64,36 @@
                     <div class="shop-menu pull-right">
                         <ul class="nav navbar-nav">
                             <li>
-                                <a asp-controller="Employees" asp-action="Index"><i class="fa fa-user"></i> Список сотрудников</a>
+                                <a asp-controller="Employees" asp-action="Index">
+                                    <i class="fa fa-user">Список сотрудников</i>
+                                </a>
                             </li>
                             <li>
                                 <a href="#">
-                                    <i class="fa fa-star"></i>
-                                    Wishlist
+                                    <i class="fa fa-star">Wishlist</i>                                   
                                 </a>
                             </li>
                             <li>
-                                <a asp-controller="Home" asp-action="Checkout"><i class="fa fa-crosshairs"></i> Checkout</a>
+                                <a asp-controller="Home" asp-action="Checkout">
+                                    <i class="fa fa-crosshairs">Checkout</i>
+                                </a>
                             </li>
                             <li>
-                                <a asp-controller="Cart" asp-action="Details">
-                                    <i class="fa fa-shopping-cart"></i> Cart
-                                </a>
+                                    @await Component.InvokeAsync("Cart")
                             </li>
                             <li>
                                 <a asp-controller="WebAPI" asp-action="Index">
-                                    <i class="fa fa-shopping-cart"></i> WebAPI
+                                    <i class="fa fa-shopping-cart">WebAPI</i> 
                                 </a>
                             </li>
                             @if (User.IsInRole("Administrator"))
                             {
                                 <li>
                                     <a asp-area="Admin" asp-controller="Home" asp-action="Index">
-                                        <i class="fa fa-android"></i> Админская панель
+                                        <i class="fa fa-android">Админская панель</i> 
                                     </a>
                                 </li>
                             }
-
                         </ul>
                     </div>
                 </div>

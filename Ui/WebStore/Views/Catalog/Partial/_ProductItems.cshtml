@@ -15,7 +15,7 @@
                         <p>
                             @if (isBrand)
                             {
-                                <a is-active-route ignore-action asp-controller="Catalog" asp-action="ProductDetails" 
+                                <a is-active-route ignore-action asp-controller="Catalog" asp-action="ProductDetails"
                                    asp-route-id="@item.Id"
                                    asp-route-fromBrand="true"
                                    asp-route-BrandId="@Context.Request.Query["BrandId"]"
@@ -27,8 +27,8 @@
                             }
                             else
                             {
-                                <a is-active-route ignore-action asp-controller="Catalog" asp-action="ProductDetails" 
-                                   asp-route-id="@item.Id " 
+                                <a is-active-route ignore-action asp-controller="Catalog" asp-action="ProductDetails"
+                                   asp-route-id="@item.Id "
                                    asp-route-SectionId="@Context.Request.Query["SectionId"]">
                                     <img src="~/images/shop/@item.ImageUrl" alt="" />
                                     <h2>@item.Price.ToString("C")</h2>
@@ -36,7 +36,8 @@
                                 </a>
                             }
                         </p>
-                        <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path" class="btn btn-default add-to-cart">
+                        <a href="#" class="btn btn-default add-to-cart callAddToCart" data-id="@item.Id" data-returnUrl="@Context.Request.Path">
+                            @*<a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Id" asp-route-returnUrl="@Context.Request.Path" class="btn btn-default add-to-cart">*@
                             <i class="fa fa-shopping-cart"></i>Добавить в корзину
                         </a>
                     </div>

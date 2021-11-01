@@ -19,5 +19,13 @@ namespace WebStore.Domain.Filters
         /// Бренд товара
         /// </summary>
         public int? BrandId { get; set; }
+        /// <summary>
+        /// Количество товара на странице
+        /// </summary>
+        public int? PageSize { get; set; }
+        /// <summary>
+        /// Страница товара
+        /// </summary>
+        public int Page { get; set; }
     }
 }

@@ -43,7 +43,7 @@ namespace WebStore.Services.Implementations.Sql
             return await _context.Brands.SingleOrDefaultAsync(o => o.Id == id).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<Product>> GetProducts(ProductFilter filter) 
+        public async Task<PageProduct> GetProducts(ProductFilter filter)
         {
             var query = _context.Products.Include("Section").Include("Brand").AsQueryable();
 
@@ -57,29 +57,81 @@ namespace WebStore.Services.Implementations.Sql
                 query = query.Where(c => c.SectionId.Equals(filter.SectionId.Value));
             }
 
-            return await query.Select(p => new Product()
+            var model = new PageProduct
             {
-                Id = p.Id,
-                Name = p.Name,
-                Order = p.Order,
-                Price = p.Price,
-                ImageUrl = p.ImageUrl,
-                Brand = p.BrandId.HasValue ? new Brand()
+                TotalCount = query.Count()
+            };
+
+            if (filter.PageSize.HasValue)
+            {
+                model.Products = await query.OrderBy(c => c.Order).Skip(((filter.Page - 1) * filter.PageSize.Value)).Take(filter.PageSize.Value)
+                    .Select(p =>
+                    new Product
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Order = p.Order,
+                        Price = p.Price,
+                        ImageUrl = p.ImageUrl,
+                        Brand = p.BrandId.HasValue ? new Brand()
+                        {
+                            Id = p.Brand.Id,
+                            Name = p.Brand.Name
+                        } : null,
+                        Section = new Section()
+                        {
+                            Id = p.SectionId,
+                            Name = p.Section.Name
+                        }
+                    }).ToListAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                model.Products = await query.OrderBy(c => c.Order).Select(p =>
+                new Product
                 {
-                    Id = p.Brand.Id,
-                    Name = p.Brand.Name
-                } : null,
-                Section = new Section()
-                {
-                    Id = p.SectionId,
-                    Name = p.Section.Name
-                }
-            }).ToListAsync().ConfigureAwait(false);
+                    Id = p.Id,
+                    Name = p.Name,
+                    Order = p.Order,
+                    Price = p.Price,
+                    ImageUrl = p.ImageUrl,
+                    Brand = p.BrandId.HasValue ? new Brand()
+                    {
+                        Id = p.Brand.Id,
+                        Name = p.Brand.Name
+                    } : null,
+                    Section = new Section()
+                    {
+                        Id = p.SectionId,
+                        Name = p.Section.Name
+                    }
+                }).ToListAsync().ConfigureAwait(false);
+            }
+            return model;
+
+            //return await query.Select(p => new Product()
+            //{
+            //    Id = p.Id,
+            //    Name = p.Name,
+            //    Order = p.Order,
+            //    Price = p.Price,
+            //    ImageUrl = p.ImageUrl,
+            //    Brand = p.BrandId.HasValue ? new Brand()
+            //    {
+            //        Id = p.Brand.Id,
+            //        Name = p.Brand.Name
+            //    } : null,
+            //    Section = new Section()
+            //    {
+            //        Id = p.SectionId,
+            //        Name = p.Section.Name
+            //    }
+            //}).ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<Product> GetProductById(int id) 
+        public async Task<Product> GetProductById(int id)
         {
-                _logger.LogInformation("Получение товара по id = {0}", id);
+            _logger.LogInformation("Получение товара по id = {0}", id);
 
             var product = await _context.Products.Include("Brand").Include("Section").FirstOrDefaultAsync(p => p.Id.Equals(id));
 

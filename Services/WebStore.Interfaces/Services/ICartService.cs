@@ -10,5 +10,6 @@ namespace WebStore.Interfaces.Services
         void RemoveAll();
         void AddToCart(int id);
         Task<CartViewModel> TransformCart();
+        int GetItemsCoumtFromCart();
     }
 }
