@@ -36,21 +36,25 @@
 // Получение идентификатора из атрибута
         var id = button.data('id');
         // Вызов метода контроллера
-        $.get(Cart._properties.addToCartLink + '/' + id).done(function () {
-            // Отображаем сообщение, что товар добавлен в корзину
-            Cart.showToolTip(button);
-            // В случае успеха – обновляем представление
-            Cart.refreshCartView();
-        }).fail(function () { console.log('addToCart error'); });
+        $.get(Cart._properties.addToCartLink + '/' + id)
+            .done(function () {
+                // Отображаем сообщение, что товар добавлен в корзину
+                Cart.showToolTip(button);
+                // В случае успеха – обновляем представление
+                Cart.refreshCartView();
+            })
+            .fail(function () { console.log('addToCart error'); });
     },
     refreshCartView: function () {
         // Получаем контейнер корзины
         var container = $("#cartContainer");
         // Получение представления корзины
-        $.get(Cart._properties.getCartViewLink).done(function (result) {
-            // Обновление html
-            container.html(result);
-        }).fail(function () { console.log('refreshCartView error'); });
+        $.get(Cart._properties.getCartViewLink)
+            .done(function (result) {
+                // Обновление html
+                container.html(result);
+            })
+            .fail(function () { console.log('refreshCartView error'); });
     },
     showToolTip: function (button) {
         // Отображаем тултип
@@ -68,11 +72,13 @@
         event.preventDefault();
         // Получение идентификатора из атрибута
         var id = button.data('id');
-        $.get(Cart._properties.removeFromCartLink + '/' + id).done(function () {
-            button.closest('tr').remove();
-            // В случае успеха – обновляем представление
-            Cart.refreshCartView();
-        }).fail(function () { console.log('addToCart error'); });
+        $.get(Cart._properties.removeFromCartLink + '/' + id)
+            .done(function () {
+                button.closest('tr').remove();
+                // В случае успеха – обновляем представление
+                Cart.refreshCartView();
+            })
+            .fail(function () { console.log('addToCart error'); });
     },
     incrementItem: function (event) {
         var button = $(this);
@@ -83,16 +89,18 @@
         // Получение идентификатора из атрибута
         var id = button.data('id');
         // Вызов метода контроллера
-        $.get(Cart._properties.addToCartLink + '/' + id).done(function () {
-            // Получаем значение
-            var value = parseInt($('.cart_quantity_input', container).val());
-            // Увеличиваем его на 1
-            $('.cart_quantity_input', container).val(value + 1);
-            // Обновляем цену
-            Cart.refreshPrice(container);
-            // В случае успеха – обновляем представление
-            Cart.refreshCartView();
-        }).fail(function () { console.log('addToCart error'); });
+        $.get(Cart._properties.addToCartLink + '/' + id)
+            .done(function () {
+                // Получаем значение
+                var value = parseInt($('.cart_quantity_input', container).val());
+                // Увеличиваем его на 1
+                $('.cart_quantity_input', container).val(value + 1);
+                // Обновляем цену
+                Cart.refreshPrice(container);
+                // В случае успеха – обновляем представление
+                Cart.refreshCartView();
+            })
+            .fail(function () { console.log('addToCart error'); });
     },
     decrementItem: function () {
         var button = $(this);
@@ -102,19 +110,21 @@
         event.preventDefault();
         // Получение идентификатора из атрибута
         var id = button.data('id');
-        $.get(Cart._properties.decrementLink + '/' + id).done(function () {
-            var value = parseInt($('.cart_quantity_input', container).val());
-            if (value > 1) {
-                // Уменьшаем его на 1
-                $('.cart_quantity_input', container).val(value - 1);
-                Cart.refreshPrice(container);
-            } else {
-                container.remove();
-                Cart.refreshTotalPrice();
-            }
-            // В случае успеха – обновляем представление
-            Cart.refreshCartView();
-        }).fail(function () { console.log('addToCart error'); });
+        $.get(Cart._properties.decrementLink + '/' + id)
+            .done(function () {
+                var value = parseInt($('.cart_quantity_input', container).val());
+                if (value > 1) {
+                    // Уменьшаем его на 1
+                    $('.cart_quantity_input', container).val(value - 1);
+                    Cart.refreshPrice(container);
+                } else {
+                    container.remove();
+                    Cart.refreshTotalPrice();
+                }
+                // В случае успеха – обновляем представление
+                Cart.refreshCartView();
+             })
+            .fail(function () { console.log('addToCart error'); });
     },
     refreshPrice: function (container) {
         // Получаем количество

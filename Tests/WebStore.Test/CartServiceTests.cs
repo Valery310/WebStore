@@ -85,7 +85,7 @@ namespace WebStore.Test
             };
 
             var productData = new Mock<IProductData>();
-            productData.Setup(c => c.GetProducts(It.IsAny<ProductFilter>())).ReturnsAsync(new[] { new Product { Id = 1 }, new Product { Id = 2 }, new Product { Id = 3 } } );
+            productData.Setup(c => c.GetProducts(It.IsAny<ProductFilter>())).ReturnsAsync(new PageProduct() { Products = new[] { new Product { Id = 1 }, new Product { Id = 2 }, new Product { Id = 3 } }, TotalCount = 3 });
 
             var cartStore = new Mock<ICartStore>();
             cartStore.Setup(c => c.Cart).Returns(cart);
@@ -210,17 +210,31 @@ namespace WebStore.Test
                     new CartItem(){ProductId = 1, Quantity = 4}
                 }
             };
-            var products = new List<ProductDto>()
-            {
-                new ProductDto()
-                {
-                    Id = 1,
-                    ImageUrl = "",
-                    Name = "Test",
-                    Order = 0,
-                    Price = 1.11m,
-                }
-            };
+
+            var products = new PageProductDto()
+            { 
+                Products = new List<ProductDto> {
+                     new ProductDto()
+                    {
+                        Id = 1,
+                        ImageUrl = "",
+                        Name = "Test",
+                        Order = 0,
+                        Price = 1.11m,
+                    }
+                },
+            }; 
+            //var products = new List<ProductDto>()
+            //{
+            //    new ProductDto()
+            //    {
+            //        Id = 1,
+            //        ImageUrl = "",
+            //        Name = "Test",
+            //        Order = 0,
+            //        Price = 1.11m,
+            //    }
+            //};
             var productData = new Mock<IProductData>();
             productData.Setup(c => c.GetProducts(It.IsAny<ProductFilter>()).Result).Returns(products.FromDTO());
             var cartStore = new Mock<ICartStore>();

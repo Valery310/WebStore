@@ -11,6 +11,7 @@ namespace WebStore.Components
     public class CartViewComponent : ViewComponent
     {
         private readonly ICartService _cartService;
+
         public CartViewComponent(ICartService cartService)
         {
             _cartService = cartService;
@@ -18,13 +19,15 @@ namespace WebStore.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            Dictionary<ProductViewModel, int> _Items = new Dictionary<ProductViewModel, int>();
-            _Items.Add(new ProductViewModel(), _cartService.GetItemsCoumtFromCart());
+            //Dictionary<ProductViewModel, int> _Items = new Dictionary<ProductViewModel, int>();
+            //_Items.Add(new ProductViewModel(), _cartService.GetItemsCoumtFromCart());
 
-            return View(new CartViewModel()
-            {          
-                Items = _Items
-            }); ; 
+            //return View(new CartViewModel()
+            //{          
+            //    Items = _Items
+            //}); ; 
+            ViewBag.Count = _cartService.GetItemsCoumtFromCart();
+            return View();
         }
     }
 }

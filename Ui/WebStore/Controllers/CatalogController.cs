@@ -22,6 +22,7 @@ namespace WebStore.Controllers
 
         public async Task<IActionResult> Shop(int? sectionId, int? brandId, int page = 1)
         {
+            var ps = int.Parse(_configuration["PageSize"]);
             var products = await _productData.GetProducts(new ProductFilter { BrandId = brandId, SectionId = sectionId, Page = page, PageSize = int.Parse(_configuration["PageSize"]) }).ConfigureAwait(false);
 
             var model = new CatalogViewModel()

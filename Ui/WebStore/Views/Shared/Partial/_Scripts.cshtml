@@ -4,7 +4,7 @@
 <script src="~/js/price-range.js"></script>
 <script src="~/js/jquery.prettyPhoto.js"></script>
 <script src="~/js/main.js"></script>
-<script src="~/js/cartLogic.js"></script>
+<script src="~/js/cartLogic.js" asp-append-version="true"></script>
 
 @*<environment include="Development">
         <script src="~/js/price-range.js"  asp-append-version="true" ></script>
@@ -24,10 +24,10 @@
 <script type="text/javascript">
     $(function() {
         Cart.init({
-            addToCartLink: '@Url.Action("AddToCart","Cart")',
+            addToCartLink: '@Url.Action("AddToCartApi","Cart")',
             getCartViewLink : '@Url.Action("GetCartView", "Cart")',
-            removeFromCartLink: '@Url.Action("RemoveFromCart","Cart")',
-            decrementLink: '@Url.Action("DecrementFromCart","Cart")'
+            removeFromCartLink: '@Url.Action("RemoveFromCartApi","Cart")',
+            decrementLink: '@Url.Action("DecrementFromCartApi","Cart")'
         });
     });
 </script>

@@ -34,19 +34,13 @@ namespace WebStore.Controllers
         public IActionResult DecrementFromCart(int id)
         {
             _cartService.DecrementFromCart(id);
-            // return RedirectToAction("Details");
-            return Json(new
-            {
-                id,
-                message = "Количество товара уменьшено на 1"
-            });
+            return RedirectToAction("Details");
         }
 
         public IActionResult RemoveFromCart(int id)
         {
             _cartService.RemoveFromCart(id);
-            //  return RedirectToAction("Details");
-            return Json(new { id, message = "Товар удален из корзины" });
+            return RedirectToAction("Details");
         }
 
         public IActionResult RemoveAll()
@@ -58,9 +52,37 @@ namespace WebStore.Controllers
         public IActionResult AddToCart(int id, string returnUrl)
         {
             _cartService.AddToCart(id);
-            return Json(new { id, message = "Товар добавлен в корзину" });
-         //   return Redirect(returnUrl);
+            return Redirect(returnUrl);
         }
+
+        #region JSON
+
+        public IActionResult AddToCartApi(int id, string returnUrl)
+        {
+            _cartService.AddToCart(id);
+            return Json(new { id, message = "Товар добавлен в корзину" });
+            //   return Redirect(returnUrl);
+        }
+
+        public IActionResult RemoveFromCartApi(int id)
+        {
+            _cartService.RemoveFromCart(id);
+            //  return RedirectToAction("Details");
+            return Json(new { id, message = "Товар удален из корзины" });
+        }
+
+        public IActionResult DecrementFromCartApi(int id)
+        {
+            _cartService.DecrementFromCart(id);
+            // return RedirectToAction("Details");
+            return Json(new
+            {
+                id,
+                message = "Количество товара уменьшено на 1"
+            });
+        }
+
+        #endregion
 
         [HttpGet]
         public IActionResult GetCartView()

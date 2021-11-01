@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using WebStore.Controllers;
@@ -21,6 +22,10 @@ namespace WebStore.Test
         {
             // Arrange
             var productMock = new Mock<IProductData>();
+
+            var configuration = new Mock<IConfiguration>();
+            configuration.SetupGet(x => x[It.IsAny<string>()]).Returns("3");
+
             productMock.Setup(p => p.GetProductById(It.IsAny<int>())).ReturnsAsync(new Product()
             {
                 Id = 1,
@@ -35,7 +40,7 @@ namespace WebStore.Test
                 }
             });
 
-            var controller = new CatalogController(productMock.Object);
+            var controller = new CatalogController(productMock.Object, configuration.Object);
             // Act
             var result = await controller.ProductDetails(1);
             // Assert
@@ -53,7 +58,11 @@ namespace WebStore.Test
             // Arrange
             var productMock = new Mock<IProductData>();
             productMock.Setup(p => p.GetProductById(It.IsAny<int>())).ReturnsAsync((Product)null);
-            var controller = new CatalogController(productMock.Object);
+
+            var configuration = new Mock<IConfiguration>();
+            configuration.SetupGet(x => x[It.IsAny<string>()]).Returns("3");
+
+            var controller = new CatalogController(productMock.Object, configuration.Object);
             // Act
             var result = await controller.ProductDetails(1);
             // Assert
@@ -65,8 +74,10 @@ namespace WebStore.Test
         {
             // Arrange
             var productMock = new Mock<IProductData>();
-            productMock.Setup(p => p.GetProducts(It.IsAny<ProductFilter>())).ReturnsAsync(new List<Product>()
+            productMock.Setup(p => p.GetProducts(It.IsAny<ProductFilter>())).ReturnsAsync(new PageProduct() 
             {
+                Products = new List<Product>()
+             {
                 new Product()
                 {
                     Id = 1,
@@ -93,9 +104,16 @@ namespace WebStore.Test
                         Name = "TestBrand"
                     }
                 }
-                });
+              }
+                , TotalCount = 2
+            }
+         
+           );
 
-            var controller = new CatalogController(productMock.Object);
+            var configuration = new Mock<IConfiguration>();
+            configuration.SetupGet(x => x[It.IsAny<string>()]).Returns("3");
+
+            var controller = new CatalogController(productMock.Object, configuration.Object);
             // Act
             var result = await controller.Shop(1, 5);
             // Assert
