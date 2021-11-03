@@ -97,7 +97,7 @@ namespace WebStore.Clients.Services.Products
 
         public async Task<SaveResult> DeleteProduct(int productId)
         {
-            var url = $"{ServiceAddress}/{productId}";
+            var url = $"{ServiceAddress}/deleteproduct/{productId}";
             var response = await DeleteAsync(url);
             var result = await response.Content.ReadAsAsync<SaveResult>();
             return result;

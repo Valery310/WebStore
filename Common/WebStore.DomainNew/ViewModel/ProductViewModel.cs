@@ -1,7 +1,7 @@
 ﻿using WebStore.Domain.Entities;
 using WebStore.Domain.Entities.Base.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebStore.Domain.ViewModel
 {
@@ -17,9 +17,16 @@ namespace WebStore.Domain.ViewModel
         [Required, Display(Name = "Цена")]
         public decimal Price { get; set; }
         [Required, Display(Name = "Категория")]
-        public Section Section { get; set; }
+        public int SectionId { get; set; }
         [Display(Name = "Бренд")]
+        public int? BrandId { get; set; }
+
+        public Section Section { get; set; }
+
         public Brand Brand { get; set; }
+
+        public SelectList Sections { get; set; }
+        public SelectList Brands { get; set; }
     }
 
 }

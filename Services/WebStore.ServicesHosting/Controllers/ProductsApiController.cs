@@ -92,10 +92,10 @@ namespace WebStore.ServicesHosting.Controllers
             var result = await _productData.UpdateProduct(product);
             return result;
         }
-        [HttpDelete("{productId}")]
+        [HttpDelete("deleteproduct/{productId}")]
         public async Task<SaveResult> DeleteProduct(int productId)
         {
-            var result = await _productData.DeleteProduct(productId);
+            var result =await _productData.DeleteProduct(productId);
             return result;
         }
     }

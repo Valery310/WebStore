@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
 using System.Threading.Tasks;
-using WebStore.Areas.Admin.Models;
+using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
+using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Services;
 
 namespace WebStore.Areas.Admin.Controllers
@@ -14,9 +17,9 @@ namespace WebStore.Areas.Admin.Controllers
         
         public ProductsController(IProductData productData) => _productData = productData;
             
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = _productData.GetProducts(new ProductFilter());
+            var products = await _productData.GetProducts(new ProductFilter());
             return View(products);
         }
 
@@ -25,66 +28,83 @@ namespace WebStore.Areas.Admin.Controllers
      //   public IActionResult Delete(int id) => RedirectToAction(nameof(Index));
 
         [Route("edit/{id?}")]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> EditAsync(int? id)
         {
-            ProductViewModel model;
+            var tempSections = await _productData.GetSections().ConfigureAwait(false);
+            var notParentSections = tempSections.Where(s => s.ParentId != null);
+            var brands = await _productData.GetBrands();
 
-                var temp = await _productData.GetProductById(id).ConfigureAwait(false);
-                model = new ProductViewModel
+            if (!id.HasValue)
+            {
+                return View(new ProductViewModel()
                 {
-                    Id = temp.Id,
-                    Name = temp.Name,
-                    Order = temp.Order,
-                    ImageUrl = temp.ImageUrl,
-                    Price = temp.Price,
-                    Brand = temp.Brand,
-                    Section = temp.Section
-                };
+                    Sections = new SelectList(notParentSections, "Id", "Name"),
+                    Brands = new SelectList(brands, "Id", "Name")
+                });
+            }
+            var product = await _productData.GetProductById(id.Value);
 
-                if (ReferenceEquals(model, null))
-                {
-                    return NotFound();
-                }
-            return View(model);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(new ProductViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Order = product.Order,
+                Price = product.Price,
+                ImageUrl = product.ImageUrl,
+                Section = product.Section,
+                Brand = product?.Brand,
+                BrandId = product?.Brand.Id,
+                SectionId = product.Section.Id,
+                Brands = new SelectList(brands, "Id", "Name", product.Brand?.Id),
+                Sections = new SelectList(notParentSections, "Id", "Name", product.Section.Id)
+            });
         }
 
         [HttpPost]
         [Route("edit/{id?}")]
         public async Task<IActionResult> Edit(ProductViewModel model)
         {
-            if (model.Price < 0)
+            var tempSections = await _productData.GetSections();
+            var notParentSections = tempSections.Where(s => s.ParentId != null);
+            var brands = await _productData.GetBrands();
+
+            if (ModelState.IsValid && model.SectionId != 0)
             {
-                ModelState.AddModelError("Price", "Цена не может быть меньше нуля.");
-            }
-            if (ModelState.IsValid)
-            {
+                var productDto = new Product()
+                {
+                    Id = model.Id,
+                    ImageUrl = model.ImageUrl,
+                    Name = model.Name,
+                    Order = model.Order,
+                    Price = model.Price,
+                    Brand = model.BrandId != -1 ?  brands?.Single(p => p.Id == model.BrandId): null,
+                    Section = tempSections.Single(p => p.Id == model.SectionId)
+                };
                 if (model.Id > 0)
                 {
-                    var dbitem = await _productData.GetProductById(model.Id).ConfigureAwait(false);
-
-                    if (ReferenceEquals(dbitem, null))
-                    {
-                        return NotFound();
-                    }
-                    dbitem.Name = model.Name;
-                    dbitem.ImageUrl = model.ImageUrl;
-                    dbitem.Order = model.Order;
-                    dbitem.Price = model.Price;
-                    dbitem.Brand = model.Brand;
-                    dbitem.Section = model.Section;
-
-                    await _productData.UpdateAsync(dbitem);
+                    await _productData.UpdateProduct(productDto);
                 }
+                else
+                {
+                    await _productData.CreateProduct(productDto);
+                }
+                //  return RedirectToAction("ProductList", "Home", new { area = "Admin" });
                 return RedirectToAction(nameof(Index));
             }
-            //Возвращаем модель, если не валидна.
+            model.Brands = new SelectList(brands, "Id", "Name", model.Brands);
+            model.Sections = new SelectList(notParentSections, "Id", "Name", model.Sections);
             return View(model);
         }
 
         [Route("delete/{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            _productData.DeleteAsync(id);
+            var result = await _productData.DeleteProduct(id);
             return RedirectToAction(nameof(Index));
         }
     }

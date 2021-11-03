@@ -45,7 +45,7 @@ namespace WebStore.Services.Implementations.Sql
 
         public async Task<PageProduct> GetProducts(ProductFilter filter)
         {
-            var query = _context.Products.Include("Section").Include("Brand").AsQueryable();
+            var query = _context.Products.Include("Section").Include("Brand").Where(p => !p.IsDelete).AsQueryable();
 
             if (filter.BrandId.HasValue)
             {
@@ -108,25 +108,6 @@ namespace WebStore.Services.Implementations.Sql
                 }).ToListAsync().ConfigureAwait(false);
             }
             return model;
-
-            //return await query.Select(p => new Product()
-            //{
-            //    Id = p.Id,
-            //    Name = p.Name,
-            //    Order = p.Order,
-            //    Price = p.Price,
-            //    ImageUrl = p.ImageUrl,
-            //    Brand = p.BrandId.HasValue ? new Brand()
-            //    {
-            //        Id = p.Brand.Id,
-            //        Name = p.Brand.Name
-            //    } : null,
-            //    Section = new Section()
-            //    {
-            //        Id = p.SectionId,
-            //        Name = p.Section.Name
-            //    }
-            //}).ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<Product> GetProductById(int id)
@@ -231,10 +212,13 @@ namespace WebStore.Services.Implementations.Sql
                     Name = product.Name,
                     ImageUrl = product.ImageUrl,
                     Order = product.Order,
-                    Price = product.Price
+                    Price = product.Price,
+                  //  Brand = product.Brand,
+                 //   Section = product.Section,
+                    IsDelete = product.IsDelete,
                 };
 
-                await _context.Products.AddAsync(product).ConfigureAwait(false);
+                await _context.Products.AddAsync(_product).ConfigureAwait(false);
                 await _context.SaveChangesAsync();
 
                 return new SaveResult
@@ -318,8 +302,8 @@ namespace WebStore.Services.Implementations.Sql
 
             public async Task<SaveResult> DeleteProduct(int productId)
             {
-                var product = await _context.Products.FirstOrDefaultAsync().ConfigureAwait(false);
-                if (product == null)
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId).ConfigureAwait(false);
+            if (product == null)
                 {
                     return new SaveResult()
                     {
@@ -329,7 +313,9 @@ namespace WebStore.Services.Implementations.Sql
                 }
                 try
                 {
-                    _context.Remove(product);
+                    //_context.Remove(product);
+                    product.IsDelete = true;
+                     _context.Update(product);
                     await _context.SaveChangesAsync();
                     return new SaveResult()
                     {
