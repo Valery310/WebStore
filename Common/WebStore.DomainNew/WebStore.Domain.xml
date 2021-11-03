@@ -66,7 +66,17 @@
             Секция к которой принадлежит товар
             </summary>
         </member>
+        <member name="P:WebStore.Domain.Entities.Product.Section">
+            <summary>
+            Секция к которой принадлежит товар
+            </summary>
+        </member>
         <member name="P:WebStore.Domain.Entities.Product.BrandId">
+            <summary>
+            Бренд товара
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Product.Brand">
             <summary>
             Бренд товара
             </summary>
@@ -79,6 +89,11 @@
         <member name="P:WebStore.Domain.Entities.Product.Price">
             <summary>
             Цена
+            </summary>
+        </member>
+        <member name="P:WebStore.Domain.Entities.Product.IsDelete">
+            <summary>
+            Удален товар или нет
             </summary>
         </member>
         <member name="T:WebStore.Domain.Entities.Section">

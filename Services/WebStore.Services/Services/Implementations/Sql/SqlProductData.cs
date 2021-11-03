@@ -219,5 +219,134 @@ namespace WebStore.Services.Implementations.Sql
             }
                 
         }
+
+        public async Task<SaveResult> CreateProduct(Product product)
+        {
+            try
+            {
+                var _product = new Product()
+                {
+                    BrandId = product.Brand?.Id,
+                    SectionId = product.Section.Id,
+                    Name = product.Name,
+                    ImageUrl = product.ImageUrl,
+                    Order = product.Order,
+                    Price = product.Price
+                };
+
+                await _context.Products.AddAsync(product).ConfigureAwait(false);
+                await _context.SaveChangesAsync();
+
+                return new SaveResult
+                {
+                    IsSuccess = true
+                };
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return new SaveResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        ex.Message
+                    }
+                };
+            }
+            catch (DbUpdateException ex)
+            {
+                return new SaveResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        ex.Message
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                return new SaveResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        e.Message
+                    }
+                };
+            }
+        
+        }
+
+        public async Task<SaveResult> UpdateProduct(Product product)
+        {
+            var _product = await _context.Products.FirstOrDefaultAsync().ConfigureAwait(false);
+            if (_product == null)
+            {
+                return new SaveResult()
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>() { "Entity not exist" }
+                };
+            }
+            _product.BrandId = product.Brand.Id;
+            _product.SectionId = product.Section.Id;
+            _product.ImageUrl = product.ImageUrl;
+            _product.Order = product.Order;
+            _product.Price = product.Price;
+            _product.Name = product.Name;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return new SaveResult
+                {
+                    IsSuccess = true
+                };
+            }
+            catch (Exception e)
+            {
+                return new SaveResult
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>()
+                    {
+                        e.Message
+                    }
+                };
+            }
+        }
+
+            public async Task<SaveResult> DeleteProduct(int productId)
+            {
+                var product = await _context.Products.FirstOrDefaultAsync().ConfigureAwait(false);
+                if (product == null)
+                {
+                    return new SaveResult()
+                    {
+                        IsSuccess = false,
+                        Errors = new List<string>() { "Entity not exist" }
+                    };
+                }
+                try
+                {
+                    _context.Remove(product);
+                    await _context.SaveChangesAsync();
+                    return new SaveResult()
+                    {
+                        IsSuccess = true
+                    };
+                }
+                catch (Exception e)
+                {
+                    return new SaveResult
+                    {
+                        IsSuccess = false,
+                        Errors = new List<string>()
+                    {
+                        e.Message
+                    }
+                    };
+                }
+            }       
     }
 }

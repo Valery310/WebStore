@@ -1,32 +1,38 @@
-﻿@model IEnumerable<Product>
+﻿@model PageProduct
 @{
     ViewBag.Titile = "Управление каталогом товаров";
 }
 
+
 <div id="page-wrapper">
     <div id="page-inner">
+
+        <p>
+            <a asp-action="Edit" class="btn btn-success">Добавить продукт</a>
+        </p>
+
         <table class="table">
             <thead>
                 <tr>
                     <th></th>
-                    <th>@Html.DisplayNameFor(m => m.Id)</th>
-                    <th>@Html.DisplayNameFor(m => m.Name)</th>
-                    <th>@Html.DisplayNameFor(m => m.Brand)</th>
-                    <th>@Html.DisplayNameFor(m => m.Section)</th>
-                    <th>@Html.DisplayNameFor(m => m.ImageUrl)</th>
-                    <th>@Html.DisplayNameFor(m => m.Price)</th>
+                    <th>@Html.DisplayNameFor(m => m.Products.FirstOrDefault().Id)</th>
+                    <th>@Html.DisplayNameFor(m => m.Products.FirstOrDefault().Name)</th>
+                    <th>@Html.DisplayNameFor(m => m.Products.FirstOrDefault().Brand)</th>
+                    <th>@Html.DisplayNameFor(m => m.Products.FirstOrDefault().Section)</th>
+                    <th>@Html.DisplayNameFor(m => m.Products.FirstOrDefault().ImageUrl)</th>
+                    <th>@Html.DisplayNameFor(m => m.Products.FirstOrDefault().Price)</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var product in Model)
+                @foreach (var product in Model.Products)
                 {
                     var brand = product.Brand?.Name;
 
                     <tr>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@product.Id">
-                                <i class="glyphicon glyphicon-edit"></i>ред.
+                            <a asp-action="Edit" asp-route-id="@product.Id" title="Редактировать">
+                                <i class="glyphicon glyphicon-edit">ред.</i>
                             </a>
                         </td>
                         <td>@Html.DisplayFor(_ => product.Id)</td>
@@ -36,8 +42,8 @@
                         <td><img src="~/images/shop/@product.ImageUrl" width="50" alt="@product.Name" /></td>
                         <td>@Html.DisplayFor(_ => product.Price)</td>
                         <td>
-                            <a asp-action="Delete" asp-route-id="@product.Id" class="text-danger">
-                                <i class="glyphicon glyphicon-remove"></i>уд.
+                            <a asp-action="Delete" asp-route-id="@product.Id" class="text-danger" title="Удалить">
+                                <i class="glyphicon glyphicon-remove">уд.</i>
                             </a>
                         </td>
                     </tr>
