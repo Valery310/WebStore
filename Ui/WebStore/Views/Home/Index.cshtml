@@ -1,19 +1,19 @@
-﻿@{
-    ViewData["Title"] = "E-shopper";
-}
-@await Html.PartialAsync("Partial/_Slider")
+﻿@using WebStore.Interfaces.Services
+@using WebStore.Services.Mapping
+@inject IProductData ProductData
 @{
+    ViewData["Title"] = "E-shopper";
     //inject ILogger<AccountController> Logger
 }
 
-
+@await Html.PartialAsync("Partial/_Slider")
 <section>
     <div class="row">
         <div class="col-sm-3">
             @await Html.PartialAsync("Partial/_LeftSideBar")
         </div>
         <div class="col-sm-9 padding-right">
-            @await Html.PartialAsync("Partial/_FeaturedItems")
+            @await Html.PartialAsync("Partial/_FeaturedItems", ProductData.GetProducts(new WebStore.Domain.Filters.ProductFilter { Page = 1, PageSize = 6 }).Result.Products.ToView())
             @await Html.PartialAsync("Partial/_CategoryTab")
             @await Html.PartialAsync("Partial/_RecommendedItems")
         </div>

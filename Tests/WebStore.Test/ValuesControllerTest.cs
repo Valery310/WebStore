@@ -8,6 +8,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using WebStore.Interfaces;
+using Xunit;
 
 namespace WebStore.Test
 {
@@ -18,7 +19,7 @@ namespace WebStore.Test
 
         private readonly WebApplicationFactory<Startup> _Host = new WebApplicationFactory<Startup>();
 
-        [TestMethod]
+        [Fact]
         public async Task GetValues_IntegrityTest()
         {
             var client = _Host.CreateClient();

@@ -19,7 +19,9 @@
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="jQuery.LoadingOverlay" Version="2.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.11" />
     <PackageReference Include="microsoft.entityframeworkcore.tools" Version="5.0.11">
@@ -45,6 +47,7 @@
     <ProjectReference Include="..\..\Services\WebStore.Clients\WebStore.Clients.csproj" />
     <ProjectReference Include="..\..\Services\WebStore.Interfaces\WebStore.Interfaces.csproj" />
     <ProjectReference Include="..\..\Services\WebStore.Services\WebStore.Services.csproj" />
+    <ProjectReference Include="..\WebStore.BlazorUI\WebStore.BlazorUI.csproj" />
   </ItemGroup>
 
 </Project>

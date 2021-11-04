@@ -100,7 +100,7 @@ namespace WebStore.Controllers
                 Name = p.Name,
                 Order = p.Order,
                 Price = p.Price,
-                Brand = p.Brand
+                Brand = p.Brand,                
             }).ToList().OrderBy(p => p.Order);
         }
 

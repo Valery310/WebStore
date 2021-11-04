@@ -1,38 +1,37 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace WebStore.TestConsole
 {
     class Program
     {
-        // private record Student(string LastName, string FirstName, int Age);
-
-        private record Student() 
+        static async Task Main(string[] args)
         {
-            public string LastName { get; init; }
-            public string FirstName { get; init; }
-            public int Age { get; init; }
+            var builder = new HubConnectionBuilder();
+            var connection = builder
+               .WithUrl("https://localhost:44374/chat")
+               .Build();
+
+            using var registration = connection.On<string>("MessageFromClient", OnMessageFromClient);
+
+            Console.WriteLine("Готов к подключению.");
+            Console.ReadLine();
+
+            await connection.StartAsync();
+
+            Console.WriteLine("Соединение установлено.");
+
+            while (true)
+            {
+                var message = Console.ReadLine();
+                await connection.InvokeAsync("SendMessage", message);
+            }
         }
 
-        static void Main(string[] args)
+        private static void OnMessageFromClient(string Message)
         {
-            var v1 = new Student
-            {
-                LastName = "Last1",
-                FirstName = "First1",
-                Age = 10
-            };
-
-            var v2 = new Student
-            {
-                LastName = "Last2",
-                FirstName = "First2",
-                Age = 11
-            };
-
-            if (v1 == v2)
-            {
-                Console.WriteLine("equals");
-            }
+            Console.WriteLine("Message from server: {0}", Message);
         }
     }
 }
