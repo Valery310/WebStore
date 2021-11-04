@@ -74,23 +74,25 @@ namespace WebStore.Controllers
 
         }
 
-        public IActionResult GetFilteredItems(int? sectionId, int? brandId, int page = 1)
+        public async Task<IActionResult> GetFilteredItems(int? sectionId, int? brandId, int page = 1)
         {
-            var productsModel = GetProducts(sectionId, brandId, page, out var totalCount);
+            // var productsModel = GetProducts(sectionId, brandId, page, out var totalCount);
+            var productsModel = await GetProducts(sectionId, brandId, page).ConfigureAwait(false);
             return PartialView("Partial/_ProductItems", productsModel);
         }
 
 
-        private IEnumerable<ProductViewModel> GetProducts(int? sectionId, int? brandId, int page, out int totalCount)
+        //private IEnumerable<ProductViewModel> GetProducts(int? sectionId, int? brandId, int page, out int totalCount)
+        private async Task<IEnumerable<ProductViewModel>> GetProducts(int? sectionId, int? brandId, int page)
         {
-            var products = _productData.GetProducts(new ProductFilter
+            var products = await _productData.GetProducts(new ProductFilter
             {
                 BrandId = brandId,
                 SectionId = sectionId,
                 Page = page,
                 PageSize = int.Parse(_configuration["PageSize"])
-            }).Result;
-            totalCount = products.TotalCount;
+            }).ConfigureAwait(false);
+           // totalCount = products.TotalCount;
             return products.Products.Select(p => new ProductViewModel()
             {
                 Id = p.Id,
@@ -99,7 +101,7 @@ namespace WebStore.Controllers
                 Order = p.Order,
                 Price = p.Price,
                 Brand = p.Brand
-            }).ToList();
+            }).ToList().OrderBy(p => p.Order);
         }
 
     }

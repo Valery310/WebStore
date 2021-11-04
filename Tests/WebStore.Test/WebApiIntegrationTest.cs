@@ -7,6 +7,8 @@ using System.Net;
 using System.Threading.Tasks;
 using WebStore.Interfaces.Api;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WebStore.Test
 {
@@ -17,7 +19,6 @@ namespace WebStore.Test
 
         private WebApplicationFactory<WebStore.ServicesHosting.Startup> _Host;
 
-        [TestInitialize]
         public void Initialize()
         {
             var values_service_mock = new Mock<IValuesService>();
@@ -29,18 +30,24 @@ namespace WebStore.Test
                 .AddSingleton(values_service_mock.Object)));
         }
 
-        [TestMethod]
+        [Fact]
         public async Task GetValues() 
         {
+            Initialize();
+
             var client = _Host.CreateClient();
-            var response = await client.GetAsync("/WebAPI");
-            Assert.Equals(HttpStatusCode.OK, response.StatusCode);
+            // var response = await client.GetAsync("/WebAPI");
+            var response = await client.GetAsync("/swagger/index");
+            
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var parser = new HtmlParser();
             var content_stream = await response.Content.ReadAsStreamAsync();
             var html = parser.ParseDocument(content_stream);
 
             var item = html.QuerySelectorAll(".container table.table tbody tr td:last-child");
+            var actual_values = item.Select(i => i.TextContent);
+            Assert.Equal(_ExpectedValues, actual_values);
         }
     }
 }

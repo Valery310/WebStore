@@ -14,6 +14,13 @@ namespace WebStore.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _Logger;
 
+        [AllowAnonymous]
+        public async Task<ActionResult> IsNameFree(string UserName) 
+        {
+            var user = await _userManager.FindByNameAsync(UserName);
+            return Json(user is null ? "true" : "Пользователь с таким именем уже существует");
+        }
+
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountController> Logger)
         {
             _userManager = userManager;

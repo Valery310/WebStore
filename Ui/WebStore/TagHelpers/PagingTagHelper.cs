@@ -59,8 +59,7 @@ namespace WebStore.TagHelpers
                 {
                     if (pageUrlValue.Value != null)
                     {
-                        link.MergeAttribute("data-" + pageUrlValue.Key,
-                        pageUrlValue.Value.ToString());
+                        link.MergeAttribute("data-" + pageUrlValue.Key, pageUrlValue.Value.ToString());
                     }
                 }
             }

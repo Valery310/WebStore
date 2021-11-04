@@ -82,7 +82,7 @@ namespace WebStore.ServicesHosting.Controllers
         {
             using (_logger.BeginScope("Получение сотрудника по id"))
             {
-                _logger.LogInformation("Удаление сотрудника с id = {0} пользователем {1}", id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _logger.LogInformation("Получение сотрудника с id = {0}", id);
                 var result = _employeesData.GetById(id);
                 if (result is null)
                 {
