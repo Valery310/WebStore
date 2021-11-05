@@ -21,6 +21,7 @@ using WebStore.Services.Services;
 using System.Net.Http;
 using Polly;
 using Polly.Extensions.Http;
+using WebStore.Hubs;
 
 namespace WebStore
 {
@@ -96,6 +97,8 @@ namespace WebStore
                 HttpPolicyExtensions.HandleTransientHttpError().CircuitBreakerAsync(handledEventsAllowedBeforeBreaking: 5, TimeSpan.FromSeconds(30));
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,6 +121,7 @@ namespace WebStore
                 app.UseHsts();
             }
 
+            app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -139,13 +143,16 @@ namespace WebStore
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/chat");
                 endpoints.MapControllerRoute(
                     name: "areas",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");
+
+                endpoints.MapFallbackToFile("index.html");
             });
 
             // var hello = Configuration["CustomHelloWorld"];

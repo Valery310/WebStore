@@ -1,21 +1,25 @@
-﻿using AngleSharp.Html.Parser;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using WebStore.Interfaces.Api;
+using AngleSharp.Dom;
+using AngleSharp.Html.Parser;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using WebStore.Domain.ViewModel;
+using WebStore.Interfaces.Api;
+using WebStore.Interfaces.Services;
+using Assert = Xunit.Assert;
 
 namespace WebStore.Test
 {
     [TestClass]
-    public class WebApiIntegrationTest
+    public class WebAPIIntegrationTest
     {
         private readonly string[] _ExpectedValues = Enumerable.Range(1, 10).Select(i => $"TestValue - {i}").ToArray();
 
-        private WebApplicationFactory<WebStore.ServicesHosting.Startup> _Host;
+        private WebApplicationFactory<Startup> _Host;
 
         [TestInitialize]
         public void Initialize()
@@ -23,24 +27,36 @@ namespace WebStore.Test
             var values_service_mock = new Mock<IValuesService>();
             values_service_mock.Setup(s => s.Get()).Returns(_ExpectedValues);
 
-            _Host = new WebApplicationFactory<WebStore.ServicesHosting.Startup>()
-                .WithWebHostBuilder(host => host
-                .ConfigureServices(service => service
-                .AddSingleton(values_service_mock.Object)));
+            var cart_service_mock = new Mock<ICartService>();
+            cart_service_mock.Setup(c => c.TransformCart()).ReturnsAsync(() => new CartViewModel { Items = (System.Collections.Generic.Dictionary<ProductViewModel, int>)Enumerable.Empty<(ProductViewModel, int)>() });
+
+            _Host = new WebApplicationFactory<Startup>()
+               .WithWebHostBuilder(host => host
+                   .ConfigureServices(services => services
+                       .AddSingleton(values_service_mock.Object)
+                       .AddSingleton(cart_service_mock.Object)));
         }
 
-        [TestMethod]
-        public async Task GetValues() 
+        [Xunit.Fact, Timeout(3000)]
+        public async Task GetValues()
         {
+            Initialize();
             var client = _Host.CreateClient();
+
             var response = await client.GetAsync("/WebAPI");
-            Assert.Equals(HttpStatusCode.OK, response.StatusCode);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var parser = new HtmlParser();
+
             var content_stream = await response.Content.ReadAsStreamAsync();
             var html = parser.ParseDocument(content_stream);
 
-            var item = html.QuerySelectorAll(".container table.table tbody tr td:last-child");
+            var items = html.QuerySelectorAll(".container table.table tbody tr td:last-child");
+
+            var actual_values = items.Select(item => item.Text());
+
+            Assert.Equal(_ExpectedValues, actual_values);
         }
     }
 }

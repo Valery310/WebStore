@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebStore.Domain.Dto;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
 
@@ -63,6 +62,24 @@ namespace WebStore.Interfaces.Services
         /// <param name="filter">Фильтр товаров</param>
         /// <returns></returns>
         Task<PageProduct> GetProducts(ProductFilter filter);
+        /// <summary>
+        /// Создать продукт
+        /// </summary>
+        /// <param name="product">Сущность Product</param>
+        /// <returns></returns>
+        Task<SaveResult> CreateProduct(Product product);
+        /// <summary>
+        /// Обновить продукт
+        /// </summary>
+        /// <param name="product">Сущность Product</param>
+        /// <returns></returns>
+        Task<SaveResult> UpdateProduct(Product product);
+        /// <summary>
+        /// Удалить продукт
+        /// </summary>
+        /// <param name="productId">Id продукта</param>
+        /// <returns></returns>
+        Task<SaveResult> DeleteProduct(int productId);
     }
 
 }

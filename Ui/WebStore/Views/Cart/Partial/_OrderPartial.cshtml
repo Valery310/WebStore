@@ -26,23 +26,26 @@
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
     </div>
-        <div class="col-sm-6">
-            <div class="total_area">
-                @{
-                    ViewData.TryGetValue("sumCart", out var sumObj);
-                }
+    <div class="col-sm-6">
+        <div class="total_area">
+            @{
+                ViewData.TryGetValue("sumCart", out var sumObj);
+            }
 
-                @if (sumObj is decimal and > 0)
+            @if (sumObj is decimal and > 0)
+            {
+                var sum = (decimal)sumObj;
+                <ul>
+                    <li>Итого <span id="totalOrderSum">@sum.ToString("C")</span></li>
+                </ul>
+                if (sum > 0)
                 {
-                    var sum = (decimal)sumObj;
-                    <ul>
-                        <li>Итого <span id="totalOrderSum">@sum.ToString("C")</span></li>
-                    </ul>
-                    if (sum > 0) 
-                    {
-                        <input type="submit" value="Оформить заказ" class="btn btn-default check_out" />
-                    }
+                    <input type="submit" value="Оформить заказ" class="btn btn-default check_out" />
                 }
-            </div>
+            }
         </div>
+    </div>
 </form>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

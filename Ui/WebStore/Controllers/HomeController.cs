@@ -2,9 +2,13 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using WebStore.Domain.Entities;
+using WebStore.Domain.Filters;
 using WebStore.Domain.ViewModel;
 using WebStore.Interfaces.Api;
+using WebStore.Interfaces.Services;
 
 namespace WebStore.Controllers
 {

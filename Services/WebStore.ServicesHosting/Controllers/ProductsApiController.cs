@@ -69,15 +69,34 @@ namespace WebStore.ServicesHosting.Controllers
         [HttpPut("{id}"), ActionName("Put")]
         public async Task<IActionResult> UpdateAsync([FromBody] Product product)
         {
-            var result = _productData.UpdateAsync(product).Result;
+            var result = await _productData.UpdateAsync(product);
             return result > 0 ? Ok(result) : NotFound();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var result = _productData.DeleteAsync(id).Result;
+            var result = await _productData.DeleteAsync(id);
             return result ? Ok() : NotFound();
+        }
+
+        [HttpPost("create")]
+        public async Task<SaveResult> CreateProduct([FromBody] Product product)
+        {
+            var result = await _productData.CreateProduct(product);
+            return result;
+        }
+        [HttpPut]
+        public async Task<SaveResult> UpdateProduct([FromBody] Product product)
+        {
+            var result = await _productData.UpdateProduct(product);
+            return result;
+        }
+        [HttpDelete("deleteproduct/{productId}")]
+        public async Task<SaveResult> DeleteProduct(int productId)
+        {
+            var result =await _productData.DeleteProduct(productId);
+            return result;
         }
     }
 }

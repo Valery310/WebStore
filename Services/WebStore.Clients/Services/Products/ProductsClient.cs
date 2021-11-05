@@ -78,6 +78,30 @@ namespace WebStore.Clients.Services.Products
             var result = Get<BrandDto>(url).FromDTO();
             return result;
         }
+
+        public async Task<SaveResult> CreateProduct(Product product)
+        {
+            var url = $"{ServiceAddress}/create";
+            var response = Post(url, product);
+            var result = await response.Content.ReadAsAsync<SaveResult>();
+            return result;
+        }
+
+        public async Task<SaveResult> UpdateProduct(Product product)
+        {
+            var url = $"{ServiceAddress}";
+            var response = Put(url, product);
+            var result = await response.Content.ReadAsAsync<SaveResult>();
+            return result;
+        }
+
+        public async Task<SaveResult> DeleteProduct(int productId)
+        {
+            var url = $"{ServiceAddress}/deleteproduct/{productId}";
+            var response = await DeleteAsync(url);
+            var result = await response.Content.ReadAsAsync<SaveResult>();
+            return result;
+        }
     }
 
 }

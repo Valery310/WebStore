@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebStore.Domain.ViewModel
 {
@@ -6,6 +7,7 @@ namespace WebStore.Domain.ViewModel
     {
         [Display(Name = "Имя")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Имя является обязательным"), MaxLength(256)]
+        [Remote("IsNameFree", "Account")]
         public string UserName { get; set; }
 
         [Display(Name = "Почта")]

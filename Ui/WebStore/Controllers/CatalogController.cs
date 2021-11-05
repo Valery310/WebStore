@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebStore.Domain.Entities;
@@ -72,5 +73,36 @@ namespace WebStore.Controllers
             });
 
         }
+
+        public async Task<IActionResult> GetFilteredItems(int? sectionId, int? brandId, int page = 1)
+        {
+            // var productsModel = GetProducts(sectionId, brandId, page, out var totalCount);
+            var productsModel = await GetProducts(sectionId, brandId, page).ConfigureAwait(false);
+            return PartialView("Partial/_ProductItems", productsModel);
+        }
+
+
+        //private IEnumerable<ProductViewModel> GetProducts(int? sectionId, int? brandId, int page, out int totalCount)
+        private async Task<IEnumerable<ProductViewModel>> GetProducts(int? sectionId, int? brandId, int page)
+        {
+            var products = await _productData.GetProducts(new ProductFilter
+            {
+                BrandId = brandId,
+                SectionId = sectionId,
+                Page = page,
+                PageSize = int.Parse(_configuration["PageSize"])
+            }).ConfigureAwait(false);
+           // totalCount = products.TotalCount;
+            return products.Products.Select(p => new ProductViewModel()
+            {
+                Id = p.Id,
+                ImageUrl = p.ImageUrl,
+                Name = p.Name,
+                Order = p.Order,
+                Price = p.Price,
+                Brand = p.Brand,                
+            }).ToList().OrderBy(p => p.Order);
+        }
+
     }
 }

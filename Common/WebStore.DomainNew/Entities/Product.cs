@@ -16,14 +16,18 @@ namespace WebStore.Domain.Entities
         /// Секция к которой принадлежит товар
         /// </summary>
         public int SectionId { get; set; }
-
+        /// <summary>
+        /// Секция к которой принадлежит товар
+        /// </summary>
         [ForeignKey("SectionId")]
         public virtual Section Section { get; set; }
         /// <summary>
         /// Бренд товара
         /// </summary>
         public int? BrandId { get; set; }
-
+        /// <summary>
+        /// Бренд товара
+        /// </summary>
         [ForeignKey("BrandId")]
         public virtual Brand Brand { get; set; }
         /// <summary>
@@ -35,5 +39,10 @@ namespace WebStore.Domain.Entities
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
+        /// <summary>
+        /// Удален товар или нет
+        /// </summary>
+        public bool IsDelete { get; set; }
+
     }
 }

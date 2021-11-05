@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using WebStore.Domain.Filters;
 using WebStore.Interfaces.Services;
 
 namespace WebStore.Areas.Admin.Controllers
@@ -16,10 +18,11 @@ namespace WebStore.Areas.Admin.Controllers
             return View();
         }
 
-        //public IActionResult ProductList() 
-        //{
-        //    var products = _productData.GetProducts(new Services.Filters.ProductFilter());
-        //    return View(products);
-        //}
+        public async Task<IActionResult> ProductList()
+        {
+            var products = await _productData.GetProducts(new ProductFilter());
+            return View(products);
+        }
     }
 }
+

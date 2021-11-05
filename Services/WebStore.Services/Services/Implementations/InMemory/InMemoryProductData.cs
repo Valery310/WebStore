@@ -529,5 +529,20 @@ namespace WebStore.Services.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<SaveResult> CreateProduct(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SaveResult> UpdateProduct(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SaveResult> DeleteProduct(int productId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
