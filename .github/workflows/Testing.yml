@@ -1,6 +1,10 @@
-name: Testing
+name: .NET
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
@@ -18,4 +22,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build -v normal
+      run: dotnet test --no-build --verbosity normal

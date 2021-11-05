@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebStore.Domain.Entities;
 using WebStore.Domain.Filters;
 
 namespace WebStore.Interfaces.Services
 {
-
     /// <summary>
     /// Интерфейс для работы с товарами
     /// </summary>
@@ -82,4 +81,5 @@ namespace WebStore.Interfaces.Services
         /// <returns></returns>
         Task<SaveResult> DeleteProduct(int productId);
     }
+
 }
