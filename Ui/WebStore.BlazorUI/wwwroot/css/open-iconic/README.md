@@ -9,7 +9,7 @@
 
 * 223 icons designed to be legible down to 8 pixels
 * Super-light SVG files - 61.8 for the entire set 
-* SVG sprite&mdash;the modern replacement for icon fonts
+* SVG sprite&mdash;the modern replacement for icon images-blazor
 * Webfont (EOT, OTF, SVG, TTF, WOFF), PNG and WebP formats
 * Webfont stylesheets (including versions for Bootstrap and Foundation) in CSS, LESS, SCSS and Stylus formats
 * PNG and WebP raster images in 8px, 16px, 24px, 32px, 48px and 64px.
@@ -58,7 +58,7 @@ Coloring icons is even easier. All you need to do is set the `fill` rule on the 
 }
 ```
 
-To learn more about SVG Sprites, read [Chris Coyier's guide](http://css-tricks.com/svg-sprites-use-better-icon-fonts/).
+To learn more about SVG Sprites, read [Chris Coyier's guide](http://css-tricks.com/svg-sprites-use-better-icon-images-blazor/).
 
 #### Using Open Iconic's Icon Font...
 
@@ -109,6 +109,6 @@ You can find our default stylesheets in `font/css/open-iconic.{css, less, scss, 
 
 All code (including SVG markup) is under the [MIT License](http://opensource.org/licenses/MIT).
 
-### Fonts
+### images-blazor
 
-All fonts are under the [SIL Licensed](http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web).
+All images-blazor are under the [SIL Licensed](http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web).

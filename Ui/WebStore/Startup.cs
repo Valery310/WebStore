@@ -150,7 +150,9 @@ namespace WebStore
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");
+
+                endpoints.MapFallbackToFile("index.html");
             });
 
             // var hello = Configuration["CustomHelloWorld"];
